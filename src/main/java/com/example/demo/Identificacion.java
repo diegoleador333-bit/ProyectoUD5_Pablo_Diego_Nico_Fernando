@@ -44,7 +44,7 @@ public class Identificacion {
 			return "Correo o contraseña incorrectos";
 		}
 
-		Usuarios u = encontrados.get(0);
+		Usuarios u = encontrados.get(0); 
 		return "Login correcto";
 	}
 }

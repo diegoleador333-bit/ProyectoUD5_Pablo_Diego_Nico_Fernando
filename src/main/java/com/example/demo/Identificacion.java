@@ -1,10 +1,12 @@
 package com.example.demo;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/identificacion")
@@ -42,7 +44,7 @@ public class Identificacion {
 			return "Correo o contraseña incorrectos";
 		}
 
-		Usuarios u = encontrados.get(0);
+		Usuarios u = encontrados.get(0); 
 		return "Login correcto";
 	}
 }

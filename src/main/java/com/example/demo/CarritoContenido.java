@@ -1,10 +1,5 @@
 package com.example.demo;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
-import org.springframework.jdbc.core.RowMapper;
-
 public class CarritoContenido {
 	private int id;
 	private Carrito carrito;

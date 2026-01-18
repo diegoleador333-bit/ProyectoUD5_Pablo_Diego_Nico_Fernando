@@ -1,13 +1,5 @@
 package com.example.demo;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.jdbc.core.ResultSetExtractor;
-import org.springframework.jdbc.core.RowMapper;
-
 public class Camisetas {
 	private int id;
 	private String equipo;

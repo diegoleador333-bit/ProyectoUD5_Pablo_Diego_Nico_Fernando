@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.servlet.http.HttpSession;
 
+@CrossOrigin(origins = {"http://127.0.0.1:5500", "http://localhost:5500"})
 @RestController
 @RequestMapping("/identificacion")
 public class Identificacion {
@@ -24,21 +26,25 @@ public class Identificacion {
 	@PostMapping("/registro")
 	public String registro(@RequestBody Usuarios nuevo, HttpSession session) {
 
-		List<Usuarios> existentes = jdbcTemplate.query("SELECT * FROM usuarios WHERE correo = ?", new UsuariosMapper(),
-				nuevo.getCorreo());
+		
+		 List<Usuarios> existentes = jdbcTemplate.query(
+			        "SELECT * FROM Usuarios WHERE correo = ?",
+			        new UsuariosMapper(),
+			        nuevo.getCorreo()
+			    );
 
 		if (!existentes.isEmpty()) {
 			return "El usuario ya existe";
 		}
 
 		jdbcTemplate.update(
-			    "INSERT INTO usuarios (dni, nombre, apellido, correo, password) VALUES (?, ?, ?, ?, ?)",
-			    nuevo.getDni(),
-			    nuevo.getNombre(),
-			    nuevo.getApellido(),
-			    nuevo.getCorreo(),
-			    nuevo.getPassword()
-			);
+		        "INSERT INTO Usuarios (DNI, nombre, apellido, correo, pwd) VALUES (?, ?, ?, ?, ?)",
+		        nuevo.getDni(),
+		        nuevo.getNombre(),
+		        nuevo.getApellido(),
+		        nuevo.getCorreo(),
+		        nuevo.getPassword()
+		    );
 
 		session.setAttribute("usuario", nuevo);
 		return "Usuario registrado correctamente";
@@ -47,7 +53,7 @@ public class Identificacion {
 	@PostMapping("/login")
 	public String login(@RequestBody Usuarios login, HttpSession session) {
 
-		List<Usuarios> encontrados = jdbcTemplate.query("SELECT * FROM usuarios WHERE correo = ? AND password = ?",
+		List<Usuarios> encontrados = jdbcTemplate.query("SELECT * FROM usuarios WHERE correo = ? AND pwd = ?",
 				new UsuariosMapper(), login.getCorreo(), login.getPassword());
 
 		if (encontrados.isEmpty()) {

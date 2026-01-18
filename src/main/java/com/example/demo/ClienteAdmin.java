@@ -11,13 +11,11 @@ public class ClienteAdmin {
 
 		do {
 			System.out.println("=== CLIENTE ADMIN ===");
-			System.out.println("1. Listar camisetas por liga y temporada");
-			System.out.println("2. Crear camiseta");
-			System.out.println("3. Modificar camiseta");
-			System.out.println("4. Eliminar camiseta");
-			System.out.println("5. Ver stock por talla");
-			System.out.println("6. Actualizar stock");
-			System.out.println("7. Salir");
+			System.out.println("1. Crear camiseta");
+			System.out.println("2. Cambiar precio camiseta");
+			System.out.println("3. Eliminar camiseta");
+			System.out.println("4. Ver stock por talla (actualizar stock si quieres)");
+			System.out.println("5. Salir");
 
 			opcion = sc.nextInt();
 			sc.nextLine();
@@ -80,7 +78,7 @@ public class ClienteAdmin {
 					System.out.println("Camiseta eliminada correctamente");
 					break;
 
-				case 0:
+				case 7:
 					System.out.println("Saliendo del cliente admin...");
 					break;
 

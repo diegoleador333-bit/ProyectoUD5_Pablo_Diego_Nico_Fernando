@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.demo.Endpoints;
 
 import java.util.List;
 
@@ -8,6 +8,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.example.demo.Carrito.Carrito;
+import com.example.demo.Carrito.CarritoMapper;
+import com.example.demo.CarritoContenido.CarritoContenido;
+import com.example.demo.CarritoContenido.contenidoMapper;
+import com.example.demo.Usuarios.Usuarios;
 
 import jakarta.servlet.http.HttpSession;
 

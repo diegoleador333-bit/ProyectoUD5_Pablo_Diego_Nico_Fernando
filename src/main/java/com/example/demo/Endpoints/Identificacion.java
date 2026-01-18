@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.demo.Endpoints;
 
 import java.util.List;
 
@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.example.demo.Usuarios.Usuarios;
+import com.example.demo.Usuarios.UsuariosMapper;
 
 import jakarta.servlet.http.HttpSession;
 

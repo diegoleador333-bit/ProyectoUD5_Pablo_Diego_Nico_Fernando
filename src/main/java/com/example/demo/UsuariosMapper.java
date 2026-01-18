@@ -8,7 +8,7 @@ public class UsuariosMapper {
         return new Usuarios(
             rs.getLong("id"),
             rs.getString("nombre"),
-            rs.getString("apelldio"),
+            rs.getString("apellido"),
             rs.getString("dni"),
             rs.getString("correo"),
             rs.getString("password")

@@ -20,9 +20,9 @@ public class Identificacion {
 
 	@PostMapping("/registro")
 	public String registro(@RequestBody Usuarios nuevo) {
+		String sql = "SELECT * FROM usuarios WHERE correo = ?";
 
-		List<Usuarios> existentes = jdbcTemplate.query("SELECT * FROM usuarios WHERE correo = ?", new UsuariosMapper(),
-				nuevo.getCorreo());
+		List<Usuarios> existentes = jdbcTemplate.query(sql, new UsuariosMapper(), nuevo.getCorreo());
 
 		if (!existentes.isEmpty()) {
 			return "El usuario ya existe";
@@ -44,7 +44,7 @@ public class Identificacion {
 			return "Correo o contraseña incorrectos";
 		}
 
-		Usuarios u = encontrados.get(0); 
+		Usuarios u = encontrados.get(0);
 		return "Login correcto";
 	}
 }

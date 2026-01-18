@@ -28,8 +28,15 @@ public class Identificacion {
 			return "El usuario ya existe";
 		}
 
-		jdbcTemplate.update("INSERT INTO usuarios (nombre, password) VALUES (?, ?)", nuevo.getCorreo(),
-				nuevo.getPassword());
+		jdbcTemplate.update(
+			    "INSERT INTO usuarios (dni, nombre, apellido, correo, password) VALUES (?, ?, ?, ?, ?)",
+			    nuevo.getDni(),
+			    nuevo.getNombre(),
+			    nuevo.getApellido(),
+			    nuevo.getCorreo(),
+			    nuevo.getPassword()
+			);
+
 
 		return "Usuario registrado correctamente";
 	}

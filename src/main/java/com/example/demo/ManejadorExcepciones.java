@@ -11,5 +11,5 @@ public class ManejadorExcepciones {
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<String> manejarExcGeneral(Exception e) {
 		return new ResponseEntity<>("Error: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-	}
+	}// 
 }

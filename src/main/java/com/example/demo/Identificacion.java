@@ -28,15 +28,8 @@ public class Identificacion {
 			return "El usuario ya existe";
 		}
 
-		jdbcTemplate.update(
-			    "INSERT INTO usuarios (dni, nombre, apellido, correo, password) VALUES (?, ?, ?, ?, ?)",
-			    nuevo.getDni(),
-			    nuevo.getNombre(),
-			    nuevo.getApellido(),
-			    nuevo.getCorreo(),
-			    nuevo.getPassword()
-			);
-
+		jdbcTemplate.update("INSERT INTO Usuarios (DNI, nombre, apellido, correo, pwd) VALUES (?, ?, ?, ?, ?)",
+				nuevo.getDni(), nuevo.getNombre(), nuevo.getApellido(), nuevo.getCorreo(), nuevo.getPassword());
 
 		return "Usuario registrado correctamente";
 	}
@@ -44,7 +37,7 @@ public class Identificacion {
 	@PostMapping("/login")
 	public String login(@RequestBody Usuarios login) {
 
-		List<Usuarios> encontrados = jdbcTemplate.query("SELECT * FROM usuarios WHERE correo = ? AND password = ?",
+		List<Usuarios> encontrados = jdbcTemplate.query("SELECT * FROM usuarios WHERE correo = ? AND pwd = ?",
 				new UsuariosMapper(), login.getCorreo(), login.getPassword());
 
 		if (encontrados.isEmpty()) {

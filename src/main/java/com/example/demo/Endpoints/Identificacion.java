@@ -62,7 +62,7 @@ public class Identificacion {
 	@PostMapping("/cerrar")
 	public String logout(HttpSession session) {
 		session.invalidate();
-		return "Sesión cerrada correctamente";
+		return "Sesion cerrada correctamente";
 	}
 
 	@GetMapping("/perfil")

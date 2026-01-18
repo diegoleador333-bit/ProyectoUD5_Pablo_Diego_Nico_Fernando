@@ -1,4 +1,6 @@
-package com.example.demo;
+package com.example.demo.Stock;
+
+import com.example.demo.Camisetas.Camisetas;
 
 public class StockPorTalla {
 	private int id;

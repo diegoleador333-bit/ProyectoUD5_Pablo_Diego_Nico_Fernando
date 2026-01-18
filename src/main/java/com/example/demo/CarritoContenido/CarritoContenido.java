@@ -1,0 +1,93 @@
+package com.example.demo.CarritoContenido;
+
+import com.example.demo.Camisetas.Camisetas;
+import com.example.demo.Carrito.Carrito;
+
+public class CarritoContenido {
+	private int id;
+	private Carrito carrito;
+	private Camisetas camiseta;
+	private int cantidad;
+	private String tallaSeleccionada;
+	private String nombrePersonalizado;
+	private int numeroPersonalizado;
+	private boolean llevaParche;
+
+	public CarritoContenido(int id, Carrito carrito, Camisetas camiseta, int cantidad, String tallaSeleccionada,
+			String nombrePersonalizado, int numeroPersonalizado, boolean llevaParche) {
+		super();
+		this.id = id;
+		this.carrito = carrito;
+		this.camiseta = camiseta;
+		this.cantidad = cantidad;
+		this.tallaSeleccionada = tallaSeleccionada;
+		this.nombrePersonalizado = nombrePersonalizado;
+		this.numeroPersonalizado = numeroPersonalizado;
+		this.llevaParche = llevaParche;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public Carrito getCarrito() {
+		return carrito;
+	}
+
+	public void setCarrito(Carrito carrito) {
+		this.carrito = carrito;
+	}
+
+	public Camisetas getCamiseta() {
+		return camiseta;
+	}
+
+	public void setCamiseta(Camisetas camiseta) {
+		this.camiseta = camiseta;
+	}
+
+	public int getCantidad() {
+		return cantidad;
+	}
+
+	public void setCantidad(int cantidad) {
+		this.cantidad = cantidad;
+	}
+
+	public String getTallaSeleccionada() {
+		return tallaSeleccionada;
+	}
+
+	public void setTallaSeleccionada(String tallaSeleccionada) {
+		this.tallaSeleccionada = tallaSeleccionada;
+	}
+
+	public String getNombrePersonalizado() {
+		return nombrePersonalizado;
+	}
+
+	public void setNombrePersonalizado(String nombrePersonalizado) {
+		this.nombrePersonalizado = nombrePersonalizado;
+	}
+
+	public int getNumeroPersonalizado() {
+		return numeroPersonalizado;
+	}
+
+	public void setNumeroPersonalizado(int numeroPersonalizado) {
+		this.numeroPersonalizado = numeroPersonalizado;
+	}
+
+	public boolean isLlevaParche() {
+		return llevaParche;
+	}
+
+	public void setLlevaParche(boolean llevaParche) {
+		this.llevaParche = llevaParche;
+	}
+
+}

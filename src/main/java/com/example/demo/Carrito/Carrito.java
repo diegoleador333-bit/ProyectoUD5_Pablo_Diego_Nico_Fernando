@@ -1,6 +1,8 @@
-package com.example.demo;
+package com.example.demo.Carrito;
 
 import java.sql.Date;
+
+import com.example.demo.Usuarios.Usuarios;
 
 public class Carrito {
 	private long id;

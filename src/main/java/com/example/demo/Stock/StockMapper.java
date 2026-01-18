@@ -1,7 +1,9 @@
-package com.example.demo;
+package com.example.demo.Stock;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import com.example.demo.Camisetas.Camisetas;
 
 public class StockMapper {
 	public StockPorTalla mapRow(ResultSet rs, int rowNum) throws SQLException {

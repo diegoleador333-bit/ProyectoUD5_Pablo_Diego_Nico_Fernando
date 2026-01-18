@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.servlet.http.HttpSession;
 
-@CrossOrigin(origins = {"http://127.0.0.1:5500", "http://localhost:5500"})
+@CrossOrigin(origins = { "http://127.0.0.1:5500", "http://localhost:5500" })
 @RestController
 @RequestMapping("/identificacion")
 public class Identificacion {
@@ -26,25 +26,15 @@ public class Identificacion {
 	@PostMapping("/registro")
 	public String registro(@RequestBody Usuarios nuevo, HttpSession session) {
 
-		
-		 List<Usuarios> existentes = jdbcTemplate.query(
-			        "SELECT * FROM Usuarios WHERE correo = ?",
-			        new UsuariosMapper(),
-			        nuevo.getCorreo()
-			    );
+		List<Usuarios> existentes = jdbcTemplate.query("SELECT * FROM Usuarios WHERE correo = ?", new UsuariosMapper(),
+				nuevo.getCorreo());
 
 		if (!existentes.isEmpty()) {
 			return "El usuario ya existe";
 		}
 
-		jdbcTemplate.update(
-		        "INSERT INTO Usuarios (DNI, nombre, apellido, correo, pwd) VALUES (?, ?, ?, ?, ?)",
-		        nuevo.getDni(),
-		        nuevo.getNombre(),
-		        nuevo.getApellido(),
-		        nuevo.getCorreo(),
-		        nuevo.getPassword()
-		    );
+		jdbcTemplate.update("INSERT INTO Usuarios (DNI, nombre, apellido, correo, pwd) VALUES (?, ?, ?, ?, ?)",
+				nuevo.getDni(), nuevo.getNombre(), nuevo.getApellido(), nuevo.getCorreo(), nuevo.getPassword());
 
 		session.setAttribute("usuario", nuevo);
 		return "Usuario registrado correctamente";
@@ -60,28 +50,28 @@ public class Identificacion {
 			return "Correo o contraseña incorrectos";
 		}
 
-		Usuarios u = encontrados.get(0); 
+		Usuarios u = encontrados.get(0);
 		session.setAttribute("usuario", u);
-		
+
 		return "Login correcto";
 	}
-	
+
 	@PostMapping("/cerrar")
 	public String logout(HttpSession session) {
-	    session.invalidate();
-	    return "Sesión cerrada correctamente";
+		session.invalidate();
+		return "Sesión cerrada correctamente";
 	}
-	
+
 	@GetMapping("/perfil")
 	public Object sesion(HttpSession session) {
 
-	    Usuarios usuario = (Usuarios) session.getAttribute("usuario");
+		Usuarios usuario = (Usuarios) session.getAttribute("usuario");
 
-	    if (usuario == null) {
-	        return "No hay ninguna sesion";
-	    }
+		if (usuario == null) {
+			return "No hay ninguna sesion";
+		}
 
-	    return usuario;
+		return usuario;
 	}
 
 }

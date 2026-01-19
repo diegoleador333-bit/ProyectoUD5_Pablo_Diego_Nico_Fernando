@@ -914,22 +914,23 @@
 
     // =========  LOGIN/REGISTER  =========
  document.getElementById("btnLogin").onclick = async () => {
-  const email = document.getElementById("loginEmail").value.trim();
-  const pass  = document.getElementById("loginPass").value.trim();
+  const correo = document.getElementById("loginEmail").value.trim();
+  const pass   = document.getElementById("loginPass").value.trim();
 
-  if (!email || !pass) return toast("Rellena email y contraseña");
+  if (!correo || !pass) return toast("Rellena email y contraseña");
 
   const resp = await fetch(`${API_BASE}/identificacion/login`, {
     method: "POST",
-    credentials: "include",
+    credentials: "include",              
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ correo: email, password: pass })
+    body: JSON.stringify({ correo: correo, password: pass })
   });
 
-  const txt = await resp.text();
+  const txt = (await resp.text()).trim();
   toast(txt);
 
-  if (txt.toLowerCase().includes("login correcto")) {
+  // MUY IMPORTANTE: comparación exacta (para no confundir "incorrectos" con "correcto")
+  if (txt === "Login correcto") {
     await renderNavAuth();
     bootstrap.Modal.getInstance(document.getElementById("modalLogin"))?.hide();
   }

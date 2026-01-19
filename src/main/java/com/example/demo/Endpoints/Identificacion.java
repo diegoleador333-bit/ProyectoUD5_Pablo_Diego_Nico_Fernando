@@ -50,6 +50,7 @@ public class Identificacion {
 				new UsuariosMapper(), login.getCorreo(), login.getPassword());
 
 		if (encontrados.isEmpty()) {
+			session.invalidate(); //elimina sesión previa
 			return "Correo o contraseña incorrectos";
 		}
 

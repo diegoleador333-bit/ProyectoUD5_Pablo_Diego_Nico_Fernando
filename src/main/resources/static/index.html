@@ -388,217 +388,14 @@
 
   <script>
 
-    const API_BASE = "http://localhost:8080";
+    const API_BASE = "http://127.0.0.1:8080";
 
-
-   
-    const CATALOGO = [
-      {
-        "equipo": "Real Madrid",
-        "imagen": "realmadrid_2000_2005.png",
-        "precio": 85.00,
-        "temporada": "2000-2005",
-        "liga": "LaLiga"
-      },
-      {
-        "equipo": "FC Barcelona",
-        "imagen": "barcelona_2000_2005.png",
-        "precio": 85.00,
-        "temporada": "2000-2005",
-        "liga": "LaLiga"
-      },
-      {
-        "equipo": "Manchester United",
-        "imagen": "manutd_2000_2005.png",
-        "precio": 88.00,
-        "temporada": "2000-2005",
-        "liga": "Premier League"
-      },
-      {
-        "equipo": "Juventus",
-        "imagen": "juventus_2000_2005.png",
-        "precio": 82.00,
-        "temporada": "2000-2005",
-        "liga": "Serie A"
-      },
-      {
-        "equipo": "Bayern Munich",
-        "imagen": "bayern_2000_2005.png",
-        "precio": 87.00,
-        "temporada": "2000-2005",
-        "liga": "Bundesliga"
-      },
-      {
-        "equipo": "Brasil",
-        "imagen": "brasil_2000_2005.png",
-        "precio": 80.00,
-        "temporada": "2000-2005",
-        "liga": "Selecciones"
-      },
-
-      {
-        "equipo": "Real Madrid",
-        "imagen": "realmadrid_2006_2011.png",
-        "precio": 90.00,
-        "temporada": "2006-2011",
-        "liga": "LaLiga"
-      },
-      {
-        "equipo": "FC Barcelona",
-        "imagen": "barcelona_2006_2011.png",
-        "precio": 92.00,
-        "temporada": "2006-2011",
-        "liga": "LaLiga"
-      },
-      {
-        "equipo": "Chelsea",
-        "imagen": "chelsea_2006_2011.png",
-        "precio": 90.00,
-        "temporada": "2006-2011",
-        "liga": "Premier League"
-      },
-      {
-        "equipo": "AC Milan",
-        "imagen": "milan_2006_2011.png",
-        "precio": 88.00,
-        "temporada": "2006-2011",
-        "liga": "Serie A"
-      },
-      {
-        "equipo": "Bayern Munich",
-        "imagen": "bayern_2006_2011.png",
-        "precio": 89.00,
-        "temporada": "2006-2011",
-        "liga": "Bundesliga"
-      },
-      {
-        "equipo": "España",
-        "imagen": "espana_2006_2011.png",
-        "precio": 85.00,
-        "temporada": "2006-2011",
-        "liga": "Selecciones"
-      },
-
-      {
-        "equipo": "FC Barcelona",
-        "imagen": "barcelona_2012_2017.png",
-        "precio": 95.00,
-        "temporada": "2012-2017",
-        "liga": "LaLiga"
-      },
-      {
-        "equipo": "Real Madrid",
-        "imagen": "realmadrid_2012_2017.png",
-        "precio": 95.00,
-        "temporada": "2012-2017",
-        "liga": "LaLiga"
-      },
-      {
-        "equipo": "Manchester City",
-        "imagen": "mancity_2012_2017.png",
-        "precio": 94.00,
-        "temporada": "2012-2017",
-        "liga": "Premier League"
-      },
-      {
-        "equipo": "Juventus",
-        "imagen": "juventus_2012_2017.png",
-        "precio": 90.00,
-        "temporada": "2012-2017",
-        "liga": "Serie A"
-      },
-      {
-        "equipo": "Borussia Dortmund",
-        "imagen": "dortmund_2012_2017.png",
-        "precio": 88.00,
-        "temporada": "2012-2017",
-        "liga": "Bundesliga"
-      },
-      {
-        "equipo": "Alemania",
-        "imagen": "alemania_2012_2017.png",
-        "precio": 90.00,
-        "temporada": "2012-2017",
-        "liga": "Selecciones"
-      },
-
-      {
-        "equipo": "Real Madrid",
-        "imagen": "realmadrid_2018_2022.png",
-        "precio": 100.00,
-        "temporada": "2018-2022",
-        "liga": "LaLiga"
-      },
-      {
-        "equipo": "Liverpool",
-        "imagen": "liverpool_2018_2022.png",
-        "precio": 98.00,
-        "temporada": "2018-2022",
-        "liga": "Premier League"
-      },
-      {
-        "equipo": "Inter",
-        "imagen": "inter_2018_2022.png",
-        "precio": 95.00,
-        "temporada": "2018-2022",
-        "liga": "Serie A"
-      },
-      {
-        "equipo": "Bayern Munich",
-        "imagen": "bayern_2018_2022.png",
-        "precio": 98.00,
-        "temporada": "2018-2022",
-        "liga": "Bundesliga"
-      },
-      {
-        "equipo": "Francia",
-        "imagen": "francia_2018_2022.png",
-        "precio": 95.00,
-        "temporada": "2018-2022",
-        "liga": "Selecciones"
-      },
-
-      {
-        "equipo": "Real Madrid",
-        "imagen": "realmadrid_2023_2026.png",
-        "precio": 110.00,
-        "temporada": "2023-2026",
-        "liga": "LaLiga"
-      },
-      {
-        "equipo": "Manchester City",
-        "imagen": "mancity_2023_2026.png",
-        "precio": 110.00,
-        "temporada": "2023-2026",
-        "liga": "Premier League"
-      },
-      {
-        "equipo": "Napoli",
-        "imagen": "napoli_2023_2026.png",
-        "precio": 105.00,
-        "temporada": "2023-2026",
-        "liga": "Serie A"
-      },
-      {
-        "equipo": "Bayern Munich",
-        "imagen": "bayern_2023_2026.png",
-        "precio": 108.00,
-        "temporada": "2023-2026",
-        "liga": "Bundesliga"
-      },
-      {
-        "equipo": "Argentina",
-        "imagen": "argentina_2023_2026.png",
-        "precio": 110.00,
-        "temporada": "2023-2026",
-        "liga": "Selecciones"
-      }
-    ];
 
     // ========= 2) STORAGE (para que NO se pierda el carrito al recargar) =========
     // Esto sí compensa hacerlo con 2 mini funciones, para no copiar 10 líneas muchas veces.
     const CART_KEY = "cart90t";
     let cart = []; //array donde se va a guardar el carrito
+    let CATALOGO = [];
 
     function saveCart() {
       localStorage.setItem(CART_KEY, JSON.stringify(cart));
@@ -710,7 +507,8 @@
       '<div class="col-12 col-md-4">' +
         '<div class="card h-100 shadow-sm">' +
 
-          '<img src="' + p.imagen + '" class="card-img-top" alt="' + p.equipo + '">' +
+          '<img src="' + API_BASE + '/' + p.imagen + '" class="card-img-top" alt="' + p.equipo + '">'
+ +
 
           '<div class="card-body d-flex flex-column">' +
             '<h5 class="card-title">' + p.equipo + '</h5>' +
@@ -779,7 +577,8 @@
       document.getElementById("modalProductPrice").textContent = euros(product.precio);
 
       // imagen
-      document.getElementById("modalImg").src = product.imagen;
+      document.getElementById("modalImg").src = API_BASE + "/" + product.imagen;
+
 
       // reset campos
       document.getElementById("selSize").value = "M";
@@ -975,6 +774,22 @@ document.getElementById("btnLogin").onclick = async () => {
   }
 };
 
+
+async function cargarCamisetasDesdeAPI() {
+  const resp = await fetch(`${API_BASE}/mostrarCamisetas/todas`, {
+    credentials: "include"
+  });
+
+  const data = await resp.json();
+
+  // guardo en variable global para filtros
+  CATALOGO = Array.isArray(data) ? data : [];
+
+  // dibujo
+  renderProducts(CATALOGO);
+}
+
+
     // =========BOTONES FILTROS=========
     document.getElementById("btnApplyFilters").onclick = applyFiltersAndRender;//Se aplican los filtros
 
@@ -991,10 +806,12 @@ document.getElementById("btnLogin").onclick = async () => {
     updateCartUI();
     toast("Carrito vaciado");
     };
-   loadCart();
-updateCartUI();
-renderNavAuth();
-renderProducts(CATALOGO);
+
+  loadCart();
+  updateCartUI();
+  renderNavAuth();
+  cargarCamisetasDesdeAPI();
+
   </script>
 </body>
 </html>

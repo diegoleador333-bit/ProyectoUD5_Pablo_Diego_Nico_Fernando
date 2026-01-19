@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.Carrito.Carrito;
@@ -44,9 +45,8 @@ public class CarritoEndpoints {
 		return contenido;
 	}
 
-	@PostMapping("/eliminar/{idCamiseta}")
-	@Transactional
-	public String eliminarDelCarrito(@PathVariable int idCamiseta, HttpSession session) {
+	@PostMapping("/eliminar/{idCamiseta}/{talla}")
+	public String eliminarDelCarrito(@PathVariable int idCamiseta, @PathVariable String talla, HttpSession session) {
 
 		Usuarios usuario = (Usuarios) session.getAttribute("usuario");
 		if (usuario == null) {
@@ -56,8 +56,12 @@ public class CarritoEndpoints {
 		Carrito carrito = jdbcTemplate.queryForObject("SELECT * FROM Carrito WHERE usuario_Id = ?", new CarritoMapper(),
 				usuario.getId());
 
-		int cantidad = jdbcTemplate.queryForObject(
-				"SELECT cantidad FROM CarritoContenido WHERE carrito_Id = ? AND camiseta_Id = ?", int.class,
+		boolean parche = jdbcTemplate.queryForObject(
+				"SELECT llevaParche FROM CarritoContenido WHERE camiseta_Id = ? AND talla = ? AND carrito_Id = ?",
+				Boolean.class, idCamiseta, talla, carrito.getId());
+
+		Integer cantidad = jdbcTemplate.queryForObject(
+				"SELECT cantidad FROM CarritoContenido WHERE carrito_Id = ? AND camiseta_Id = ?", Integer.class,
 				carrito.getId(), idCamiseta);
 
 		double precioUnidad = jdbcTemplate.queryForObject("SELECT precio FROM Camisetas WHERE id = ?", Double.class,
@@ -65,8 +69,12 @@ public class CarritoEndpoints {
 
 		double totalResta = precioUnidad * cantidad;
 
-		jdbcTemplate.update("DELETE FROM CarritoContenido WHERE camiseta_Id = ? AND carrito_Id = ?", idCamiseta,
-				carrito.getId());
+		if (parche) {
+			totalResta = totalResta + 5.00 * cantidad;
+		}
+
+		jdbcTemplate.update("DELETE FROM CarritoContenido WHERE camiseta_Id = ? AND carrito_Id = ? AND talla = ?",
+				idCamiseta, carrito.getId(), talla);
 
 		jdbcTemplate.update("UPDATE Carrito SET precioTotal = precioTotal - ? WHERE id = ?", totalResta,
 				carrito.getId());
@@ -75,7 +83,6 @@ public class CarritoEndpoints {
 	}
 
 	@PostMapping("/comprar")
-	@Transactional
 	public String comprar(HttpSession session) {
 
 		Usuarios usuario = (Usuarios) session.getAttribute("usuario");
@@ -93,9 +100,8 @@ public class CarritoEndpoints {
 		return "Compra realizada correctamente";
 	}
 
-	@PostMapping("/sumar/{idCamiseta}")
-	@Transactional
-	public String aumentarCantidad(@PathVariable int idCamiseta, HttpSession session) {
+	@PostMapping("/sumar/{idCamiseta}/{talla}")
+	public String aumentarCantidad(@PathVariable int idCamiseta, @PathVariable String talla, HttpSession session) {
 
 		Usuarios usuario = (Usuarios) session.getAttribute("usuario");
 		if (usuario == null) {
@@ -104,12 +110,31 @@ public class CarritoEndpoints {
 		Carrito carrito = jdbcTemplate.queryForObject("SELECT * FROM Carrito WHERE usuario_Id = ?", new CarritoMapper(),
 				usuario.getId());
 
+		boolean parche = jdbcTemplate.queryForObject(
+				"SELECT llevaParche FROM CarritoContenido WHERE camiseta_Id = ? AND talla = ? AND carrito_Id = ?",
+				Boolean.class, idCamiseta, talla, carrito.getId());
+
+		String columnaStock = "stock" + talla;
+		Integer stockDisponible = jdbcTemplate.queryForObject(
+				"SELECT " + columnaStock + " FROM StockPorTalla WHERE camiseta_Id = ?", Integer.class, idCamiseta);
+
+		Integer cantidadCarrito = jdbcTemplate.queryForObject(
+				"SELECT cantidad FROM CarritoContenido WHERE carrito_Id = ? AND camiseta_Id = ? AND talla = ?",
+				Integer.class, carrito.getId(), idCamiseta, talla);
+
+		if (cantidadCarrito >= stockDisponible) {
+			return "No hay mas stock disponible para la talla " + talla;
+		}
+
 		double precioUnidad = jdbcTemplate.queryForObject("SELECT precio FROM Camisetas WHERE id = ?", Double.class,
 				idCamiseta);
+		if (parche) {
+			precioUnidad = precioUnidad + 5.00;
+		}
 
 		jdbcTemplate.update(
-				"UPDATE CarritoContenido SET cantidad = cantidad + 1 WHERE carrito_Id = ? AND camiseta_Id = ?",
-				carrito.getId(), idCamiseta);
+				"UPDATE CarritoContenido SET cantidad = cantidad + 1 WHERE carrito_Id = ? AND camiseta_Id = ? AND talla = ?",
+				carrito.getId(), idCamiseta, talla);
 
 		jdbcTemplate.update("UPDATE Carrito SET precioTotal = precioTotal + ? WHERE id = ?", precioUnidad,
 				carrito.getId());
@@ -117,9 +142,8 @@ public class CarritoEndpoints {
 		return "Cantidad aumentada";
 	}
 
-	@PostMapping("/restar/{idCamiseta}")
-	@Transactional
-	public String disminuirCantidad(@PathVariable int idCamiseta, HttpSession session) {
+	@PostMapping("/restar/{idCamiseta}/{talla}")
+	public String disminuirCantidad(@PathVariable int idCamiseta, @PathVariable String talla, HttpSession session) {
 
 		Usuarios usuario = (Usuarios) session.getAttribute("usuario");
 		if (usuario == null) {
@@ -129,12 +153,20 @@ public class CarritoEndpoints {
 		Carrito carrito = jdbcTemplate.queryForObject("SELECT * FROM Carrito WHERE usuario_Id = ?", new CarritoMapper(),
 				usuario.getId());
 
+		boolean parche = jdbcTemplate.queryForObject(
+				"SELECT llevaParche FROM CarritoContenido WHERE camiseta_Id = ? AND talla = ? AND carrito_Id = ?",
+				Boolean.class, idCamiseta, talla, carrito.getId());
+
 		double precioUnidad = jdbcTemplate.queryForObject("SELECT precio FROM Camisetas WHERE id = ?", Double.class,
 				idCamiseta);
 
+		if (parche) {
+			precioUnidad = precioUnidad + 5.00;
+		}
+
 		jdbcTemplate.update(
-				"UPDATE CarritoContenido SET cantidad = cantidad - 1 WHERE carrito_Id = ? AND camiseta_Id = ? AND cantidad > 1",
-				usuario.getId(), idCamiseta);
+				"UPDATE CarritoContenido SET cantidad = cantidad - 1 WHERE carrito_Id = ? AND camiseta_Id = ? AND cantidad > 1 AND talla = ?",
+				usuario.getId(), idCamiseta, talla);
 
 		jdbcTemplate.update("UPDATE Carrito SET precioTotal = precioTotal - ? WHERE id = ?", precioUnidad,
 				carrito.getId());
@@ -142,10 +174,62 @@ public class CarritoEndpoints {
 		return "Cantidad disminuida";
 	}
 
-	@PostMapping("/parche/{idCamiseta}")
-	@Transactional
-	public String cambioParche(@PathVariable int idCamiseta, HttpSession session) {
-		return "Parche añadido";
+	@PostMapping("/parche/{idCamiseta}/{talla}")
+	public String cambioParche(@PathVariable int idCamiseta, @PathVariable String talla, HttpSession session) {
+		Usuarios usuario = (Usuarios) session.getAttribute("usuario");
+		if (usuario == null) {
+			return "No has iniciado sesion";
+		}
+
+		Carrito carrito = jdbcTemplate.queryForObject("SELECT * FROM Carrito WHERE usuario_Id = ?", new CarritoMapper(),
+				usuario.getId());
+
+		boolean parche = jdbcTemplate.queryForObject(
+				"SELECT llevaParche FROM CarritoContenido WHERE camiseta_Id = ? AND talla = ? AND carrito_Id = ?",
+				Boolean.class, idCamiseta, talla, carrito.getId());
+
+		Integer cantidadCarrito = jdbcTemplate.queryForObject(
+				"SELECT cantidad FROM CarritoContenido WHERE carrito_Id = ? AND camiseta_Id = ? AND talla = ?",
+				Integer.class, carrito.getId(), idCamiseta, talla);
+
+		double precioFinal = 5.00 * cantidadCarrito;
+
+		if (parche) {
+			jdbcTemplate.update(
+					"UPDATE CarritoContenido SET llevaParche = 0 WHERE carrito_Id = ? AND camiseta_Id = ? AND talla = ?",
+					carrito.getId(), idCamiseta, talla);
+			jdbcTemplate.update("UPDATE Carrito SET precioTotal = precioTotal - ? WHERE id = ?", precioFinal,
+					carrito.getId());
+			return "Parche quitado";
+		} else {
+			jdbcTemplate.update(
+					"UPDATE CarritoContenido SET llevaParche = 1 WHERE carrito_Id = ? AND camiseta_Id = ? AND talla = ?",
+					carrito.getId(), idCamiseta, talla);
+			jdbcTemplate.update("UPDATE Carrito SET precioTotal = precioTotal + ? WHERE id = ?", precioFinal,
+					carrito.getId());
+			return "Parche añadido";
+		}
+	}
+
+	@PostMapping("/datos/{idCamiseta}/{talla}")
+	public String cambioNombre(@RequestParam(value = "nombrePersonalizado") String nombrePersonalizado,
+			@RequestParam(value = "numeroPersonalizado") String numeroPersonalizado, @PathVariable int idCamiseta,
+			@PathVariable String talla, HttpSession session) {
+
+		Usuarios usuario = (Usuarios) session.getAttribute("usuario");
+		if (usuario == null) {
+			return "No has iniciado sesion";
+		}
+
+		Carrito carrito = jdbcTemplate.queryForObject("SELECT * FROM Carrito WHERE usuario_Id = ?", new CarritoMapper(),
+				usuario.getId());
+
+		jdbcTemplate.update(
+				"UPDATE CarritoContenido SET nombrePersonalizado = ?, numeroPersonalizado = ? WHERE carrito_Id = ? AND camiseta_Id = ? AND talla = ?",
+				nombrePersonalizado, numeroPersonalizado, carrito.getId(), idCamiseta, talla);
+
+		return "Datos cambiados";
+
 	}
 
 }

@@ -7,9 +7,6 @@ public class Camisetas {
 	private double precio;
 	private String temporada;
 	private String liga;
-	private boolean parche;
-	private String nombreDorsal;
-	private int numeroDorsal;
 
 	public Camisetas(int id, String equipo, String imagen, double precio, String temporada, String liga, boolean parche,
 			String nombreDorsal, int numeroDorsal) {
@@ -19,9 +16,6 @@ public class Camisetas {
 		this.precio = precio;
 		this.temporada = temporada;
 		this.liga = liga;
-		this.parche = parche;
-		this.nombreDorsal = nombreDorsal;
-		this.numeroDorsal = numeroDorsal;
 	}
 
 	public Camisetas(int id, String equipo, String imagen, double precio, String temporada, String liga) {
@@ -82,29 +76,7 @@ public class Camisetas {
 		this.liga = liga;
 	}
 
-	public boolean getParche() {
-		return parche;
-	}
 
-	public void setParche(boolean parche) {
-		this.parche = parche;
-	}
-
-	public String getNombreDorsal() {
-		return nombreDorsal;
-	}
-
-	public void setNombreDorsal(String nombreDorsal) {
-		this.nombreDorsal = nombreDorsal;
-	}
-
-	public int getNumeroDorsal() {
-		return numeroDorsal;
-	}
-
-	public void setNumeroDorsal(int numeroDorsal) {
-		this.numeroDorsal = numeroDorsal;
-	}
 
 
 }

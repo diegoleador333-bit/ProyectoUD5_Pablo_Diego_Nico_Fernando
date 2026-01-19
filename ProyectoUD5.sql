@@ -1,4 +1,5 @@
 CREATE DATABASE if not exists ProyectoUD5;
+USE ProyectoUD5;
 -- 1. Tabla Usuarios
 CREATE TABLE Usuarios (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -65,6 +66,15 @@ CREATE TABLE CarritoContenido (
     carrito_Id INT NOT NULL,
     camiseta_Id INT NOT NULL,
 	 cantidad INT,
+	 tallaSeleccionada ENUM(
+	 'S',
+	 'M',
+	 'L',
+	 'XL'
+	 )NOT NULL,
+	 nombrePersonalizado VARCHAR(100),
+	 numeroPersonalizado INT,
+	 llevaParche TINYINT,
     FOREIGN KEY (carrito_Id) REFERENCES Carrito(id) ON DELETE CASCADE,
     FOREIGN KEY (camiseta_Id) REFERENCES Camisetas(id)
 );

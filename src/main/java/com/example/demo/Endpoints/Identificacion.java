@@ -50,7 +50,7 @@ public class Identificacion {
 				new UsuariosMapper(), login.getCorreo(), login.getPassword());
 
 		if (encontrados.isEmpty()) {
-			session.invalidate(); //elimina sesión previa
+			session.invalidate(); // elimina sesión previa
 			return "Correo o contraseña incorrectos";
 		}
 
@@ -67,8 +67,15 @@ public class Identificacion {
 	}
 
 	@GetMapping("/perfil")
-	public Usuarios sesion(HttpSession session) {
-		return (Usuarios) session.getAttribute("usuario"); // null si no hay sesion
-	}
+	public Object sesion(HttpSession session) {
 
+		Usuarios usuario = (Usuarios) session.getAttribute("usuario");
+
+		if (usuario == null) {
+			return "No has iniciado sesion";
+		}
+
+		return usuario;
+
+	}
 }

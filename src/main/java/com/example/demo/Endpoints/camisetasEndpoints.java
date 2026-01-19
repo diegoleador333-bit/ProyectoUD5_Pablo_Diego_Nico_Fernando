@@ -29,11 +29,16 @@ public class camisetasEndpoints {
 		return jdbcTemplate.query(sql, new CamisetasMapper());
 	}
 
-	@GetMapping("/{unId}")
-	public Camisetas mostrarCamisetasById(@PathVariable int unId) {
-	    String sql = "SELECT id, imagen, equipo, precio, temporada, liga, parche, nombreDorsal, numeroDorsal FROM camisetas WHERE id = ?";
-	    return jdbcTemplate.queryForObject(sql, new CamisetasMapper(), unId);
-	}
+	@GetMapping("camisetas/{unId}")
+	public List<Camisetas> mostrarCamisetasById(@PathVariable int unId, HttpSession session) {
+		Usuarios usuario = (Usuarios) session.getAttribute("usuario");
+		String sql = "SELECT c.id, c.equipo, c.imagen, c.precio, c.temporada, c.liga, c.nombreDorsal, c.numeroDorsal, c.parche, s.stockS, s.stockM, s.stockL, s.stockXL"
+				+ "FROM Camisetas c" + "INNER JOIN StockPorTalla s ON c.id = s.camiseta_Id"
+				+ "WHERE c.id = :idCamisetaSeleccionada";
+		List<Camisetas> misCamisetas = jdbcTemplate.query(sql, new CamisetasMapper());
 
+		return misCamisetas;
+
+	}
 
 }

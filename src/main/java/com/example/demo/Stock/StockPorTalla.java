@@ -18,6 +18,11 @@ public class StockPorTalla {
 		this.stockL = stockL;
 		this.stockXL = stockXL;
 	}
+	
+	public StockPorTalla() {
+		
+	}
+
 
 	public int getId() {
 		return id;

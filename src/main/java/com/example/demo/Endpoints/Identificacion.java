@@ -71,7 +71,7 @@ public class Identificacion {
 		Usuarios usuario = (Usuarios) session.getAttribute("usuario");
 
 		if (usuario == null) {
-			return "No hay ninguna sesion";
+			return "No has iniciado sesion";
 		}
 
 		return usuario;

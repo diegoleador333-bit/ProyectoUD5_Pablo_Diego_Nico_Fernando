@@ -30,12 +30,10 @@ public class camisetasEndpoints {
 	}
 
 	@GetMapping("/{unId}")
-	public List<Camisetas> mostrarCamisetasById(@PathVariable int unId, HttpSession session) {
-
-		String sql = "SELECT c.id, c.equipo, c.imagen, c.precio, c.temporada, c.liga, "
-				+ "c.nombreDorsal, c.numeroDorsal, c.parche " + "FROM Camisetas c " + "WHERE c.id = ?";
-
-		return jdbcTemplate.query(sql, new CamisetasMapper(), unId);
+	public Camisetas mostrarCamisetasById(@PathVariable int unId) {
+	    String sql = "SELECT id, imagen, equipo, precio, temporada, liga, parche, nombreDorsal, numeroDorsal FROM camisetas WHERE id = ?";
+	    return jdbcTemplate.queryForObject(sql, new CamisetasMapper(), unId);
 	}
+
 
 }

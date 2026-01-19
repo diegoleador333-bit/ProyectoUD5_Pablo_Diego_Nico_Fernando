@@ -1,0 +1,286 @@
+[
+  {
+    "equipo": "Real Madrid",
+    "imagen": "realmadrid_2000_2005.png",
+    "precio": 85.00,
+    "temporada": "2000-2005",
+    "liga": "LaLiga",
+    "parche": false,
+    "nombreDorsal": null,
+    "numeroDorsal": null
+  },
+  {
+    "equipo": "FC Barcelona",
+    "imagen": "barcelona_2000_2005.png",
+    "precio": 85.00,
+    "temporada": "2000-2005",
+    "liga": "LaLiga",
+    "parche": false,
+    "nombreDorsal": null,
+    "numeroDorsal": null
+  },
+  {
+    "equipo": "Manchester United",
+    "imagen": "manutd_2000_2005.png",
+    "precio": 88.00,
+    "temporada": "2000-2005",
+    "liga": "Premier League",
+    "parche": false,
+    "nombreDorsal": null,
+    "numeroDorsal": null
+  },
+  {
+    "equipo": "Juventus",
+    "imagen": "juventus_2000_2005.png",
+    "precio": 82.00,
+    "temporada": "2000-2005",
+    "liga": "Serie A",
+    "parche": false,
+    "nombreDorsal": null,
+    "numeroDorsal": null
+  },
+  {
+    "equipo": "Bayern Munich",
+    "imagen": "bayern_2000_2005.png",
+    "precio": 87.00,
+    "temporada": "2000-2005",
+    "liga": "Bundesliga",
+    "parche": false,
+    "nombreDorsal": null,
+    "numeroDorsal": null
+  },
+  {
+    "equipo": "Brasil",
+    "imagen": "brasil_2000_2005.png",
+    "precio": 80.00,
+    "temporada": "2000-2005",
+    "liga": "Selecciones",
+    "parche": false,
+    "nombreDorsal": null,
+    "numeroDorsal": null
+  },
+
+  {
+    "equipo": "Real Madrid",
+    "imagen": "realmadrid_2006_2011.png",
+    "precio": 90.00,
+    "temporada": "2006-2011",
+    "liga": "LaLiga",
+    "parche": false,
+    "nombreDorsal": null,
+    "numeroDorsal": null
+  },
+  {
+    "equipo": "FC Barcelona",
+    "imagen": "barcelona_2006_2011.png",
+    "precio": 92.00,
+    "temporada": "2006-2011",
+    "liga": "LaLiga",
+    "parche": false,
+    "nombreDorsal": null,
+    "numeroDorsal": null
+  },
+  {
+    "equipo": "Chelsea",
+    "imagen": "chelsea_2006_2011.png",
+    "precio": 90.00,
+    "temporada": "2006-2011",
+    "liga": "Premier League",
+    "parche": false,
+    "nombreDorsal": null,
+    "numeroDorsal": null
+  },
+  {
+    "equipo": "AC Milan",
+    "imagen": "milan_2006_2011.png",
+    "precio": 88.00,
+    "temporada": "2006-2011",
+    "liga": "Serie A",
+    "parche": false,
+    "nombreDorsal": null,
+    "numeroDorsal": null
+  },
+  {
+    "equipo": "Bayern Munich",
+    "imagen": "bayern_2006_2011.png",
+    "precio": 89.00,
+    "temporada": "2006-2011",
+    "liga": "Bundesliga",
+    "parche": false,
+    "nombreDorsal": null,
+    "numeroDorsal": null
+  },
+  {
+    "equipo": "España",
+    "imagen": "espana_2006_2011.png",
+    "precio": 85.00,
+    "temporada": "2006-2011",
+    "liga": "Selecciones",
+    "parche": false,
+    "nombreDorsal": null,
+    "numeroDorsal": null
+  },
+
+  {
+    "equipo": "FC Barcelona",
+    "imagen": "barcelona_2012_2017.png",
+    "precio": 95.00,
+    "temporada": "2012-2017",
+    "liga": "LaLiga",
+    "parche": false,
+    "nombreDorsal": null,
+    "numeroDorsal": null
+  },
+  {
+    "equipo": "Real Madrid",
+    "imagen": "realmadrid_2012_2017.png",
+    "precio": 95.00,
+    "temporada": "2012-2017",
+    "liga": "LaLiga",
+    "parche": false,
+    "nombreDorsal": null,
+    "numeroDorsal": null
+  },
+  {
+    "equipo": "Manchester City",
+    "imagen": "mancity_2012_2017.png",
+    "precio": 94.00,
+    "temporada": "2012-2017",
+    "liga": "Premier League",
+    "parche": false,
+    "nombreDorsal": null,
+    "numeroDorsal": null
+  },
+  {
+    "equipo": "Juventus",
+    "imagen": "juventus_2012_2017.png",
+    "precio": 90.00,
+    "temporada": "2012-2017",
+    "liga": "Serie A",
+    "parche": false,
+    "nombreDorsal": null,
+    "numeroDorsal": null
+  },
+  {
+    "equipo": "Borussia Dortmund",
+    "imagen": "dortmund_2012_2017.png",
+    "precio": 88.00,
+    "temporada": "2012-2017",
+    "liga": "Bundesliga",
+    "parche": false,
+    "nombreDorsal": null,
+    "numeroDorsal": null
+  },
+  {
+    "equipo": "Alemania",
+    "imagen": "alemania_2012_2017.png",
+    "precio": 90.00,
+    "temporada": "2012-2017",
+    "liga": "Selecciones",
+    "parche": false,
+    "nombreDorsal": null,
+    "numeroDorsal": null
+  },
+
+  {
+    "equipo": "Real Madrid",
+    "imagen": "realmadrid_2018_2022.png",
+    "precio": 100.00,
+    "temporada": "2018-2022",
+    "liga": "LaLiga",
+    "parche": false,
+    "nombreDorsal": null,
+    "numeroDorsal": null
+  },
+  {
+    "equipo": "Liverpool",
+    "imagen": "liverpool_2018_2022.png",
+    "precio": 98.00,
+    "temporada": "2018-2022",
+    "liga": "Premier League",
+    "parche": false,
+    "nombreDorsal": null,
+    "numeroDorsal": null
+  },
+  {
+    "equipo": "Inter",
+    "imagen": "inter_2018_2022.png",
+    "precio": 95.00,
+    "temporada": "2018-2022",
+    "liga": "Serie A",
+    "parche": false,
+    "nombreDorsal": null,
+    "numeroDorsal": null
+  },
+  {
+    "equipo": "Bayern Munich",
+    "imagen": "bayern_2018_2022.png",
+    "precio": 98.00,
+    "temporada": "2018-2022",
+    "liga": "Bundesliga",
+    "parche": false,
+    "nombreDorsal": null,
+    "numeroDorsal": null
+  },
+  {
+    "equipo": "Francia",
+    "imagen": "francia_2018_2022.png",
+    "precio": 95.00,
+    "temporada": "2018-2022",
+    "liga": "Selecciones",
+    "parche": false,
+    "nombreDorsal": null,
+    "numeroDorsal": null
+  },
+
+  {
+    "equipo": "Real Madrid",
+    "imagen": "realmadrid_2023_2026.png",
+    "precio": 110.00,
+    "temporada": "2023-2026",
+    "liga": "LaLiga",
+    "parche": false,
+    "nombreDorsal": null,
+    "numeroDorsal": null
+  },
+  {
+    "equipo": "Manchester City",
+    "imagen": "mancity_2023_2026.png",
+    "precio": 110.00,
+    "temporada": "2023-2026",
+    "liga": "Premier League",
+    "parche": false,
+    "nombreDorsal": null,
+    "numeroDorsal": null
+  },
+  {
+    "equipo": "Napoli",
+    "imagen": "napoli_2023_2026.png",
+    "precio": 105.00,
+    "temporada": "2023-2026",
+    "liga": "Serie A",
+    "parche": false,
+    "nombreDorsal": null,
+    "numeroDorsal": null
+  },
+  {
+    "equipo": "Bayern Munich",
+    "imagen": "bayern_2023_2026.png",
+    "precio": 108.00,
+    "temporada": "2023-2026",
+    "liga": "Bundesliga",
+    "parche": false,
+    "nombreDorsal": null,
+    "numeroDorsal": null
+  },
+  {
+    "equipo": "Argentina",
+    "imagen": "argentina_2023_2026.png",
+    "precio": 110.00,
+    "temporada": "2023-2026",
+    "liga": "Selecciones",
+    "parche": false,
+    "nombreDorsal": null,
+    "numeroDorsal": null
+  }
+]

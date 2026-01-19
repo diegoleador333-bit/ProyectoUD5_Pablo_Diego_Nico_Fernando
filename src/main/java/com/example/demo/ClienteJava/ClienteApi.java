@@ -1,56 +1,79 @@
 package com.example.demo.ClienteJava;
 
 import java.io.*;
-import java.net.*;
-import java.nio.charset.StandardCharsets;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 public class ClienteApi {
 
-	private static final String BASE_URL = "http://localhost:8080/admin/camisetas";
+	private static final String BASE_URL = "http://localhost:8080/admin";
 
-	public static String getCamisetas(String liga, String temporada) throws Exception {
-
-		String urlStr = BASE_URL + "?liga=" + URLEncoder.encode(liga, "UTF-8") + "&temporada=" + temporada;
-
-		HttpURLConnection conn = (HttpURLConnection) new URL(urlStr).openConnection();
-
-		conn.setRequestMethod("GET");
-
-		return leerRespuesta(conn);
-	}
-
-	// crear
+	//crear camiseta
 	public static void crearCamiseta(String json) throws Exception {
 
-		HttpURLConnection conn = (HttpURLConnection) new URL(BASE_URL).openConnection();
+		URL url = new URL(BASE_URL + "/camisetas");
+		HttpURLConnection con = (HttpURLConnection) url.openConnection();
 
-		conn.setRequestMethod("POST");
-		conn.setRequestProperty("Content-Type", "application/json");
-		conn.setDoOutput(true);
+		con.setRequestMethod("POST");
+		con.setRequestProperty("Content-Type", "application/json");
+		con.setDoOutput(true);
 
-		try (OutputStream os = conn.getOutputStream()) {
-			os.write(json.getBytes(StandardCharsets.UTF_8));
+		try (OutputStream os = con.getOutputStream()) {
+			os.write(json.getBytes());
 		}
 
-		leerRespuesta(conn);
+		con.getInputStream();
+		con.disconnect();
 	}
 
-	// borrar camiseta
+	//cambiar el precio
+	public static void cambiarPrecio(int id, double precio) throws Exception {
+
+		URL url = new URL(BASE_URL + "/camisetas/precio/" + id);
+		HttpURLConnection con = (HttpURLConnection) url.openConnection();
+
+		con.setRequestMethod("PUT");
+		con.setRequestProperty("Content-Type", "application/json");
+		con.setDoOutput(true);
+
+		String json = "{ \"precio\": " + precio + " }";
+
+		try (OutputStream os = con.getOutputStream()) {
+			os.write(json.getBytes());
+		}
+
+		con.getInputStream();
+		con.disconnect();
+	}
+
+	//eliminar camiseta por id
 	public static void eliminarCamiseta(int id) throws Exception {
 
-		HttpURLConnection conn = (HttpURLConnection) new URL(BASE_URL + "/" + id).openConnection();
+		URL url = new URL(BASE_URL + "/camisetas/" + id);
+		HttpURLConnection con = (HttpURLConnection) url.openConnection();
 
-		conn.setRequestMethod("DELETE");
-		leerRespuesta(conn);
+		con.setRequestMethod("DELETE");
+		con.getInputStream();
+		con.disconnect();
 	}
 
-	private static String leerRespuesta(HttpURLConnection conn) throws Exception {
-		BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+	//ve el stock 
+	public static String verStock(int id) throws Exception {
+
+		URL url = new URL(BASE_URL + "/stock/" + id);
+		HttpURLConnection con = (HttpURLConnection) url.openConnection();
+		con.setRequestMethod("GET");
+
+		BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
+
 		StringBuilder sb = new StringBuilder();
 		String linea;
+
 		while ((linea = br.readLine()) != null) {
 			sb.append(linea).append("\n");
 		}
+
+		con.disconnect();
 		return sb.toString();
 	}
 }

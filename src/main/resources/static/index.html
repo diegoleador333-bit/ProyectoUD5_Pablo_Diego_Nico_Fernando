@@ -131,6 +131,7 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
         </div>
         <div class="modal-body">
+
           <div class="mb-3">
             <label class="form-label">Email</label>
             <input id="loginEmail" class="form-control" type="email" placeholder="tu@email.com">
@@ -140,9 +141,7 @@
             <input id="loginPass" class="form-control" type="password" placeholder="••••••••">
           </div>
 
-          <div class="alert alert-secondary mb-0">
-            (Demo) Guardamos sesión en localStorage.
-          </div>
+        
         </div>
         <div class="modal-footer d-flex justify-content-between">
           <button class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#modalRegister">
@@ -163,33 +162,32 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
         </div>
         <div class="modal-body">
-          <div class="mb-3">
-            <label class="form-label">Nombre</label>
-            <input id="regName" class="form-control" type="text" placeholder="Tu nombre">
-          </div>
 
           <div class="mb-3">
-            <label class="form-label">Apellidos</label>
-            <input id="regApellido" class="form-control" type="text" placeholder="Tus apellidos">
-          </div>
+  <label class="form-label">Nombre</label>
+  <input id="regName" class="form-control" type="text" placeholder="Tu nombre">
+</div>
 
-          <div class="mb-3">
-            <label class="form-label">DNI</label>
-            <input id="regDni" class="form-control" type="text" placeholder="12345678A">
-          </div>
+<div class="mb-3">
+  <label class="form-label">Apellidos</label>
+  <input id="regApellido" class="form-control" type="text" placeholder="Tus apellidos">
+</div>
 
-          <div class="mb-3">
-            <label class="form-label">Email</label>
-            <input id="regEmail" class="form-control" type="email" placeholder="tu@email.com">
-          </div>
+<div class="mb-3">
+  <label class="form-label">DNI</label>
+  <input id="regDni" class="form-control" type="text" placeholder="12345678A">
+</div>
+
+<div class="mb-3">
+  <label class="form-label">Email</label>
+  <input id="regEmail" class="form-control" type="email" placeholder="tu@email.com">
+</div>
           <div class="mb-3">
             <label class="form-label">Contraseña</label>
             <input id="regPass" class="form-control" type="password" placeholder="••••••••">
           </div>
 
-          <div class="alert alert-secondary mb-0">
-            Registro de usuario.
-          </div>
+        
         </div>
         <div class="modal-footer d-flex justify-content-between">
           <button class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#modalLogin">
@@ -913,7 +911,7 @@
     };
 
     // =========  LOGIN/REGISTER  =========
- document.getElementById("btnLogin").onclick = async () => {
+document.getElementById("btnLogin").onclick = async () => {
   const correo = document.getElementById("loginEmail").value.trim();
   const pass   = document.getElementById("loginPass").value.trim();
 
@@ -921,7 +919,7 @@
 
   const resp = await fetch(`${API_BASE}/identificacion/login`, {
     method: "POST",
-    credentials: "include",              
+    credentials: "include",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ correo: correo, password: pass })
   });
@@ -929,10 +927,16 @@
   const txt = (await resp.text()).trim();
   toast(txt);
 
-  // MUY IMPORTANTE: comparación exacta (para no confundir "incorrectos" con "correcto")
   if (txt === "Login correcto") {
     await renderNavAuth();
     bootstrap.Modal.getInstance(document.getElementById("modalLogin"))?.hide();
+  } else {
+    //si falla, cierro sesión por si había una previa
+    await fetch(`${API_BASE}/identificacion/cerrar`, {
+      method: "POST",
+      credentials: "include"
+    });
+    await renderNavAuth();
   }
 };
 
@@ -987,17 +991,10 @@
     updateCartUI();
     toast("Carrito vaciado");
     };
-   updateCartUI()
-    // ========= INIT =========
-    // 1) cargar carrito guardado
-    loadCart();
-    updateCartUI();
-
-    // 2) navbar sesión
-    renderNavAuth();
-
-    // 3) mostrar catálogo completo al entrar
-    renderProducts(CATALOGO);
+   loadCart();
+updateCartUI();
+renderNavAuth();
+renderProducts(CATALOGO);
   </script>
 </body>
 </html>

@@ -5,8 +5,6 @@ import java.sql.SQLException;
 
 import org.springframework.jdbc.core.RowMapper;
 
-
-
 public class CamisetasMapper implements RowMapper<Camisetas> {
 	public Camisetas mapRow(ResultSet rs, int rowNum) throws SQLException {
 		Camisetas camiseta = new Camisetas(rs.getInt("id"), rs.getString("equipo"), rs.getString("imagen"),

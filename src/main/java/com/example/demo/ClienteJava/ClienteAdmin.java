@@ -10,12 +10,13 @@ public class ClienteAdmin {
 		int opcion;
 
 		do {
-			System.out.println("=== CLIENTE ADMIN ===");
+			System.out.println("CLIENTE ADMIN");
 			System.out.println("1. Crear camiseta");
 			System.out.println("2. Cambiar precio camiseta");
 			System.out.println("3. Eliminar camiseta");
-			System.out.println("4. Ver stock por talla (actualizar stock si quieres)");
+			System.out.println("4. Ver stock por talla");
 			System.out.println("5. Salir");
+			System.out.print("Elige una opción: ");
 
 			opcion = sc.nextInt();
 			sc.nextLine();
@@ -24,18 +25,6 @@ public class ClienteAdmin {
 				switch (opcion) {
 
 				case 1:
-					System.out.print("Liga: ");
-					String liga1 = sc.nextLine();
-
-					System.out.print("Temporada (año): ");
-					String temporada1 = sc.nextLine();
-
-					String respuesta = ClienteApi.getCamisetas(liga1, temporada1);
-
-					System.out.println(respuesta);
-					break;
-
-				case 2:
 					System.out.print("Equipo: ");
 					String equipo = sc.nextLine();
 
@@ -46,44 +35,51 @@ public class ClienteAdmin {
 					double precio = sc.nextDouble();
 					sc.nextLine();
 
-					System.out.print("Temporada: ");
-					String temporada2 = sc.nextLine();
+					System.out.print("Temporada (2000-2005...): ");
+					String temporada = sc.nextLine();
 
 					System.out.print("Liga: ");
-					String liga2 = sc.nextLine();
+					String liga = sc.nextLine();
 
-					String json = String.format("""
+					String json = """
 							{
 							  "equipo": "%s",
 							  "imagen": "%s",
 							  "precio": %.2f,
 							  "temporada": "%s",
-							  "liga": "%s",
-							  "parche": false,
-							  "nombreDorsal": "",
-							  "numeroDorsal": 0
+							  "liga": "%s"
 							}
-							""", equipo, imagen, precio, temporada2, liga2);
+							""".formatted(equipo, imagen, precio, temporada, liga);
 
 					ClienteApi.crearCamiseta(json);
-					System.out.println("Camiseta creada correctamente");
+					System.out.println("Camiseta creada");
+					break;
+
+				case 2:
+					System.out.print("ID camiseta: ");
+					int idPrecio = sc.nextInt();
+
+					System.out.print("Nuevo precio: ");
+					double nuevoPrecio = sc.nextDouble();
+
+					ClienteApi.cambiarPrecio(idPrecio, nuevoPrecio);
+					System.out.println("Precio actualizado");
 					break;
 
 				case 3:
-					System.out.print("ID de la camiseta: ");
-					int id = sc.nextInt();
-					sc.nextLine();
+					System.out.print("ID camiseta: ");
+					int idEliminar = sc.nextInt();
 
-					ClienteApi.eliminarCamiseta(id);
-					System.out.println("Camiseta eliminada correctamente");
+					ClienteApi.eliminarCamiseta(idEliminar);
+					System.out.println("Camiseta eliminada");
 					break;
 
-				case 7:
-					System.out.println("Saliendo del cliente admin...");
-					break;
+				case 4:
+					System.out.print("ID camiseta: ");
+					int idStock = sc.nextInt();
 
-				default:
-					System.out.println("Opción no válida");
+					String stock = ClienteApi.verStock(idStock);
+					System.out.println(stock);
 					break;
 				}
 
@@ -91,7 +87,7 @@ public class ClienteAdmin {
 				System.out.println("Error: " + e.getMessage());
 			}
 
-		} while (opcion != 0);
+		} while (opcion != 5);
 
 		sc.close();
 	}

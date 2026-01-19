@@ -15,7 +15,7 @@ import com.example.demo.Usuarios.UsuariosMapper;
 
 import jakarta.servlet.http.HttpSession;
 
-@CrossOrigin(origins = { "http://127.0.0.1:5500", "http://localhost:5500" })
+@CrossOrigin(origins = { "http://127.0.0.1:5500", "http://localhost:5500" }, allowCredentials = "true")
 @RestController
 @RequestMapping("/identificacion")
 public class Identificacion {
@@ -50,6 +50,7 @@ public class Identificacion {
 				new UsuariosMapper(), login.getCorreo(), login.getPassword());
 
 		if (encontrados.isEmpty()) {
+			session.invalidate(); // elimina sesión previa
 			return "Correo o contraseña incorrectos";
 		}
 
@@ -71,10 +72,10 @@ public class Identificacion {
 		Usuarios usuario = (Usuarios) session.getAttribute("usuario");
 
 		if (usuario == null) {
-			return "No hay ninguna sesion";
+			return "No has iniciado sesion";
 		}
 
 		return usuario;
-	}
 
+	}
 }

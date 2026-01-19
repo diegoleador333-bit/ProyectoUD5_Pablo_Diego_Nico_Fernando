@@ -1,0 +1,1002 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>90T — Reserva de camisetas</title>
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    .brand-logo { width: 44px; height: 44px; object-fit: contain; }
+    .card-img-top { height: 210px; object-fit: cover; background:#f3f4f6; }
+    .price { font-weight: 700; }
+    .muted { color:#6c757d; }
+  </style>
+</head>
+
+<body class="bg-light">
+
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+
+      <a class="navbar-brand d-flex align-items-center gap-2 fw-bold" href="#">
+        <img src="./logo-90t.png" class="brand-logo" alt="Logo 90T">
+        90T
+      </a>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMain">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navMain">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item"><a class="nav-link active" href="#">Home</a></li>
+        </ul>
+
+        <div class="d-flex align-items-center gap-2">
+          <!-- carrito -->
+          <button class="btn btn-outline-info" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCart">
+            Carrito <span class="badge bg-info text-dark" id="cartCount">0</span>
+          </button>
+
+          <!-- auth area -->
+          <div class="d-flex align-items-center gap-2" id="navAuthArea"></div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container py-4">
+
+    <!-- HEADER -->
+    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mb-3">
+      <div>
+        <h1 class="h3 mb-1">Catálogo de camisetas</h1>
+        <p class="muted mb-0">Reserva online y recoge en tienda (plazo máximo: 1 mes).</p>
+      </div>
+    </div>
+
+    <!-- FILTROS -->
+    <div class="card mb-4">
+      <div class="card-body">
+        <div class="row g-3 align-items-end">
+
+          <div class="col-12 col-md-4">
+            <label class="form-label">Buscar (equipo)</label>
+            <div class="input-group">
+              <input id="searchInput" type="text" class="form-control" placeholder="Real Madrid, Brasil...">
+              <button class="btn btn-outline-secondary" id="btnClearSearch">X</button>
+            </div>
+          </div>
+
+          <div class="col-6 col-md-2">
+            <label class="form-label">Liga</label>
+            <select class="form-select" id="filterLiga">
+              <option value="">Todas</option>
+              <option>LaLiga</option>
+              <option>Premier League</option>
+              <option>Serie A</option>
+              <option>Bundesliga</option>
+              <option>Selecciones</option>
+            </select>
+          </div>
+
+          <div class="col-6 col-md-2">
+            <label class="form-label">Temporada</label>
+            <select class="form-select" id="filterYear">
+              <option value="">Todas</option>
+              <option>2000-2005</option>
+              <option>2006-2011</option>
+              <option>2012-2017</option>
+              <option>2018-2022</option>
+              <option>2023-2026</option>
+            </select>
+          </div>
+
+          <div class="col-12 col-md-2">
+            <label class="form-label">Orden precio</label>
+            <select class="form-select" id="sortPrice">
+              <option value="asc">Menor a mayor</option>
+              <option value="desc">Mayor a menor</option>
+            </select>
+          </div>
+
+          <div class="col-12 col-md-2 d-grid">
+            <button class="btn btn-primary" id="btnApplyFilters">Aplicar</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- INFO: cuántas camisetas se ven -->
+    <div class="mb-2 muted">
+      Mostrando <strong id="countShown">0</strong> camisetas
+    </div>
+
+    <!-- GRID -->
+    <div class="row g-4" id="productsGrid"></div>
+
+  </main>
+
+  <!-- LOGIN -->
+  <div class="modal fade" id="modalLogin" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Iniciar sesión</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input id="loginEmail" class="form-control" type="email" placeholder="tu@email.com">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Contraseña</label>
+            <input id="loginPass" class="form-control" type="password" placeholder="••••••••">
+          </div>
+
+          <div class="alert alert-secondary mb-0">
+            (Demo) Guardamos sesión en localStorage.
+          </div>
+        </div>
+        <div class="modal-footer d-flex justify-content-between">
+          <button class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#modalRegister">
+            Ir a registro
+          </button>
+          <button class="btn btn-primary" id="btnLogin">Entrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- REGISTER -->
+  <div class="modal fade" id="modalRegister" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Registro</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label">Nombre</label>
+            <input id="regName" class="form-control" type="text" placeholder="Tu nombre">
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Apellidos</label>
+            <input id="regApellido" class="form-control" type="text" placeholder="Tus apellidos">
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">DNI</label>
+            <input id="regDni" class="form-control" type="text" placeholder="12345678A">
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input id="regEmail" class="form-control" type="email" placeholder="tu@email.com">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Contraseña</label>
+            <input id="regPass" class="form-control" type="password" placeholder="••••••••">
+          </div>
+
+          <div class="alert alert-secondary mb-0">
+            Registro de usuario.
+          </div>
+        </div>
+        <div class="modal-footer d-flex justify-content-between">
+          <button class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#modalLogin">
+            Volver a login
+          </button>
+          <button class="btn btn-warning" id="btnRegister">Crear cuenta</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- OFFCANVAS CARRITO -->
+  <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasCart" aria-labelledby="offcanvasCartLabel">
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title" id="offcanvasCartLabel">Carrito</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
+    </div>
+
+    <div class="offcanvas-body">
+      <div id="cartItems" class="vstack gap-2">
+        <p class="muted mb-0">Tu carrito está vacío.</p>
+      </div>
+
+      <hr>
+
+      <div class="d-flex justify-content-between">
+        <span class="muted">Subtotal</span>
+        <strong id="cartSubtotal">0€</strong>
+      </div>
+
+      <div class="d-grid gap-2 mt-3">
+        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalCheckout">
+          Comprar / Reservar
+        </button>
+        <button class="btn btn-outline-danger" id="btnClearCart">
+          Vaciar carrito
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL PRODUCTO -->
+  <div class="modal fade" id="modalProduct" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalProductTitle">Camiseta</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+
+        <div class="modal-body">
+          <div class="row g-3">
+            <div class="col-12 col-md-5">
+              <img id="modalImg" class="img-fluid rounded border" alt="Camiseta" style="height:260px; width:100%; object-fit:cover; background:#f3f4f6;">
+            </div>
+
+            <div class="col-12 col-md-7">
+              <p class="muted mb-1" id="modalProductMeta"></p>
+              <p class="h4 price mb-2" id="modalProductPrice">—</p>
+
+              <hr>
+
+              <div class="row g-3">
+                <div class="col-12 col-md-4">
+                  <label class="form-label">Talla</label>
+                  <select class="form-select" id="selSize">
+                    <option>S</option><option selected>M</option><option>L</option><option>XL</option>
+                  </select>
+                </div>
+
+                <div class="col-12 col-md-4">
+                  <label class="form-label">Nombre</label>
+                  <input class="form-control" id="inpName" type="text" placeholder="RONALDO">
+                </div>
+
+                <div class="col-12 col-md-4">
+                  <label class="form-label">Dorsal</label>
+                  <input class="form-control" id="inpNumber" type="number" min="0" max="99" placeholder="7">
+                </div>
+
+                <div class="col-12">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="chkPatch">
+                    <label class="form-check-label" for="chkPatch">
+                      Añadir parche (+5€)
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mt-3">
+                <p class="mb-1"><strong>Total estimado:</strong> <span id="estimatedTotal">—</span></p>
+                <p class="muted mb-0 small">* Precio final al confirmar compra.</p>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
+          <button class="btn btn-primary" id="btnAddToCart">Añadir a la cesta</button>
+          <button class="btn btn-success" id="btnBuyNow">Comprar</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL CHECKOUT -->
+  <div class="modal fade" id="modalCheckout" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h5 class="modal-title">Checkout</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+
+        <div class="modal-body">
+          <div class="row g-3">
+
+            <div class="col-12 col-md-6">
+              <h6 class="mb-2">Datos del usuario</h6>
+
+              <div class="mb-2">
+                <label class="form-label">Nombre</label>
+                <input class="form-control" id="chkName" placeholder="Nombre y apellidos">
+              </div>
+
+              <div class="mb-2">
+                <label class="form-label">Email</label>
+                <input class="form-control" id="chkEmail" type="email" placeholder="tu@email.com">
+              </div>
+
+              <div class="mb-2">
+                <label class="form-label">Teléfono</label>
+                <input class="form-control" id="chkPhone" placeholder="600 000 000">
+              </div>
+
+              <div class="alert alert-info mb-0">
+                Recogida en tienda en un plazo máximo de <strong>1 mes</strong>.
+              </div>
+            </div>
+
+            <div class="col-12 col-md-6">
+              <h6 class="mb-2">Resumen</h6>
+
+              <ul class="list-group">
+                <li class="list-group-item d-flex justify-content-between">
+                  <span>Subtotal</span>
+                  <strong id="sumSubtotal">0€</strong>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                  <span>Extras (parches)</span>
+                  <strong id="sumExtras">0€</strong>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                  <span>Total</span>
+                  <strong id="sumTotal">0€</strong>
+                </li>
+              </ul>
+
+              <div class="mt-3">
+                <button class="btn btn-success w-100" id="btnConfirmOrder">
+                  Confirmar reserva
+                </button>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST (mensajitos) -->
+  <div class="position-fixed bottom-0 end-0 p-3" style="z-index:1080">
+    <div id="appToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="toast-header">
+        <strong class="me-auto">90T</strong>
+        <small class="text-muted">ahora</small>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Cerrar"></button>
+      </div>
+      <div class="toast-body" id="toastBody">Mensaje</div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+
+    const API_BASE = "http://localhost:8080";
+
+
+   
+    const CATALOGO = [
+      {
+        "equipo": "Real Madrid",
+        "imagen": "realmadrid_2000_2005.png",
+        "precio": 85.00,
+        "temporada": "2000-2005",
+        "liga": "LaLiga"
+      },
+      {
+        "equipo": "FC Barcelona",
+        "imagen": "barcelona_2000_2005.png",
+        "precio": 85.00,
+        "temporada": "2000-2005",
+        "liga": "LaLiga"
+      },
+      {
+        "equipo": "Manchester United",
+        "imagen": "manutd_2000_2005.png",
+        "precio": 88.00,
+        "temporada": "2000-2005",
+        "liga": "Premier League"
+      },
+      {
+        "equipo": "Juventus",
+        "imagen": "juventus_2000_2005.png",
+        "precio": 82.00,
+        "temporada": "2000-2005",
+        "liga": "Serie A"
+      },
+      {
+        "equipo": "Bayern Munich",
+        "imagen": "bayern_2000_2005.png",
+        "precio": 87.00,
+        "temporada": "2000-2005",
+        "liga": "Bundesliga"
+      },
+      {
+        "equipo": "Brasil",
+        "imagen": "brasil_2000_2005.png",
+        "precio": 80.00,
+        "temporada": "2000-2005",
+        "liga": "Selecciones"
+      },
+
+      {
+        "equipo": "Real Madrid",
+        "imagen": "realmadrid_2006_2011.png",
+        "precio": 90.00,
+        "temporada": "2006-2011",
+        "liga": "LaLiga"
+      },
+      {
+        "equipo": "FC Barcelona",
+        "imagen": "barcelona_2006_2011.png",
+        "precio": 92.00,
+        "temporada": "2006-2011",
+        "liga": "LaLiga"
+      },
+      {
+        "equipo": "Chelsea",
+        "imagen": "chelsea_2006_2011.png",
+        "precio": 90.00,
+        "temporada": "2006-2011",
+        "liga": "Premier League"
+      },
+      {
+        "equipo": "AC Milan",
+        "imagen": "milan_2006_2011.png",
+        "precio": 88.00,
+        "temporada": "2006-2011",
+        "liga": "Serie A"
+      },
+      {
+        "equipo": "Bayern Munich",
+        "imagen": "bayern_2006_2011.png",
+        "precio": 89.00,
+        "temporada": "2006-2011",
+        "liga": "Bundesliga"
+      },
+      {
+        "equipo": "España",
+        "imagen": "espana_2006_2011.png",
+        "precio": 85.00,
+        "temporada": "2006-2011",
+        "liga": "Selecciones"
+      },
+
+      {
+        "equipo": "FC Barcelona",
+        "imagen": "barcelona_2012_2017.png",
+        "precio": 95.00,
+        "temporada": "2012-2017",
+        "liga": "LaLiga"
+      },
+      {
+        "equipo": "Real Madrid",
+        "imagen": "realmadrid_2012_2017.png",
+        "precio": 95.00,
+        "temporada": "2012-2017",
+        "liga": "LaLiga"
+      },
+      {
+        "equipo": "Manchester City",
+        "imagen": "mancity_2012_2017.png",
+        "precio": 94.00,
+        "temporada": "2012-2017",
+        "liga": "Premier League"
+      },
+      {
+        "equipo": "Juventus",
+        "imagen": "juventus_2012_2017.png",
+        "precio": 90.00,
+        "temporada": "2012-2017",
+        "liga": "Serie A"
+      },
+      {
+        "equipo": "Borussia Dortmund",
+        "imagen": "dortmund_2012_2017.png",
+        "precio": 88.00,
+        "temporada": "2012-2017",
+        "liga": "Bundesliga"
+      },
+      {
+        "equipo": "Alemania",
+        "imagen": "alemania_2012_2017.png",
+        "precio": 90.00,
+        "temporada": "2012-2017",
+        "liga": "Selecciones"
+      },
+
+      {
+        "equipo": "Real Madrid",
+        "imagen": "realmadrid_2018_2022.png",
+        "precio": 100.00,
+        "temporada": "2018-2022",
+        "liga": "LaLiga"
+      },
+      {
+        "equipo": "Liverpool",
+        "imagen": "liverpool_2018_2022.png",
+        "precio": 98.00,
+        "temporada": "2018-2022",
+        "liga": "Premier League"
+      },
+      {
+        "equipo": "Inter",
+        "imagen": "inter_2018_2022.png",
+        "precio": 95.00,
+        "temporada": "2018-2022",
+        "liga": "Serie A"
+      },
+      {
+        "equipo": "Bayern Munich",
+        "imagen": "bayern_2018_2022.png",
+        "precio": 98.00,
+        "temporada": "2018-2022",
+        "liga": "Bundesliga"
+      },
+      {
+        "equipo": "Francia",
+        "imagen": "francia_2018_2022.png",
+        "precio": 95.00,
+        "temporada": "2018-2022",
+        "liga": "Selecciones"
+      },
+
+      {
+        "equipo": "Real Madrid",
+        "imagen": "realmadrid_2023_2026.png",
+        "precio": 110.00,
+        "temporada": "2023-2026",
+        "liga": "LaLiga"
+      },
+      {
+        "equipo": "Manchester City",
+        "imagen": "mancity_2023_2026.png",
+        "precio": 110.00,
+        "temporada": "2023-2026",
+        "liga": "Premier League"
+      },
+      {
+        "equipo": "Napoli",
+        "imagen": "napoli_2023_2026.png",
+        "precio": 105.00,
+        "temporada": "2023-2026",
+        "liga": "Serie A"
+      },
+      {
+        "equipo": "Bayern Munich",
+        "imagen": "bayern_2023_2026.png",
+        "precio": 108.00,
+        "temporada": "2023-2026",
+        "liga": "Bundesliga"
+      },
+      {
+        "equipo": "Argentina",
+        "imagen": "argentina_2023_2026.png",
+        "precio": 110.00,
+        "temporada": "2023-2026",
+        "liga": "Selecciones"
+      }
+    ];
+
+    // ========= 2) STORAGE (para que NO se pierda el carrito al recargar) =========
+    // Esto sí compensa hacerlo con 2 mini funciones, para no copiar 10 líneas muchas veces.
+    const CART_KEY = "cart90t";
+    let cart = []; //array donde se va a guardar el carrito
+
+    function saveCart() {
+      localStorage.setItem(CART_KEY, JSON.stringify(cart));
+    }
+
+    function loadCart() {
+      try {
+        const raw = localStorage.getItem(CART_KEY);
+        cart = raw ? JSON.parse(raw) : [];
+        if (!Array.isArray(cart)) cart = [];
+      } catch {
+        cart = [];
+      }
+    }
+
+    
+
+
+    // Formatear euros 
+    function euros(n) {
+      return Number(n).toFixed(2) + "€";
+    }
+
+    // Toast para errores u otras cosas que necesiten un mensaje por pantalla, se le pasa por parametro el mensaje que se vaya a poner 
+    function toast(msg) {
+      document.getElementById("toastBody").textContent = msg;
+      bootstrap.Toast.getOrCreateInstance(document.getElementById("appToast"), { delay: 1500 }).show();
+    }
+
+    //==================NAVBAR==================
+    async function renderNavAuth() {
+  const area = document.getElementById("navAuthArea");
+
+  try {
+    const resp = await fetch(`${API_BASE}/identificacion/perfil`, {
+      credentials: "include"
+    });
+
+    const user = await resp.json(); // user será null si no hay sesión
+
+    if (!user) throw new Error("No session");
+
+    // Hay sesión -> muestro dropdown
+    area.innerHTML = `
+      <div class="dropdown">
+        <button class="btn btn-outline-light dropdown-toggle" data-bs-toggle="dropdown">
+          ${user.nombre || "Mi cuenta"}
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end">
+          <li><span class="dropdown-item-text muted">${user.correo || ""}</span></li>
+          <li><hr class="dropdown-divider"></li>
+          <li><button class="dropdown-item text-danger" id="btnLogout">Cerrar sesión</button></li>
+        </ul>
+      </div>
+    `;
+
+    document.getElementById("btnLogout").onclick = async () => {
+      await fetch(`${API_BASE}/identificacion/cerrar`, {
+        method: "POST",
+        credentials: "include"
+      });
+      toast("Sesión cerrada");
+      renderNavAuth();
+    };
+
+  } catch (e) {
+    // No hay sesión -> muestro login/registro
+    area.innerHTML = `
+      <button class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#modalLogin">Login</button>
+      <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalRegister">Registro</button>
+    `;
+  }
+}
+
+
+    //====================================
+
+    
+    // Entra una lista y se dibuja tal cual (sin paginar).
+   function renderProducts(list) {
+
+  // 1. Cogemos el contenedor donde van las cards
+  const grid = document.getElementById("productsGrid");
+
+  // 2. Lo vaciamos entero (borramos cards anteriores)
+  grid.innerHTML = "";
+
+  // 3. Mostramos cuántos productos hay
+  document.getElementById("countShown").textContent = list.length;
+
+  // 4. Si NO hay productos, mostramos un mensaje y salimos
+  if (list.length === 0) {
+    grid.innerHTML =
+      '<div class="col-12">' +
+        '<div class="alert alert-warning">' +
+          'No hay camisetas con esos filtros.' +
+        '</div>' +
+      '</div>';
+    return;
+  }
+
+  // 5. Recorremos la lista producto a producto
+  for (let i = 0; i < list.length; i++) {
+
+    const p = list[i]; // producto actual
+
+    // 6. Creamos el HTML de UNA card
+    const cardHTML =
+      '<div class="col-12 col-md-4">' +
+        '<div class="card h-100 shadow-sm">' +
+
+          '<img src="' + p.imagen + '" class="card-img-top" alt="' + p.equipo + '">' +
+
+          '<div class="card-body d-flex flex-column">' +
+            '<h5 class="card-title">' + p.equipo + '</h5>' +
+
+            '<p class="text-muted">' +
+              'Liga: <strong>' + p.liga + '</strong><br>' +
+              'Temporada: <strong>' + p.temporada + '</strong>' +
+            '</p>' +
+
+            '<div class="mt-auto d-flex justify-content-between align-items-center">' +
+              '<span class="fw-bold">' + p.precio.toFixed(2) + '€</span>' +
+              '<button class="btn btn-sm btn-primary btn-open">Ver / Reservar</button>' +
+            '</div>' +
+          '</div>' +
+
+        '</div>' +
+      '</div>';
+
+    // 7. Añadimos la card al grid
+    grid.insertAdjacentHTML("beforeend", cardHTML);
+
+    // 8. Cogemos EL ÚLTIMO botón que acabamos de crear
+    const buttons = grid.getElementsByClassName("btn-open");
+    const lastButton = buttons[buttons.length - 1];
+
+    // 9. Al hacer click, abrimos el modal con ESTE producto
+    lastButton.onclick = function () {
+      openProduct(p);
+    };
+  }
+}
+
+
+    // =========FILTROS=========
+    function applyFiltersAndRender() {
+      const q = document.getElementById("searchInput").value.trim().toLowerCase();
+      const liga = document.getElementById("filterLiga").value;
+      const temp = document.getElementById("filterYear").value;
+      const order = document.getElementById("sortPrice").value;
+
+      let list = [...CATALOGO];
+
+      // buscar por equipo
+      if (q) list = list.filter(p => p.equipo.toLowerCase().includes(q));
+
+      // filtrar liga
+      if (liga) list = list.filter(p => p.liga === liga);
+
+      // filtrar temporada
+      if (temp) list = list.filter(p => p.temporada === temp);
+
+      // ordenar por precio
+      list.sort((a,b) => order === "asc" ? a.precio - b.precio : b.precio - a.precio);
+
+      renderProducts(list);
+    }
+
+    // =========PERSONALIZAR PRODUCTO Y AÑADIR=========
+    let currentProduct = null;
+
+    function openProduct(product) {
+      currentProduct = product;
+
+      document.getElementById("modalProductTitle").textContent = product.equipo;
+      document.getElementById("modalProductMeta").textContent = `${product.liga} · ${product.temporada}`;
+      document.getElementById("modalProductPrice").textContent = euros(product.precio);
+
+      // imagen
+      document.getElementById("modalImg").src = product.imagen;
+
+      // reset campos
+      document.getElementById("selSize").value = "M";
+      document.getElementById("inpName").value = "";
+      document.getElementById("inpNumber").value = "";
+      document.getElementById("chkPatch").checked = false;
+
+      // total estimado inicial
+      document.getElementById("estimatedTotal").textContent = euros(product.precio);
+
+      bootstrap.Modal.getOrCreateInstance(document.getElementById("modalProduct")).show();
+    }
+
+    //CUANDO SE MARCA EL PARCHE DE LA LIGA SE AÑADE EL PRECIO DEL PARCHE AL PRECIO FINAL
+    document.getElementById("chkPatch").onchange = () => {
+      if (!currentProduct) return;
+      const extra = document.getElementById("chkPatch").checked ? 5 : 0;
+      document.getElementById("estimatedTotal").textContent = euros(currentProduct.precio + extra);
+    };
+
+    // Añadir al carrito 
+    document.getElementById("btnAddToCart").onclick = () => {
+      if (!currentProduct) return;
+
+      const dorsal = document.getElementById("inpNumber").value.trim();
+      if (dorsal && (Number(dorsal) < 0 || Number(dorsal) > 99)) {
+        toast("Dorsal inválido (0-99)"); //COMPROBAR QUE NO SE HA INTRODUCIDO U DORSAR MENOR QUE 0 O MAYOR QUE 99
+        return;
+      }
+
+      cart.push({ //se crea un objto de la camiseta y la personalizacion elegida se guarda en el carrito y se actualiza la pantalla
+        equipo: currentProduct.equipo,
+        imagen: currentProduct.imagen,
+        liga: currentProduct.liga,
+        temporada: currentProduct.temporada,
+        precio: currentProduct.precio,
+        talla: document.getElementById("selSize").value,
+        nombreDorsal: document.getElementById("inpName").value.trim() || null,
+        numeroDorsal: dorsal ? Number(dorsal) : null,
+        parche: document.getElementById("chkPatch").checked
+      });
+
+      saveCart();
+      updateCartUI();
+      toast("Añadido al carrito");
+
+      bootstrap.Modal.getInstance(document.getElementById("modalProduct"))?.hide();
+    };
+
+    // Comprar se añade al carrito y se muestra la ventana de checkout
+    document.getElementById("btnBuyNow").onclick = () => {
+      document.getElementById("btnAddToCart").click(); // reutilizamos el mismo flujo
+      bootstrap.Offcanvas.getOrCreateInstance(document.getElementById("offcanvasCart")).show();
+      bootstrap.Modal.getOrCreateInstance(document.getElementById("modalCheckout")).show();
+    };
+
+    //==================CARRITO==================
+    function updateCartUI() {
+      document.getElementById("cartCount").textContent = cart.length;
+
+      const cartItems = document.getElementById("cartItems");
+
+      if (cart.length === 0) {
+        cartItems.innerHTML = `<p class="muted mb-0">Tu carrito está vacío.</p>`; //si el carrito esta vacio
+      } else {
+        cartItems.innerHTML = "";
+        cart.forEach((it, i) => {//se coge lo que hay en el carrito
+          const extras = [];
+          extras.push(`Talla: ${it.talla}`);
+          if (it.nombreDorsal) extras.push(`Nombre: ${it.nombreDorsal}`);
+          if (it.numeroDorsal !== null) extras.push(`Dorsal: ${it.numeroDorsal}`);
+          if (it.parche) extras.push(`Parche (+5€)`);
+
+          cartItems.insertAdjacentHTML("beforeend", `
+            <div class="card">
+              <div class="card-body py-2">
+                <div class="d-flex justify-content-between align-items-start">
+                  <div>
+                    <div class="fw-bold">${it.equipo}</div>
+                    <div class="muted small">${extras.join(" · ")}</div>
+                  </div>
+                  <button class="btn btn-sm btn-outline-danger" data-remove="${i}">Quitar</button>
+                </div>
+              </div>
+            </div>
+          `);
+        });
+
+        // Quitar item, cuando hago click en el carrito, si pulso el boton de quitar, se ve el producto que es, lo elimino guardo el cambio y actualizo la pantalla
+        cartItems.onclick = (e) => {
+          const btn = e.target.closest("button[data-remove]");
+          if (!btn) return;
+          cart.splice(Number(btn.dataset.remove), 1);
+          saveCart();
+          updateCartUI();
+        };
+      }
+
+      // subtotal 
+      let subtotal = 0;
+      let extrasParches = 0;
+      cart.forEach(it => {
+        subtotal += it.precio;
+        if (it.parche) { subtotal += 5; extrasParches += 5; } //se suman al total apra calcular el final
+      });
+
+      document.getElementById("cartSubtotal").textContent = euros(subtotal);
+      document.getElementById("sumSubtotal").textContent = euros(subtotal - extrasParches);
+      document.getElementById("sumExtras").textContent = euros(extrasParches);
+      document.getElementById("sumTotal").textContent = euros(subtotal);
+       
+    };
+
+    // Confirmar pedido 
+    document.getElementById("btnConfirmOrder").onclick = () => {
+      if (cart.length === 0) {
+        toast("El carrito está vacío");
+        return;
+      }
+
+      // Aquí iría tu API (POST /orders). En demo, solo vaciamos.
+      toast("Reserva confirmada (demo)");
+      cart = [];
+      saveCart();
+      updateCartUI();
+
+      bootstrap.Modal.getInstance(document.getElementById("modalCheckout"))?.hide();
+      bootstrap.Offcanvas.getInstance(document.getElementById("offcanvasCart"))?.hide();
+    };
+
+    // =========  LOGIN/REGISTER  =========
+ document.getElementById("btnLogin").onclick = async () => {
+  const email = document.getElementById("loginEmail").value.trim();
+  const pass  = document.getElementById("loginPass").value.trim();
+
+  if (!email || !pass) return toast("Rellena email y contraseña");
+
+  const resp = await fetch(`${API_BASE}/identificacion/login`, {
+    method: "POST",
+    credentials: "include",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ correo: email, password: pass })
+  });
+
+  const txt = await resp.text();
+  toast(txt);
+
+  if (txt.toLowerCase().includes("login correcto")) {
+    await renderNavAuth();
+    bootstrap.Modal.getInstance(document.getElementById("modalLogin"))?.hide();
+  }
+};
+
+
+
+   document.getElementById("btnRegister").onclick = async () => {
+  const nombre   = document.getElementById("regName").value.trim();
+  const apellido = document.getElementById("regApellido").value.trim();
+  const dni      = document.getElementById("regDni").value.trim();
+  const correo   = document.getElementById("regEmail").value.trim();
+  const pass     = document.getElementById("regPass").value.trim();
+
+  if (!nombre || !apellido || !dni || !correo || !pass) {
+    return toast("Rellena todos los campos");
+  }
+
+  const resp = await fetch(`${API_BASE}/identificacion/registro`, {
+    method: "POST",
+    credentials: "include",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      nombre: nombre,
+      apellido: apellido,
+      dni: dni,
+      correo: correo,
+      password: pass
+    })
+  });
+
+  const txt = await resp.text();
+  toast(txt);
+
+  if (txt.toLowerCase().includes("registrado correctamente")) {
+    await renderNavAuth();
+    bootstrap.Modal.getInstance(document.getElementById("modalRegister"))?.hide();
+  }
+};
+
+    // =========BOTONES FILTROS=========
+    document.getElementById("btnApplyFilters").onclick = applyFiltersAndRender;//Se aplican los filtros
+
+    document.getElementById("btnClearSearch").onclick = () => { //boton x para vcaciar la barra de busqueda
+      document.getElementById("searchInput").value = "";
+      applyFiltersAndRender();
+    };
+
+
+    // Vaciar carrito
+   document.getElementById("btnClearCart").onclick = () => {
+    cart = [];
+    saveCart();
+    updateCartUI();
+    toast("Carrito vaciado");
+    };
+   updateCartUI()
+    // ========= INIT =========
+    // 1) cargar carrito guardado
+    loadCart();
+    updateCartUI();
+
+    // 2) navbar sesión
+    renderNavAuth();
+
+    // 3) mostrar catálogo completo al entrar
+    renderProducts(CATALOGO);
+  </script>
+</body>
+</html>

@@ -25,23 +25,17 @@ public class camisetasEndpoints {
 
 	@GetMapping("/todas")
 	public List<Camisetas> mostrarCamisetas(HttpSession session) {
-		Usuarios usuario = (Usuarios) session.getAttribute("usuario");
-		String sql = "SELECT id, imagen, equipo, precio, liga FROM camisetas";
-
-		List<Camisetas> misCamisetas = jdbcTemplate.query(sql, new CamisetasMapper());
-
-		return misCamisetas;
+		String sql = "SELECT id, imagen, equipo, precio, temporada, liga, parche, nombreDorsal, numeroDorsal FROM camisetas";
+		return jdbcTemplate.query(sql, new CamisetasMapper());
 	}
 
-	@GetMapping("/todas")
+	@GetMapping("/{unId}")
 	public List<Camisetas> mostrarCamisetasById(@PathVariable int unId, HttpSession session) {
-		String sql = "SELECT c.id, c.equipo, c.imagen, c.precio, c.temporada, c.liga, c.nombreDorsal, c.numeroDorsal, c.parche, s.stockS, s.stockM, s.stockL, s.stockXL"
-				+ "FROM Camisetas c" + "INNER JOIN StockPorTalla s ON c.id = s.camiseta_Id"
-				+ "WHERE c.id = :idCamisetaSeleccionada";
-		Usuarios usuario = (Usuarios) session.getAttribute("usuario");
-		List<Camisetas> misCamisetas = jdbcTemplate.query(sql, new CamisetasMapper());
 
-		return misCamisetas;
+		String sql = "SELECT c.id, c.equipo, c.imagen, c.precio, c.temporada, c.liga, "
+				+ "c.nombreDorsal, c.numeroDorsal, c.parche " + "FROM Camisetas c " + "WHERE c.id = ?";
+
+		return jdbcTemplate.query(sql, new CamisetasMapper(), unId);
 	}
 
 }

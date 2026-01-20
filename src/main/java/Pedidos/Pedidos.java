@@ -8,14 +8,14 @@ public class Pedidos {
 
 	// Atributos
 	private int id;
-	private Usuarios usuarioId; // Mapeo de usuario_Id
+	private int usuarioId; // Mapeo de usuario_Id
 	private Date fechaPedido;
 	private double precioTotal;
 
 	public Pedidos() {
 	}
 
-	public Pedidos(int id, Usuarios usuarioId, Date fechaPedido, double precioTotal) {
+	public Pedidos(int id, int usuarioId, Date fechaPedido, double precioTotal) {
 		this.id = id;
 		this.usuarioId = usuarioId;
 		this.fechaPedido = fechaPedido;
@@ -32,11 +32,11 @@ public class Pedidos {
 		this.id = id;
 	}
 
-	public Usuarios getUsuarioId() {
+	public int getUsuarioId() {
 		return usuarioId;
 	}
 
-	public void setUsuarioId(Usuarios usuarioId) {
+	public void setUsuarioId(int usuarioId) {
 		this.usuarioId = usuarioId;
 	}
 

@@ -1,5 +1,6 @@
 package com.example.demo.Endpoints;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.Carrito.CarritoMapper;
 import com.example.demo.Usuarios.Usuarios;
 import com.example.demo.Usuarios.UsuariosMapper;
 
@@ -28,7 +30,7 @@ public class Identificacion {
 
 	@PostMapping("/registro")
 	public String registro(@RequestBody Usuarios nuevo, HttpSession session) {
-
+		Date fecha = new Date();
 		List<Usuarios> existentes = jdbcTemplate.query("SELECT * FROM Usuarios WHERE correo = ?", new UsuariosMapper(),
 				nuevo.getCorreo());
 
@@ -38,6 +40,12 @@ public class Identificacion {
 
 		jdbcTemplate.update("INSERT INTO Usuarios (DNI, nombre, apellido, correo, pwd) VALUES (?, ?, ?, ?, ?)",
 				nuevo.getDni(), nuevo.getNombre(), nuevo.getApellido(), nuevo.getCorreo(), nuevo.getPassword());
+
+		Usuarios x = jdbcTemplate.queryForObject("SELECT * FROM Usuarios WHERE correo = ?", new UsuariosMapper(),
+				nuevo.getCorreo());
+
+		jdbcTemplate.update("INSERT INTO Carrito (usuario_Id, precioTotal, fechaCreacion) VALUES (?, ?, ?)",
+				x.getId(), 0, fecha);
 
 		session.setAttribute("usuario", nuevo);
 		return "Usuario registrado correctamente";

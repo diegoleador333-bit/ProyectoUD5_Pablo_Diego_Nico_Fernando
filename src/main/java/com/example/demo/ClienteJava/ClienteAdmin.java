@@ -45,11 +45,11 @@ public class ClienteAdmin {
 							{
 							  "equipo": "%s",
 							  "imagen": "%s",
-							  "precio": %.2f,
+							  "precio": %s,
 							  "temporada": "%s",
 							  "liga": "%s"
 							}
-							""".formatted(equipo, imagen, precio, temporada, liga);
+							""".formatted(equipo, imagen, String.valueOf(precio), temporada, liga);
 
 					ClienteApi.crearCamiseta(json);
 					System.out.println("Camiseta creada");

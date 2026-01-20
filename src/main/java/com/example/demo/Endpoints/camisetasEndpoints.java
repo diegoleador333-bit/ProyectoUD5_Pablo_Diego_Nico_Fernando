@@ -16,6 +16,8 @@ import com.example.demo.Camisetas.CamisetasMapper;
 import com.example.demo.Carrito.Carrito;
 import com.example.demo.Carrito.CarritoMapper;
 import com.example.demo.CarritoContenido.CarritoContenido;
+import com.example.demo.Stock.StockMapper;
+import com.example.demo.Stock.StockPorTalla;
 import com.example.demo.Usuarios.Usuarios;
 
 import jakarta.servlet.http.HttpSession;
@@ -65,18 +67,42 @@ public class camisetasEndpoints {
 			return "No se ha podido cambiar el precio a la camiseta";
 	}
 
-	@PostMapping("/eliminarCamiseta")
-	public String eliminarCamisetas(HttpSession session, @RequestBody Camisetas camiseta) {
+	@PostMapping("/eliminarCamiseta/{id}")
+	public String eliminarCamisetas(HttpSession session, @PathVariable int id) {
 		Usuarios usuario = (Usuarios) session.getAttribute("usuario");
 		if (usuario == null)
 			return "No has iniciado sesion";
-		String sql = "delete from clientes where id=?";
+		String sql = "DELETE FROM Camisetas WHERE id = ?";
 
-		int resultado = jdbcTemplate.update(sql, camiseta.getId());
+		try {
+			int resultado = jdbcTemplate.update(sql, id);
+			if (resultado == 1)
+				return "Camiseta eliminada con exito";
+			else
+				return "No se ha encontrado la camiseta con ese ID";
+		} catch (Exception e) {
+			return "Error al eliminar: Es posible que la camiseta esté en algún pedido histórico.";
+		}
+	}
+
+	@GetMapping("/verStock")
+	public List<StockPorTalla> verStockPorTalla() {
+		return jdbcTemplate.query("select * from StockPorTalla", new StockMapper());
+	}
+
+	@PostMapping("/actualizarStock/{idCamiseta}")
+	public String actualizarStockCamisetas(HttpSession session, @PathVariable int idCamiseta,
+			@RequestBody StockPorTalla stock) {
+		Usuarios usuario = (Usuarios) session.getAttribute("usuario");
+		if (usuario == null)
+			return "No has iniciado sesion";
+		String sql = "UPDATE StockPorTalla SET stockS = ?, stockM = ?, stockL = ?, stockXL = ? WHERE camiseta_Id = ?";
+		int resultado = jdbcTemplate.update(sql, stock.getStockS(), stock.getStockM(), stock.getStockL(),
+				stock.getStockXL(), idCamiseta);
 		if (resultado == 1)
-			return "Camiseta eliminada con exito";
+			return "Stock actualizado con exito";
 		else
-			return "No se ha podido eliminar la camiseta";
+			return "No se pudo actualizar el stock (¿ID de camiseta incorrecto?)";
 	}
 
 	@PostMapping("/camisetas/{idCamiseta}")

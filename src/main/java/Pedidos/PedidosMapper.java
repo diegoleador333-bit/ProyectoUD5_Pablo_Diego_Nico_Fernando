@@ -9,7 +9,6 @@ import com.example.demo.Usuarios.Usuarios;
 
 public class PedidosMapper implements RowMapper<Pedidos> {
 
-	@Override
 	public Pedidos mapRow(ResultSet rs, int rowNum) throws SQLException {
 		Pedidos pedidos = new Pedidos(rs.getInt("id"), (Usuarios) rs.getObject("usuario_Id"), rs.getDate("fechaPedido"),
 				rs.getDouble("precioTotal"));

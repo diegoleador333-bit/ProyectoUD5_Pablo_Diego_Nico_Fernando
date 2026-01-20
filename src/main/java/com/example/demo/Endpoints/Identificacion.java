@@ -1,5 +1,7 @@
 package com.example.demo.Endpoints;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.List;
 
@@ -30,42 +32,75 @@ public class Identificacion {
 
 	@PostMapping("/registro")
 	public String registro(@RequestBody Usuarios nuevo, HttpSession session) {
-		Date fecha = new Date();
-		List<Usuarios> existentes = jdbcTemplate.query("SELECT * FROM Usuarios WHERE correo = ?", new UsuariosMapper(),
-				nuevo.getCorreo());
+		try {
+			Date fecha = new Date();
+			List<Usuarios> existentes = jdbcTemplate.query("SELECT * FROM Usuarios WHERE correo = ?",
+					new UsuariosMapper(), nuevo.getCorreo());
 
-		if (!existentes.isEmpty()) {
-			return "El usuario ya existe";
+			if (!existentes.isEmpty()) {
+				return "El usuario ya existe";
+			}
+			MessageDigest md = MessageDigest.getInstance("SHA-256");
+			byte[] resumen = md.digest(nuevo.getPassword().getBytes());
+
+			StringBuilder hexPwd = new StringBuilder();
+			for (byte b : resumen) {
+				String hex = Integer.toHexString(0xff & b);
+				if (hex.length() == 1)
+					hexPwd.append('0');
+				hexPwd.append(hex);
+			}
+			String hashPwd = hexPwd.toString();
+
+			jdbcTemplate.update("INSERT INTO Usuarios (DNI, nombre, apellido, correo, pwd) VALUES (?, ?, ?, ?, ?)",
+					nuevo.getDni(), nuevo.getNombre(), nuevo.getApellido(), nuevo.getCorreo(), hashPwd);
+
+			Usuarios x = jdbcTemplate.queryForObject("SELECT * FROM Usuarios WHERE correo = ?", new UsuariosMapper(),
+					nuevo.getCorreo());
+
+			jdbcTemplate.update("INSERT INTO Carrito (usuario_Id, precioTotal, fechaCreacion) VALUES (?, ?, ?)",
+					x.getId(), 0, fecha);
+
+			session.setAttribute("usuario", nuevo);
+			return "Usuario registrado correctamente";
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			return "No se pudo registrar correctamente";
 		}
-
-		jdbcTemplate.update("INSERT INTO Usuarios (DNI, nombre, apellido, correo, pwd) VALUES (?, ?, ?, ?, ?)",
-				nuevo.getDni(), nuevo.getNombre(), nuevo.getApellido(), nuevo.getCorreo(), nuevo.getPassword());
-
-		Usuarios x = jdbcTemplate.queryForObject("SELECT * FROM Usuarios WHERE correo = ?", new UsuariosMapper(),
-				nuevo.getCorreo());
-
-		jdbcTemplate.update("INSERT INTO Carrito (usuario_Id, precioTotal, fechaCreacion) VALUES (?, ?, ?)",
-				x.getId(), 0, fecha);
-
-		session.setAttribute("usuario", nuevo);
-		return "Usuario registrado correctamente";
 	}
 
 	@PostMapping("/login")
 	public String login(@RequestBody Usuarios login, HttpSession session) {
+		try {
+			
+			MessageDigest md = MessageDigest.getInstance("SHA-256");
+			byte[] resumen = md.digest(login.getPassword().getBytes());
 
-		List<Usuarios> encontrados = jdbcTemplate.query("SELECT * FROM usuarios WHERE correo = ? AND pwd = ?",
-				new UsuariosMapper(), login.getCorreo(), login.getPassword());
+			StringBuilder hexPwd = new StringBuilder();
+			for (byte b : resumen) {
+				String hex = Integer.toHexString(0xff & b);
+				if (hex.length() == 1)
+					hexPwd.append('0');
+				hexPwd.append(hex);
+			}
+			String hashPwd = hexPwd.toString();
+			
+			List<Usuarios> encontrados = jdbcTemplate.query("SELECT * FROM usuarios WHERE correo = ? AND pwd = ?",
+					new UsuariosMapper(), login.getCorreo(), hashPwd);
 
-		if (encontrados.isEmpty()) {
-			session.invalidate();
-			return "Correo o contraseña incorrectos";
+			if (encontrados.isEmpty()) {
+				session.invalidate();
+				return "Correo o contraseña incorrectos";
+			}
+
+			Usuarios u = encontrados.get(0);
+			session.setAttribute("usuario", u);
+
+			return "Login correcto";
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			return "No se pudo iniciar sesion correctamente";
 		}
-
-		Usuarios u = encontrados.get(0);
-		session.setAttribute("usuario", u);
-
-		return "Login correcto";
 	}
 
 	@PostMapping("/cerrar")

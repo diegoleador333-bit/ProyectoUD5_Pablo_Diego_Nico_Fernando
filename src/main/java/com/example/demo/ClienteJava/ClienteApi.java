@@ -8,34 +8,40 @@ public class ClienteApi {
 
 	private static final String BASE_URL = "http://localhost:8080/admin";
 
-	//crear camiseta
+	// envia datos para crear el POST
+	// Recibe el json de ClienteAdmin
 	public static void crearCamiseta(String json) throws Exception {
 
 		URL url = new URL(BASE_URL + "/camisetas");
 		HttpURLConnection con = (HttpURLConnection) url.openConnection();
 
+		// Enviar los datos con POST
 		con.setRequestMethod("POST");
 		con.setRequestProperty("Content-Type", "application/json");
-		con.setDoOutput(true);
+		con.setDoOutput(true); // habilita enviar datos
 
+		// enviamos el json por el cable
 		try (OutputStream os = con.getOutputStream()) {
 			os.write(json.getBytes());
 		}
 
+		// recibir respuesta
 		con.getInputStream();
 		con.disconnect();
 	}
 
-	//cambiar el precio
+	// recibe el id y el nuevo precio
 	public static void cambiarPrecio(int id, double precio) throws Exception {
 
 		URL url = new URL(BASE_URL + "/camisetas/precio/" + id);
 		HttpURLConnection con = (HttpURLConnection) url.openConnection();
 
+		// para actualizar
 		con.setRequestMethod("PUT");
 		con.setRequestProperty("Content-Type", "application/json");
 		con.setDoOutput(true);
 
+		// concatenamos el precio al json
 		String json = "{ \"precio\": " + precio + " }";
 
 		try (OutputStream os = con.getOutputStream()) {
@@ -46,7 +52,7 @@ public class ClienteApi {
 		con.disconnect();
 	}
 
-	//eliminar camiseta por id
+	// recibe el id
 	public static void eliminarCamiseta(int id) throws Exception {
 
 		URL url = new URL(BASE_URL + "/camisetas/" + id);
@@ -57,7 +63,7 @@ public class ClienteApi {
 		con.disconnect();
 	}
 
-	//ve el stock 
+	// pasamos el id para ver stock
 	public static String verStock(int id) throws Exception {
 
 		URL url = new URL(BASE_URL + "/stock/" + id);

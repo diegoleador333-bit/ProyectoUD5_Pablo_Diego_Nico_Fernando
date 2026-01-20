@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,6 +25,7 @@ import com.example.demo.Usuarios.Usuarios;
 
 import jakarta.servlet.http.HttpSession;
 
+@CrossOrigin(origins = { "http://127.0.0.1:5500", "http://localhost:5500" }, allowCredentials = "true")
 @RestController
 @RequestMapping("/carrito")
 public class CarritoEndpoints {
@@ -107,12 +109,13 @@ public class CarritoEndpoints {
 		}
 
 		for (int i = 0; i < contenido.size(); i++) {
-			
+
 			CarritoContenido item = contenido.get(i);
 
 			String columnaStock = "stock" + item.getTallaSeleccionada();
 			Integer stockDisponible = jdbcTemplate.queryForObject(
-					"SELECT " + columnaStock + " FROM StockPorTalla WHERE camiseta_Id = ?", Integer.class, item.getCamiseta());
+					"SELECT " + columnaStock + " FROM StockPorTalla WHERE camiseta_Id = ?", Integer.class,
+					item.getCamiseta());
 
 			if (item.getCantidad() > stockDisponible) {
 				Camisetas sinStock = jdbcTemplate.queryForObject("SELECT * FROM Camisetas WHERE id = ?",
@@ -150,7 +153,6 @@ public class CarritoEndpoints {
 		boolean parche = jdbcTemplate.queryForObject(
 				"SELECT llevaParche FROM CarritoContenido WHERE camiseta_Id = ? AND tallaSeleccionada = ? AND carrito_Id = ?",
 				Boolean.class, idCamiseta, talla, carrito.getId());
-
 		String columnaStock = "stock" + talla;
 		Integer stockDisponible = jdbcTemplate.queryForObject(
 				"SELECT " + columnaStock + " FROM StockPorTalla WHERE camiseta_Id = ?", Integer.class, idCamiseta);
@@ -202,8 +204,9 @@ public class CarritoEndpoints {
 		}
 
 		jdbcTemplate.update(
-				"UPDATE CarritoContenido SET cantidad = cantidad - 1 WHERE carrito_Id = ? AND camiseta_Id = ? AND cantidad > 1 AND tallaSeleccionada = ?",
-				usuario.getId(), idCamiseta, talla);
+				"UPDATE CarritoContenido SET cantidad = cantidad - 1 "
+						+ "WHERE carrito_Id = ? AND camiseta_Id = ? AND cantidad > 1 AND tallaSeleccionada = ?",
+				carrito.getId(), idCamiseta, talla);
 
 		jdbcTemplate.update("UPDATE Carrito SET precioTotal = precioTotal - ? WHERE id = ?", precioUnidad,
 				carrito.getId());
@@ -263,6 +266,8 @@ public class CarritoEndpoints {
 
 		jdbcTemplate.update(
 				"UPDATE CarritoContenido SET nombrePersonalizado = ?, numeroPersonalizado = ? WHERE carrito_Id = ? AND camiseta_Id = ? AND tallaSeleccionada = ?",
+				"UPDATE CarritoContenido SET nombrePersonalizado = ?, numeroPersonalizado = ? "
+						+ "WHERE carrito_Id = ? AND camiseta_Id = ? AND tallaSeleccionada = ?",
 				nombrePersonalizado, numeroPersonalizado, carrito.getId(), idCamiseta, talla);
 
 		return "Datos cambiados";

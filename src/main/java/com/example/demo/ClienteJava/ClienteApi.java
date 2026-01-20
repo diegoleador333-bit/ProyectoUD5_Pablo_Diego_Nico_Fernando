@@ -83,4 +83,42 @@ public class ClienteApi {
 		con.disconnect();
 		return sb.toString();
 	}
+
+	private static String leerRespuesta(HttpURLConnection con) throws Exception {
+		BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
+		StringBuilder sb = new StringBuilder();
+		String linea;
+		while ((linea = br.readLine()) != null) {
+			sb.append(linea).append("\n");
+		}
+		return sb.toString();
+	}
+
+	public static String mostrarCamisetas() throws Exception {
+		URL url = new URL(BASE_URL + "/camisetas");
+		HttpURLConnection con = (HttpURLConnection) url.openConnection();
+		con.setRequestMethod("GET");
+		String respuesta = leerRespuesta(con);
+		con.disconnect();
+		return respuesta;
+	}
+
+	public static String mostrarUsuarios() throws Exception {
+		URL url = new URL(BASE_URL + "/usuarios");
+		HttpURLConnection con = (HttpURLConnection) url.openConnection();
+		con.setRequestMethod("GET");
+		String respuesta = leerRespuesta(con);
+		con.disconnect();
+		return respuesta;
+	}
+
+	public static String mostrarPedidos() throws Exception {
+		URL url = new URL(BASE_URL + "/pedidos");
+		HttpURLConnection con = (HttpURLConnection) url.openConnection();
+		con.setRequestMethod("GET");
+		String respuesta = leerRespuesta(con);
+		con.disconnect();
+		return respuesta;
+	}
+
 }

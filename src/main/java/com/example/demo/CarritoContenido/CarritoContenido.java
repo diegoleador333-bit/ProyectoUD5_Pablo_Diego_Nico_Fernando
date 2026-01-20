@@ -10,11 +10,11 @@ public class CarritoContenido {
 	private int cantidad;
 	private String tallaSeleccionada;
 	private String nombrePersonalizado;
-	private int numeroPersonalizado;
+	private Integer numeroPersonalizado;
 	private boolean llevaParche;
 
 	public CarritoContenido(int id, Carrito carrito, Camisetas camiseta, int cantidad, String tallaSeleccionada,
-			String nombrePersonalizado, int numeroPersonalizado, boolean llevaParche) {
+			String nombrePersonalizado, Integer numeroPersonalizado, boolean llevaParche) {
 		super();
 		this.id = id;
 		this.carrito = carrito;
@@ -74,11 +74,11 @@ public class CarritoContenido {
 		this.nombrePersonalizado = nombrePersonalizado;
 	}
 
-	public int getNumeroPersonalizado() {
+	public Integer getNumeroPersonalizado() {
 		return numeroPersonalizado;
 	}
 
-	public void setNumeroPersonalizado(int numeroPersonalizado) {
+	public void setNumeroPersonalizado(Integer numeroPersonalizado) {
 		this.numeroPersonalizado = numeroPersonalizado;
 	}
 

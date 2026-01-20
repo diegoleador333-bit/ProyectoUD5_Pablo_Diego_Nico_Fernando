@@ -47,7 +47,7 @@ public class CarritoEndpoints {
 
 		return contenido;
 	}
-	
+
 	@GetMapping("/vaciar")
 	public Object vaciar(HttpSession session) {
 		Usuarios usuario = (Usuarios) session.getAttribute("usuario");
@@ -58,7 +58,7 @@ public class CarritoEndpoints {
 
 		Carrito carrito = jdbcTemplate.queryForObject("SELECT * FROM Carrito WHERE usuario_Id = ?", new CarritoMapper(),
 				usuario.getId());
-		
+
 		jdbcTemplate.update("DELETE FROM CarritoContenido WHERE carrito_Id = ?", carrito.getId());
 
 		jdbcTemplate.update("UPDATE Carrito SET precioTotal = 0 WHERE id = ?", carrito.getId());
@@ -279,7 +279,6 @@ public class CarritoEndpoints {
 				usuario.getId());
 
 		jdbcTemplate.update(
-				"UPDATE CarritoContenido SET nombrePersonalizado = ?, numeroPersonalizado = ? WHERE carrito_Id = ? AND camiseta_Id = ? AND tallaSeleccionada = ?",
 				"UPDATE CarritoContenido SET nombrePersonalizado = ?, numeroPersonalizado = ? "
 						+ "WHERE carrito_Id = ? AND camiseta_Id = ? AND tallaSeleccionada = ?",
 				nombrePersonalizado, numeroPersonalizado, carrito.getId(), idCamiseta, talla);

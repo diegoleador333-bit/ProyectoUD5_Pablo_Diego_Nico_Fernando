@@ -92,6 +92,19 @@ public class ClienteAdmin {
 					String stock = ClienteApi.verStock(idStock);
 					System.out.println(stock);
 					break;
+
+				case 5:
+					System.out.println(ClienteApi.mostrarCamisetas());
+					break;
+
+				case 6:
+					System.out.println(ClienteApi.mostrarUsuarios());
+					break;
+
+				case 7:
+					System.out.println(ClienteApi.mostrarPedidos());
+					break;
+
 				}
 
 			} catch (Exception e) {

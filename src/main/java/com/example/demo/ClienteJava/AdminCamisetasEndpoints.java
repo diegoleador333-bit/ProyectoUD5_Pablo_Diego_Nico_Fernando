@@ -74,4 +74,33 @@ public class AdminCamisetasEndpoints {
 
 		return jdbcTemplate.queryForMap(sql, idCamiseta);
 	}
+
+	@GetMapping("/camisetas")
+	public Object mostrarCamisetas() {
+		String sql = """
+				    SELECT id, equipo, imagen, precio, temporada, liga
+				    FROM Camisetas
+				""";
+		return jdbcTemplate.queryForList(sql);
+	}
+
+	@GetMapping("/usuarios")
+	public Object mostrarUsuarios() {
+		String sql = """
+				    SELECT id, DNI, nombre, apellido, correo
+				    FROM Usuarios
+				""";
+		return jdbcTemplate.queryForList(sql);
+	}
+
+	@GetMapping("/pedidos")
+	public Object mostrarPedidos() {
+		String sql = """
+				    SELECT p.id, u.nombre, u.apellido, p.fechaPedido, p.precioTotal
+				    FROM Pedidos p
+				    JOIN Usuarios u ON p.usuario_Id = u.id
+				""";
+		return jdbcTemplate.queryForList(sql);
+	}
+
 }

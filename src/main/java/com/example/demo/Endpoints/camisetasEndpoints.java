@@ -36,6 +36,49 @@ public class camisetasEndpoints {
 		return jdbcTemplate.query(sql, new CamisetasMapper());
 	}
 
+	@PostMapping("/subirCamiseta")
+	public String subirCamisetas(HttpSession session, @RequestBody Camisetas camiseta) {
+		Usuarios usuario = (Usuarios) session.getAttribute("usuario");
+		if (usuario == null)
+			return "No has iniciado sesion";
+		String sql = "INSERT INTO camisetas (equipo, imagen, precio, temporada, liga) VALUES (?, ?, ?, ?, ?)";
+
+		int resultado = jdbcTemplate.update(sql, camiseta.getEquipo(), camiseta.getImagen(), camiseta.getPrecio(),
+				camiseta.getTemporada(), camiseta.getLiga());
+		if (resultado == 1)
+			return "Camiseta introducida con exito";
+		else
+			return "No se ha podido añadir la camiseta";
+	}
+
+	@PostMapping("/actualizarCamiseta")
+	public String cambiarPrecioCamisetas(HttpSession session, @RequestBody Camisetas camiseta) {
+		Usuarios usuario = (Usuarios) session.getAttribute("usuario");
+		if (usuario == null)
+			return "No has iniciado sesion";
+		String sql = "UPDATE Camisetas SET precio = ? WHERE id = ?";
+
+		int resultado = jdbcTemplate.update(sql, camiseta.getPrecio(), camiseta.getId());
+		if (resultado == 1)
+			return "Camiseta actualizada con exito";
+		else
+			return "No se ha podido cambiar el precio a la camiseta";
+	}
+
+	@PostMapping("/eliminarCamiseta")
+	public String eliminarCamisetas(HttpSession session, @RequestBody Camisetas camiseta) {
+		Usuarios usuario = (Usuarios) session.getAttribute("usuario");
+		if (usuario == null)
+			return "No has iniciado sesion";
+		String sql = "delete from clientes where id=?";
+
+		int resultado = jdbcTemplate.update(sql, camiseta.getId());
+		if (resultado == 1)
+			return "Camiseta eliminada con exito";
+		else
+			return "No se ha podido eliminar la camiseta";
+	}
+
 	@PostMapping("/camisetas/{idCamiseta}")
 	public String anadirSimplePeroCorrecto(@PathVariable int idCamiseta, @RequestBody CarritoContenido item,
 			HttpSession session) {

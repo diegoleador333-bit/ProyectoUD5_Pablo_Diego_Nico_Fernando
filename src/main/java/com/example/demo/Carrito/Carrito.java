@@ -5,31 +5,31 @@ import java.sql.Date;
 import com.example.demo.Usuarios.Usuarios;
 
 public class Carrito {
-	private long id;
-	private Usuarios usuario;
+	private int id;
+	private int usuario;
 	private double precioTotal;
 	private Date fechaCreacion;
 
-	public Carrito(long id, Usuarios usuario, double precioTotal, Date fechaCreacion) {
+	public Carrito(int id, int usuario, double precioTotal, Date fechaCreacion) {
 		this.id = id;
 		this.usuario = usuario;
 		this.precioTotal = precioTotal;
 		this.fechaCreacion = fechaCreacion;
 	}
 
-	public long getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
-	public Usuarios getUsuario() {
+	public int getUsuario() {
 		return usuario;
 	}
 
-	public void setUsuario(Usuarios usuario) {
+	public void setUsuario(int usuario) {
 		this.usuario = usuario;
 	}
 
@@ -48,7 +48,5 @@ public class Carrito {
 	public void setFechaCreacion(Date fechaCreacion) {
 		this.fechaCreacion = fechaCreacion;
 	}
-
-
 
 }

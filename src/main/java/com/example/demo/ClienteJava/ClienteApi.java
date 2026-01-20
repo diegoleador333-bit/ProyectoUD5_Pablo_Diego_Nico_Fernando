@@ -68,13 +68,14 @@ public class ClienteApi {
 
 		URL url = new URL(BASE_URL + "/stock/" + id);
 		HttpURLConnection con = (HttpURLConnection) url.openConnection();
-		con.setRequestMethod("GET");
+		con.setRequestMethod("GET"); // para leer datos
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
 
 		StringBuilder sb = new StringBuilder();
 		String linea;
 
+		// bucle para leer el stock
 		while ((linea = br.readLine()) != null) {
 			sb.append(linea).append("\n");
 		}

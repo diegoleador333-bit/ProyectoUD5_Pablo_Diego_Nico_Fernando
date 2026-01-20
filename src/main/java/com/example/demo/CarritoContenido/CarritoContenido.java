@@ -1,8 +1,5 @@
 package com.example.demo.CarritoContenido;
 
-import com.example.demo.Camisetas.Camisetas;
-import com.example.demo.Carrito.Carrito;
-
 public class CarritoContenido {
 	private int id;
 	private int carrito;
@@ -26,11 +23,11 @@ public class CarritoContenido {
 		this.llevaParche = llevaParche;
 	}
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -50,11 +47,11 @@ public class CarritoContenido {
 		this.camiseta = camiseta;
 	}
 
-	public int getCantidad() {
+	public Integer getCantidad() {
 		return cantidad;
 	}
 
-	public void setCantidad(int cantidad) {
+	public void setCantidad(Integer cantidad) {
 		this.cantidad = cantidad;
 	}
 

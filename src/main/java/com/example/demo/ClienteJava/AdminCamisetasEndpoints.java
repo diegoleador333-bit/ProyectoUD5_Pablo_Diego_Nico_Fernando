@@ -31,6 +31,7 @@ public class AdminCamisetasEndpoints {
 			String liga = (String) datos.get("liga");
 			double precio = ((Number) datos.get("precio")).doubleValue();
 
+			// ejecutamos la consulta a la bbdd
 			jdbcTemplate.update(sql, equipo, imagen, precio, temporada, liga);
 
 			return "Camiseta creada correctamente";
@@ -45,6 +46,7 @@ public class AdminCamisetasEndpoints {
 	@PutMapping("/camisetas/precio/{id}")
 	public String cambiarPrecio(@PathVariable int id, @RequestBody Map<String, Double> body) {
 
+		// accedemos a la base de datos para actualizar
 		String sql = "UPDATE Camisetas SET precio = ? WHERE id = ?";
 		jdbcTemplate.update(sql, body.get("precio"), id);
 
@@ -55,6 +57,7 @@ public class AdminCamisetasEndpoints {
 	@DeleteMapping("/camisetas/{id}")
 	public String eliminarCamiseta(@PathVariable int id) {
 
+		// borramos la camiseta por id
 		jdbcTemplate.update("DELETE FROM Camisetas WHERE id = ?", id);
 		return "Camiseta eliminada";
 	}

@@ -7,10 +7,17 @@ import org.springframework.jdbc.core.RowMapper;
 
 import com.example.demo.Usuarios.Usuarios;
 
-public class CarritoMapper implements RowMapper<Carrito> { // también podemos usar un ResultSetExtractor
-	public Carrito mapRow(ResultSet rs, int rowNum) throws SQLException {
-		Carrito carrito = new Carrito(rs.getInt("id"), (Usuarios) rs.getObject("usuario_Id"),
-				rs.getDouble("precioTotal"), rs.getDate("fechaCreacion"));
-		return carrito;
-	} 
-}
+
+public class CarritoMapper implements RowMapper<Carrito> {
+	  @Override
+	  public Carrito mapRow(ResultSet rs, int rowNum) throws SQLException {
+	    
+	    return new Carrito(
+	      rs.getInt("id"),
+	      rs.getInt("usuario_Id"),
+	      rs.getDouble("precioTotal"),
+	      rs.getDate("fechaCreacion")
+	    );
+	  }
+	}
+

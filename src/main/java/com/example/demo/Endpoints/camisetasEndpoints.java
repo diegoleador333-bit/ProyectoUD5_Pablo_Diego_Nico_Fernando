@@ -32,7 +32,7 @@ public class camisetasEndpoints {
 
 	@GetMapping("/todas")
 	public List<Camisetas> mostrarCamisetas(HttpSession session) {
-		String sql = "SELECT * FROM camisetas";
+		String sql = "SELECT * FROM Camisetas";
 		return jdbcTemplate.query(sql, new CamisetasMapper());
 	}
 

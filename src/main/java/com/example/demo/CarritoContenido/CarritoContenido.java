@@ -5,15 +5,15 @@ import com.example.demo.Carrito.Carrito;
 
 public class CarritoContenido {
 	private int id;
-	private Carrito carrito;
-	private Camisetas camiseta;
+	private int carrito;
+	private int camiseta;
 	private int cantidad;
 	private String tallaSeleccionada;
 	private String nombrePersonalizado;
 	private Integer numeroPersonalizado;
 	private boolean llevaParche;
 
-	public CarritoContenido(int id, Carrito carrito, Camisetas camiseta, int cantidad, String tallaSeleccionada,
+	public CarritoContenido(int id, int carrito, int camiseta, int cantidad, String tallaSeleccionada,
 			String nombrePersonalizado, Integer numeroPersonalizado, boolean llevaParche) {
 		super();
 		this.id = id;
@@ -34,19 +34,19 @@ public class CarritoContenido {
 		this.id = id;
 	}
 
-	public Carrito getCarrito() {
+	public int getCarrito() {
 		return carrito;
 	}
 
-	public void setCarrito(Carrito carrito) {
+	public void setCarrito(int carrito) {
 		this.carrito = carrito;
 	}
 
-	public Camisetas getCamiseta() {
+	public int getCamiseta() {
 		return camiseta;
 	}
 
-	public void setCamiseta(Camisetas camiseta) {
+	public void setCamiseta(int camiseta) {
 		this.camiseta = camiseta;
 	}
 

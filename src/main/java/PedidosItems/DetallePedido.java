@@ -7,8 +7,8 @@ import Pedidos.Pedidos;
 public class DetallePedido {
 
 	private int id;
-	private Pedidos pedidoId;
-	private Camisetas camisetaId;
+	private int pedidoId;
+	private int camisetaId;
 	private int cantidad;
 	private String talla;
 	private String nombrePersonalizado;
@@ -18,7 +18,7 @@ public class DetallePedido {
 	public DetallePedido() {
 	}
 
-	public DetallePedido(int id, Pedidos pedidoId, Camisetas camisetaId, int cantidad, String talla,
+	public DetallePedido(int id, int pedidoId, int camisetaId, int cantidad, String talla,
 			String nombrePersonalizado, Integer numeroPersonalizado, boolean llevaParche) {
 		this.id = id;
 		this.pedidoId = pedidoId;
@@ -38,19 +38,19 @@ public class DetallePedido {
 		this.id = id;
 	}
 
-	public Pedidos getPedidoId() {
+	public int getPedidoId() {
 		return pedidoId;
 	}
 
-	public void setPedidoId(Pedidos pedidoId) {
+	public void setPedidoId(int pedidoId) {
 		this.pedidoId = pedidoId;
 	}
 
-	public Camisetas getCamisetaId() {
+	public int getCamisetaId() {
 		return camisetaId;
 	}
 
-	public void setCamisetaId(Camisetas camisetaId) {
+	public void setCamisetaId(int camisetaId) {
 		this.camisetaId = camisetaId;
 	}
 

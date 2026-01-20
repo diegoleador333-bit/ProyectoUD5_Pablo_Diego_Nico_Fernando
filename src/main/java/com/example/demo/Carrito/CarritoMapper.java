@@ -12,5 +12,5 @@ public class CarritoMapper implements RowMapper<Carrito> { // también podemos u
 		Carrito carrito = new Carrito(rs.getInt("id"), (Usuarios) rs.getObject("usuario_Id"),
 				rs.getDouble("precioTotal"), rs.getDate("fechaCreacion"));
 		return carrito;
-	} // este método recibirá cada fila devuelta por la query
+	} 
 }

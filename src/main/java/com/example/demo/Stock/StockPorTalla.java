@@ -4,13 +4,13 @@ import com.example.demo.Camisetas.Camisetas;
 
 public class StockPorTalla {
 	private int id;
-	private Camisetas camiseta;
+	private int camiseta;
 	private int stockS;
 	private int stockM;
 	private int stockL;
 	private int stockXL;
 
-	public StockPorTalla(int id, Camisetas camiseta, int stockS, int stockM, int stockL, int stockXL) {
+	public StockPorTalla(int id, int camiseta, int stockS, int stockM, int stockL, int stockXL) {
 		this.id = id;
 		this.camiseta = camiseta;
 		this.stockS = stockS;
@@ -32,11 +32,11 @@ public class StockPorTalla {
 		this.id = id;
 	}
 
-	public Camisetas getCamiseta() {
+	public int getCamiseta() {
 		return camiseta;
 	}
 
-	public void setCamiseta(Camisetas camiseta) {
+	public void setCamiseta(int camiseta) {
 		this.camiseta = camiseta;
 	}
 

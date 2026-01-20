@@ -79,6 +79,26 @@ CREATE TABLE CarritoContenido (
     FOREIGN KEY (camiseta_Id) REFERENCES Camisetas(id)
 );
 
+CREATE TABLE Pedidos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    usuario_Id INT NOT NULL,
+    fechaPedido DATETIME DEFAULT CURRENT_TIMESTAMP,
+    precioTotal DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (usuario_Id) REFERENCES Usuarios(id)
+);
+
+CREATE TABLE DetallePedidos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    pedido_Id INT NOT NULL,
+    camiseta_Id INT NOT NULL,
+    cantidad INT NOT NULL,
+    talla ENUM('S', 'M', 'L', 'XL') NOT NULL,
+    nombrePersonalizado VARCHAR(100),
+    numeroPersonalizado INT,
+    llevaParche TINYINT,
+    FOREIGN KEY (pedido_Id) REFERENCES Pedidos(id) ON DELETE CASCADE,
+    FOREIGN KEY (camiseta_Id) REFERENCES Camisetas(id)
+);
 
 
 

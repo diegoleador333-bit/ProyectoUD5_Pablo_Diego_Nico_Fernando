@@ -43,6 +43,9 @@ public class camisetasEndpoints {
 		if (usuario == null)
 			return "No has iniciado sesion";
 
+		Integer cantObj = item.getCantidad();
+		int cantidad = (cantObj == null) ? 1 : cantObj;
+
 		Carrito carrito = jdbcTemplate.queryForObject("SELECT * FROM Carrito WHERE usuario_Id = ?", new CarritoMapper(),
 				usuario.getId());
 
@@ -55,12 +58,12 @@ public class camisetasEndpoints {
 		if (existe != null && existe > 0) {
 			jdbcTemplate.update(
 					"UPDATE CarritoContenido SET cantidad = cantidad + ? WHERE carrito_Id = ? AND camiseta_Id = ? AND tallaSeleccionada = ?",
-					item.getCantidad(), carrito.getId(), idCamiseta, talla);
+					cantidad, carrito.getId(), idCamiseta, talla);
 		} else {
 			jdbcTemplate.update(
 					"INSERT INTO CarritoContenido (carrito_Id, camiseta_Id, cantidad, tallaSeleccionada, nombrePersonalizado, numeroPersonalizado, llevaParche) "
 							+ "VALUES (?, ?, ?, ?, ?, ?, ?)",
-					carrito.getId(), idCamiseta, item.getCantidad(), talla, item.getNombrePersonalizado(),
+					carrito.getId(), idCamiseta, cantidad, talla, item.getNombrePersonalizado(),
 					item.getNumeroPersonalizado(), item.isLlevaParche());
 		}
 
@@ -70,8 +73,8 @@ public class camisetasEndpoints {
 		if (item.isLlevaParche())
 			precio += 5.0;
 
-		jdbcTemplate.update("UPDATE Carrito SET precioTotal = precioTotal + ? WHERE id = ?",
-				precio * item.getCantidad(), carrito.getId());
+		jdbcTemplate.update("UPDATE Carrito SET precioTotal = precioTotal + ? WHERE id = ?", precio * cantidad,
+				carrito.getId());
 
 		return "Añadido al carrito";
 	}

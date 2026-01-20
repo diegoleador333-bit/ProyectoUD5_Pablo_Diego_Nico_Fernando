@@ -1,5 +1,6 @@
 package com.example.demo.Endpoints;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -145,6 +146,20 @@ public class CarritoEndpoints {
 					"UPDATE StockPorTalla SET " + columnaStock + " = " + columnaStock + " - ? WHERE camiseta_Id = ?",
 					item.getCantidad(), item.getCamiseta());
 
+		}
+
+		jdbcTemplate.update("INSERT INTO Pedidos (usuario_Id, precioTotal) VALUES (?, ?, ?)", carrito.getUsuario(),
+				carrito.getPrecioTotal());
+
+		Integer idPedido = jdbcTemplate.queryForObject("SELECT MAX(id) FROM Pedidos", Integer.class);
+
+		for (int i = 0; i < contenido.size(); i++) {
+			CarritoContenido item = contenido.get(i);
+			jdbcTemplate.update(
+					"INSERT INTO DetallePedidos (pedido_Id, camiseta_Id, cantidad, talla, nombrePersonalizado, numeroPersonalizado, llevaParche) "
+							+ "VALUES (?, ?, ?, ?, ?, ?, ?)",
+					idPedido, item.getCamiseta(), item.getCantidad(), item.getTallaSeleccionada().toUpperCase(),
+					item.getNombrePersonalizado(), item.getNumeroPersonalizado(), item.isLlevaParche() ? 1 : 0);
 		}
 
 		jdbcTemplate.update("DELETE FROM CarritoContenido WHERE carrito_Id = ?", carrito.getId());

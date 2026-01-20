@@ -15,22 +15,33 @@ public class AdminCamisetasEndpoints {
 		this.jdbcTemplate = jdbcTemplate;
 	}
 
-	//crear camiseta
+	// crear camiseta
 	@PostMapping("/camisetas")
 	public String crearCamiseta(@RequestBody Map<String, Object> datos) {
 
-		String sql = """
-				    INSERT INTO Camisetas (equipo, imagen, precio, temporada, liga, parche, nombreDorsal, numeroDorsal)
-				    VALUES (?, ?, ?, ?, ?, 0, NULL, NULL)
-				""";
+		try {
+			String sql = """
+					    INSERT INTO Camisetas (equipo, imagen, precio, temporada, liga, parche, nombreDorsal, numeroDorsal)
+					    VALUES (?, ?, ?, ?, ?, 0, NULL, NULL)
+					""";
 
-		jdbcTemplate.update(sql, datos.get("equipo"), datos.get("imagen"), datos.get("precio"), datos.get("temporada"),
-				datos.get("liga"));
+			String equipo = (String) datos.get("equipo");
+			String imagen = (String) datos.get("imagen");
+			String temporada = (String) datos.get("temporada");
+			String liga = (String) datos.get("liga");
+			double precio = ((Number) datos.get("precio")).doubleValue();
 
-		return "Camiseta creada correctamente";
+			jdbcTemplate.update(sql, equipo, imagen, precio, temporada, liga);
+
+			return "Camiseta creada correctamente";
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
 	}
 
-	//cambiar el precio de la camiseta
+	// cambiar el precio de la camiseta
 	@PutMapping("/camisetas/precio/{id}")
 	public String cambiarPrecio(@PathVariable int id, @RequestBody Map<String, Double> body) {
 
@@ -40,7 +51,7 @@ public class AdminCamisetasEndpoints {
 		return "Precio actualizado";
 	}
 
-	//elimnianr la camiseta
+	// elimnianr la camiseta
 	@DeleteMapping("/camisetas/{id}")
 	public String eliminarCamiseta(@PathVariable int id) {
 
@@ -48,7 +59,7 @@ public class AdminCamisetasEndpoints {
 		return "Camiseta eliminada";
 	}
 
-	//ver el stock y actualizarlo (por hacer)
+	// ver el stock y actualizarlo (por hacer)
 	@GetMapping("/stock/{idCamiseta}")
 	public Object verStock(@PathVariable int idCamiseta) {
 

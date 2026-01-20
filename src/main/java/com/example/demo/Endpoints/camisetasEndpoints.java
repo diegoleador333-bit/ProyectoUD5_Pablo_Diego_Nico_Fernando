@@ -6,14 +6,16 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.Camisetas.Camisetas;
 import com.example.demo.Camisetas.CamisetasMapper;
+import com.example.demo.Carrito.Carrito;
+import com.example.demo.Carrito.CarritoMapper;
 import com.example.demo.CarritoContenido.CarritoContenido;
-import com.example.demo.Stock.StockPorTalla;
 import com.example.demo.Usuarios.Usuarios;
 
 import jakarta.servlet.http.HttpSession;
@@ -34,42 +36,44 @@ public class camisetasEndpoints {
 		return jdbcTemplate.query(sql, new CamisetasMapper());
 	}
 
-//	@GetMapping("camisetas/{unId}")
-//	public String mostrarCamisetasById(@PathVariable int unId, @RequestBody CarritoContenido miCarritoItems,
-//			HttpSession session) {
-//
-//		try {
-//			Usuarios usuario = (Usuarios) session.getAttribute("usuario");
-//			if (usuario == null) {
-//				return "No has iniciado sesion";
-//			}
-//			StockPorTalla miStock = new StockPorTalla();
-//			if (miCarritoItems.getTallaSeleccionada().equals("S")) {
-//				if (miStock.getStockS() == 0) {
-//					return "No quedan camisetas S";
-//				}
-//			} else if (miCarritoItems.getTallaSeleccionada().equals("M")) {
-//				if (miStock.getStockM() == 0) {
-//					return "No quedan camisetas M";
-//				}
-//			} else if (miCarritoItems.getTallaSeleccionada().equals("L")) {
-//				if (miStock.getStockL() == 0) {
-//					return "No quedan camisetas L";
-//				}
-//			} else if (miCarritoItems.getTallaSeleccionada().equals("XL")) {
-//				if (miStock.getStockXL() == 0) {
-//					return "No quedan camisetas XL";
-//				}
-//			}
-//			String sql = "INSERT INTO CarritoContenido (carrito_Id, cantidad, tallaSeleccionada,nombrePersonalizado, numeroPersonalizado, llevaParche)values (?,?,?,?,?,?) where camiseta_Id = ?";
-//			jdbcTemplate.update(sql, miCarritoItems.getCarrito().getId(), miCarritoItems.getCantidad(),
-//					miCarritoItems.getTallaSeleccionada(), miCarritoItems.getNombrePersonalizado(),
-//					miCarritoItems.getNumeroPersonalizado(), miCarritoItems.isLlevaParche(), unId);
-//
-//			return "Camiseta Insertada con exito";
-//		} catch (Exception e) {
-//			return "Camiseta Insertada SIN éxito";
-//		}
-//	}
+	@PostMapping("/camisetas/{idCamiseta}")
+	public String anadirSimplePeroCorrecto(@PathVariable int idCamiseta, @RequestBody CarritoContenido item,
+			HttpSession session) {
+		Usuarios usuario = (Usuarios) session.getAttribute("usuario");
+		if (usuario == null)
+			return "No has iniciado sesion";
+
+		Carrito carrito = jdbcTemplate.queryForObject("SELECT * FROM Carrito WHERE usuario_Id = ?", new CarritoMapper(),
+				usuario.getId());
+
+		String talla = item.getTallaSeleccionada();
+
+		Integer existe = jdbcTemplate.queryForObject(
+				"SELECT COUNT(*) FROM CarritoContenido WHERE carrito_Id = ? AND camiseta_Id = ? AND tallaSeleccionada = ?",
+				Integer.class, carrito.getId(), idCamiseta, talla);
+
+		if (existe != null && existe > 0) {
+			jdbcTemplate.update(
+					"UPDATE CarritoContenido SET cantidad = cantidad + ? WHERE carrito_Id = ? AND camiseta_Id = ? AND tallaSeleccionada = ?",
+					item.getCantidad(), carrito.getId(), idCamiseta, talla);
+		} else {
+			jdbcTemplate.update(
+					"INSERT INTO CarritoContenido (carrito_Id, camiseta_Id, cantidad, tallaSeleccionada, nombrePersonalizado, numeroPersonalizado, llevaParche) "
+							+ "VALUES (?, ?, ?, ?, ?, ?, ?)",
+					carrito.getId(), idCamiseta, item.getCantidad(), talla, item.getNombrePersonalizado(),
+					item.getNumeroPersonalizado(), item.isLlevaParche());
+		}
+
+		double precio = jdbcTemplate.queryForObject("SELECT precio FROM Camisetas WHERE id = ?", Double.class,
+				idCamiseta);
+
+		if (item.isLlevaParche())
+			precio += 5.0;
+
+		jdbcTemplate.update("UPDATE Carrito SET precioTotal = precioTotal + ? WHERE id = ?",
+				precio * item.getCantidad(), carrito.getId());
+
+		return "Añadido al carrito";
+	}
 
 }

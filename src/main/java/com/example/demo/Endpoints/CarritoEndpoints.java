@@ -47,6 +47,24 @@ public class CarritoEndpoints {
 
 		return contenido;
 	}
+	
+	@GetMapping("/vaciar")
+	public Object vaciar(HttpSession session) {
+		Usuarios usuario = (Usuarios) session.getAttribute("usuario");
+
+		if (usuario == null) {
+			return "No has iniciado sesion";
+		}
+
+		Carrito carrito = jdbcTemplate.queryForObject("SELECT * FROM Carrito WHERE usuario_Id = ?", new CarritoMapper(),
+				usuario.getId());
+		
+		jdbcTemplate.update("DELETE FROM CarritoContenido WHERE carrito_Id = ?", carrito.getId());
+
+		jdbcTemplate.update("UPDATE Carrito SET precioTotal = 0 WHERE id = ?", carrito.getId());
+
+		return "Carrito vaciado";
+	}
 
 	@PostMapping("/eliminar/{camiseta_Id}/{tallaSeleccionada}")
 	public String eliminarDelCarrito(@PathVariable int idCamiseta, @PathVariable String talla, HttpSession session) {

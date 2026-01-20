@@ -1,4 +1,9 @@
 CREATE DATABASE if not exists ProyectoUD5;
+
+CREATE USER 'usuario_ud5'@'localhost' IDENTIFIED BY '1234';
+GRANT ALL PRIVILEGES ON ProyectoUD5.* TO 'usuario_ud5'@'localhost';
+FLUSH PRIVILEGES;
+
 USE ProyectoUD5;
 -- 1. Tabla Usuarios
 CREATE TABLE Usuarios (

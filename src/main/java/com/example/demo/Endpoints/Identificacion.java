@@ -1,5 +1,7 @@
 package com.example.demo.Endpoints;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -28,36 +30,71 @@ public class Identificacion {
 
 	@PostMapping("/registro")
 	public String registro(@RequestBody Usuarios nuevo, HttpSession session) {
+		try {
 
-		List<Usuarios> existentes = jdbcTemplate.query("SELECT * FROM Usuarios WHERE correo = ?", new UsuariosMapper(),
-				nuevo.getCorreo());
+			List<Usuarios> existentes = jdbcTemplate.query("SELECT * FROM Usuarios WHERE correo = ?",
+					new UsuariosMapper(), nuevo.getCorreo());
 
-		if (!existentes.isEmpty()) {
-			return "El usuario ya existe";
+			if (!existentes.isEmpty()) {
+				return "El usuario ya existe";
+			}
+
+			MessageDigest md = MessageDigest.getInstance("SHA-256");
+
+			byte[] resumen = md.digest(nuevo.getPassword().getBytes());
+
+			StringBuilder hexPwd = new StringBuilder();
+			for (byte b : resumen) {
+				String hex = Integer.toHexString(0xff & b);
+				if (hex.length() == 1)
+					hexPwd.append('0');
+				hexPwd.append(hex);
+			}
+			String hashPwd = hexPwd.toString();
+
+			jdbcTemplate.update("INSERT INTO Usuarios (DNI, nombre, apellido, correo, pwd) VALUES (?, ?, ?, ?, ?)",
+					nuevo.getDni(), nuevo.getNombre(), nuevo.getApellido(), nuevo.getCorreo(), hashPwd);
+
+			session.setAttribute("usuario", nuevo);
+			return "Usuario registrado correctamente";
+		} catch (NoSuchAlgorithmException e) {
+			return "Error, no se pudo registrar el usuario";
 		}
-
-		jdbcTemplate.update("INSERT INTO Usuarios (DNI, nombre, apellido, correo, pwd) VALUES (?, ?, ?, ?, ?)",
-				nuevo.getDni(), nuevo.getNombre(), nuevo.getApellido(), nuevo.getCorreo(), nuevo.getPassword());
-
-		session.setAttribute("usuario", nuevo);
-		return "Usuario registrado correctamente";
 	}
 
 	@PostMapping("/login")
 	public String login(@RequestBody Usuarios login, HttpSession session) {
 
-		List<Usuarios> encontrados = jdbcTemplate.query("SELECT * FROM usuarios WHERE correo = ? AND pwd = ?",
-				new UsuariosMapper(), login.getCorreo(), login.getPassword());
+		try {
+			MessageDigest md = MessageDigest.getInstance("SHA-256");
 
-		if (encontrados.isEmpty()) {
+			byte[] resumen = md.digest(login.getPassword().getBytes());
+
+			StringBuilder hexPwd = new StringBuilder();
+			for (byte b : resumen) {
+				String hex = Integer.toHexString(0xff & b);
+				if (hex.length() == 1)
+					hexPwd.append('0');
+				hexPwd.append(hex);
+			}
+			String hashPwd = hexPwd.toString();
+
+			List<Usuarios> encontrados = jdbcTemplate.query("SELECT * FROM usuarios WHERE correo = ? AND pwd = ?",
+					new UsuariosMapper(), login.getCorreo(), hashPwd);
+
+			if (encontrados.isEmpty()) {
+				session.invalidate();
+				return "Correo o contraseña incorrectos";
+			}
+
+			Usuarios u = encontrados.get(0);
+			session.setAttribute("usuario", u);
+
+			return "Login correcto";
+		} catch (NoSuchAlgorithmException e) {
 			session.invalidate();
-			return "Correo o contraseña incorrectos";
+			return "Error al hacer login";
 		}
-
-		Usuarios u = encontrados.get(0);
-		session.setAttribute("usuario", u);
-
-		return "Login correcto";
 	}
 
 	@PostMapping("/cerrar")

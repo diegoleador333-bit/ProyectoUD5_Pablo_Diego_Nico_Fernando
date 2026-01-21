@@ -61,7 +61,7 @@ public class Identificacion {
 			jdbcTemplate.update("INSERT INTO Carrito (usuario_Id, precioTotal, fechaCreacion) VALUES (?, ?, ?)",
 					x.getId(), 0, fecha);
 
-			session.setAttribute("usuario", nuevo);
+			session.setAttribute("usuario", x);
 			return "Usuario registrado correctamente";
 		} catch (NoSuchAlgorithmException e) {
 			// TODO Auto-generated catch block

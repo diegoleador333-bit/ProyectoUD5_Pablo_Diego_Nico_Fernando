@@ -37,15 +37,15 @@ public class CarritoEndpoints {
 		if (usuario == null) {
 			return "No has iniciado sesion";
 		}
-		// Todo minúsculas: carrito, usuario_id
+		
 		Carrito carrito = jdbcTemplate.queryForObject("SELECT * FROM carrito WHERE usuario_id = ?", new CarritoMapper(),
 				usuario.getId());
 
-		// Todo minúsculas: carritocontenido, carrito_id
+		
 		List<CarritoContenido> contenido = jdbcTemplate.query("SELECT * FROM carritocontenido WHERE carrito_id = ?",
 				new contenidoMapper(), carrito.getId());
 
-		return contenido;
+		return java.util.Map.of("items", contenido, "precioTotal", carrito.getPrecioTotal());
 	}
 
 	@GetMapping("/vaciar")

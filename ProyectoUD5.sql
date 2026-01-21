@@ -196,3 +196,11 @@ INSERT INTO Pedidos (usuario_Id, fechaPedido, precioTotal) VALUES
 -- El pedido de María fue la camiseta retro del Milan
 INSERT INTO DetallePedidos (pedido_Id, camiseta_Id, cantidad, talla, nombrePersonalizado, numeroPersonalizado, llevaParche) VALUES 
 (1, 3, 1, 'S', 'KAKA', 22, 0);
+
+
+
+INSERT INTO StockPorTalla (camiseta_Id, stockS, stockM, stockL, stockXL)
+SELECT c.id, 20, 20, 20, 20
+FROM Camisetas c
+LEFT JOIN StockPorTalla s ON s.camiseta_Id = c.id
+WHERE s.camiseta_Id IS NULL;

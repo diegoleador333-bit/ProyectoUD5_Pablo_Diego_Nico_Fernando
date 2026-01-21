@@ -32,7 +32,7 @@
 
       <div class="collapse navbar-collapse" id="navMain">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          
+          <li class="nav-item"><a class="nav-link active" href="#">Home</a></li>
         </ul>
 
         <div class="d-flex align-items-center gap-2">
@@ -112,13 +112,12 @@
   </main>
 
 
-  <div class="modal fade" id="modalLogin" tabindex="-1" aria-hidden="true"
-     data-bs-backdrop="static" data-bs-keyboard="false">
+  <div class="modal fade" id="modalLogin" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">Iniciar sesión</h5>
-
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
         </div>
         <div class="modal-body">
 
@@ -143,13 +142,12 @@
   </div>
 
 
-  <div class="modal fade" id="modalRegister" tabindex="-1" aria-hidden="true"
-     data-bs-backdrop="static" data-bs-keyboard="false">
+  <div class="modal fade" id="modalRegister" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">Registro</h5>
-          
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
         </div>
         <div class="modal-body">
 
@@ -298,6 +296,23 @@
           <div class="row g-3">
 
             <div class="col-12 col-md-6">
+              <h6 class="mb-2">Datos del usuario</h6>
+
+              <div class="mb-2">
+                <label class="form-label">Nombre</label>
+                <input class="form-control" id="chkName" placeholder="Nombre y apellidos">
+              </div>
+
+              <div class="mb-2">
+                <label class="form-label">Email</label>
+                <input class="form-control" id="chkEmail" type="email" placeholder="tu@email.com">
+              </div>
+
+              <div class="mb-2">
+                <label class="form-label">Teléfono</label>
+                <input class="form-control" id="chkPhone" placeholder="600 000 000">
+              </div>
+
               <div class="alert alert-info mb-0">
                 Recogida en tienda en un plazo máximo de <strong>1 mes</strong>.
               </div>
@@ -353,21 +368,17 @@
   </div>
 
 
-
-
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
   <script>
 
-
-//-----------------------------------------------------------FUNCIONES JAVASCRIPT-----------------------------------------------------------
     const API_BASE = "http://127.0.0.1:8080";
 
     let CATALOGO = [];
 
     
-   //nuestro backend devuelve tanto JSON como texto
-   //Esta función nos permite tratar ambas respuestas sin que el frontend falle
+    // Lee SIEMPRE como texto, e intenta parsear a JSON.
+    // Así NO peta si el servidor te devuelve "No has iniciado sesión" o HTML de error.
     function fetchJsonOrText(url, options) {
       return fetch(url, options)
         .then(function (resp) {
@@ -391,7 +402,6 @@
     }
 
 
-    //funcion para el navar por si aparece login registro o solo usuario con el dropdown 
     function renderNavAuth() {
       var area = document.getElementById("navAuthArea");
 
@@ -400,16 +410,18 @@
         '<button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalRegister">Registro</button>';
 
       //Perfil endpoint
-      fetchJsonOrText(API_BASE + "/identificacion/perfil", { credentials: "include" }) //llamada endpoint /identificacion/perfil
-                                                            //envía la cookie de sesión
+      fetchJsonOrText(API_BASE + "/identificacion/perfil", { credentials: "include" })
         .then(function (r) {
 
-          if (!r.ok) return; //si hay algun error se deja igual en navar
+          // si no hay sesión (401/403)
+          if (!r.ok) return;
+
+          // si responde 200 pero no es JSON objeto -> dejamos botones
           if (typeof r.data !== "object" || !r.data) return;
 
-          var user = r.data; //datos del usuario que nos da el servidor (ojbjeto usuario)
+          var user = r.data;
 
-          // hay usuario  se pone el dropdown
+          // hay usuario -> pintamos dropdown
           area.innerHTML =
             '<div class="dropdown">' +
               '<button class="btn btn-outline-light dropdown-toggle" data-bs-toggle="dropdown">' +
@@ -428,8 +440,8 @@
               .then(function (resp) { return resp.text(); })
               .then(function () {
                 toast("Sesión cerrada");
-                renderNavAuth(); //se vuelve a llamar a la funcion
-                cargarCarrito(); //se recarga el carrito
+                renderNavAuth();
+                cargarCarrito();
               })
               .catch(function (e) {
                 console.error(e);
@@ -443,12 +455,15 @@
     }
 
 
-    //Mostrar pop up de info de cada camiseta
+    //Mostrar las cards
     function renderProducts(list) {
+
       //contenedor donde van las cards
       const grid = document.getElementById("productsGrid");
+
       //borramos cards anteriores
       grid.innerHTML = "";
+
       //Si NO hay productos, mostramos un mensaje y salimos
       if (list.length === 0) {
         grid.innerHTML =
@@ -492,13 +507,13 @@
         // Se añade al grid
         grid.insertAdjacentHTML("beforeend", cardHTML);
 
-        // Cogemos EL ULTIMO botOn que acabamos de crear y asi cada card queda ccon su boton asignado
+        // Cogemos EL ÚLTIMO botón que acabamos de crear
         const buttons = grid.getElementsByClassName("btn-open");
         const lastButton = buttons[buttons.length - 1];
 
         //Al hacer click, abrimos para personalizar la camiseta
         lastButton.onclick = function () {
-          openProduct(p); //al clicar en el boton de la camiseta me deja personalizarla 
+          openProduct(p);
         };
       }
     }
@@ -506,8 +521,6 @@
 
     //Funcion para los filtros
     function applyFiltersAndRender() {
-
-      //los inputs 
       const q = document.getElementById("searchInput").value.trim().toLowerCase();//filtro para buscar
       const liga = document.getElementById("filterLiga").value; //filtro de la liga
       const temp = document.getElementById("filterYear").value; //filtro de el año
@@ -516,8 +529,7 @@
       let list = [...CATALOGO]; //se copia el catalogo entero en un array nuevo
 
       // buscar por equipo si no esta vacio
-      if (q) list = list.filter(p => p.equipo.toLowerCase().includes(q)); // si el filtro no esta vacio se filtran las camisetas cuyo filtro contiene el texto buscado
-      //lo que have filter es que te devuelve un nuevo array con las camisetas que cumplen con la condicion
+      if (q) list = list.filter(p => p.equipo.toLowerCase().includes(q));
 
       // filtrar liga
       if (liga) list = list.filter(p => p.liga === liga);
@@ -527,7 +539,7 @@
 
       // ordenar por precio
       if (order === "asc") {
-        list.sort(function (a, b) { //se compara de dos en dos las camisetas para ordenarlas para ordenar la lista entera
+        list.sort(function (a, b) {
           return a.precio - b.precio;
         });
       } else {
@@ -541,12 +553,12 @@
 
 
     //personalizar producto
-    let currentProduct = null; //la camiseta que esta personalizando en ese momento en el carrito
+    let currentProduct = null;
 
     function openProduct(product) {
       currentProduct = product;
 
-      document.getElementById("modalProductTitle").textContent = product.equipo; //Datos de la camiseta
+      document.getElementById("modalProductTitle").textContent = product.equipo; //titulo camiseta
       document.getElementById("modalProductMeta").textContent = `${product.liga} · ${product.temporada}`;
       document.getElementById("modalProductPrice").textContent = euros(product.precio);
 
@@ -559,7 +571,7 @@
       document.getElementById("inpNumber").value = "";
       document.getElementById("chkPatch").checked = false;
 
-      // total estimado inicial cmaiseta + parche si se ha añadido
+      // total estimado inicial
       document.getElementById("estimatedTotal").textContent = euros(product.precio);
 
       bootstrap.Modal.getOrCreateInstance(document.getElementById("modalProduct")).show();
@@ -575,27 +587,25 @@
         extra = 5;
       }
 
-      document.getElementById("estimatedTotal").textContent = euros(currentProduct.precio + extra); //se añade al precio estimado principal 
+      document.getElementById("estimatedTotal").textContent = euros(currentProduct.precio + extra);
     };
 
 
     // Añadir al carrito  
-    //Recoge la personaalizacion de la camiseta
-    //Construye un json con los datos 
-    //El servidoe la añade al carrito del usuario(con el sesion)
     document.getElementById("btnAddToCart").onclick = function () {
+      if (!currentProduct) return;
 
-      if (!currentProduct) return; //si no hay producto seleccionado sale
-
-      const talla = document.getElementById("selSize").value; //Se coge la talla que ha introducido
+      const talla = document.getElementById("selSize").value;
       const nombre = document.getElementById("inpName").value.trim();
 
-      const dorsalStr = document.getElementById("inpNumber").value.trim(); //dorsal
-      const dorsal = dorsalStr === "" ? 0 : Number(dorsalStr);//convierte el dorsal a numero, si esta vacio pone 0 
 
-      const parche = document.getElementById("chkPatch").checked; //ve si esta marcado el checkbox
+      const dorsalStr = document.getElementById("inpNumber").value.trim();
+      const dorsal = dorsalStr === "" ? 0 : Number(dorsalStr);
 
-      const body = { //se construye el json para mandar al servidor 
+      const parche = document.getElementById("chkPatch").checked;
+
+      
+      const body = {
         cantidad: 1,
         tallaSeleccionada: talla,
         nombrePersonalizado: nombre || "",
@@ -603,12 +613,12 @@
         llevaParche: parche
       };
 
-      //hace la peticion para añadir a su carrito esa camiseta concreta 
+      //mostrar camisetas endpoint
       fetch(API_BASE + "/mostrarCamisetas/camisetas/" + currentProduct.id, {
-        method: "POST", //Se crea/modifica
-        credentials: "include", //cookies
-        headers: { "Content-Type": "application/json" }, //formato json
-        body: JSON.stringify(body) //lo convierte en texto json
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body)
       })
         .then(function (resp) { return resp.text(); })
         .then(function (txt) {
@@ -617,8 +627,8 @@
           // refresca carrito
           cargarCarrito();
 
-          
-          bootstrap.Modal.getInstance(document.getElementById("modalProduct"))?.hide(); //se cierra 
+          // opcional: cerrar modal
+          bootstrap.Modal.getInstance(document.getElementById("modalProduct"))?.hide();
         })
         .catch(function (e) {
           console.error(e);
@@ -629,150 +639,160 @@
 
     // Comprar se añade al carrito y se muestra la ventana de checkout
     document.getElementById("btnBuyNow").onclick = function () {
-      // añadir al carrito 
+
+      // añadir al carrito (espera a que termine) -> reutilizo el mismo fetch que AddToCart
       document.getElementById("btnAddToCart").onclick();
-      //abrir carrito y checkout checkout para poder modificar
+
+      //abrir carrito + checkout
       bootstrap.Offcanvas.getOrCreateInstance(document.getElementById("offcanvasCart")).show();
       bootstrap.Modal.getOrCreateInstance(document.getElementById("modalCheckout")).show();
     };
 
 
-    //carrito api, pide al servidor el carrito de un usuario
-    // carrito api: pide al servidor el carrito del usuario logueado y lo pinta en el offcanvas
+    //carrito api
+
     function cargarCarrito() {
-       fetchJsonOrText(API_BASE + "/carrito/productos", { credentials: "include" })
-      .then(function (r) {
+      // carrido productos llamada api
+      fetchJsonOrText(API_BASE + "/carrito/productos", { credentials: "include" })
+        .then(function (r) {
 
-      const cartItems = document.getElementById("cartItems"); // div contenedor donde se pintan las cards del carrito
+          const cartItems = document.getElementById("cartItems");
 
-      //  En nuestro backend el endpoint devuelve SIEMPRE un objeto:
-      // { items: [...], precioTotal: number }
-      // Si no hay sesión, devuelve un texto tipo "No has iniciado sesion"
-      if (!(r.data && typeof r.data === "object" && Array.isArray(r.data.items))) {
-        // No hay carrito válido (no login / error / respuesta no esperada)
-        document.getElementById("cartCount").textContent = "0";
-        cartItems.innerHTML = `<p class="muted mb-0">${typeof r.data === "string" ? r.data : r.raw}</p>`;
-        document.getElementById("cartSubtotal").textContent = "0€";
-        document.getElementById("sumSubtotal").textContent = "0€";
-        document.getElementById("sumExtras").textContent = "0€";
-        document.getElementById("sumTotal").textContent = "0€";
-        return; // salimos para no seguir pintando
-      }
+          if (!Array.isArray(r.data)) {
+            // si el endpoint devuelve texto en vez de JSON array
+            document.getElementById("cartCount").textContent = "0";
+            cartItems.innerHTML = `<p class="muted mb-0">${typeof r.data === "string" ? r.data : r.raw}</p>`;
+            document.getElementById("cartSubtotal").textContent = "0€";
+            document.getElementById("sumSubtotal").textContent = "0€";
+            document.getElementById("sumExtras").textContent = "0€";
+            document.getElementById("sumTotal").textContent = "0€";
+            return;
+          }
 
-      const items = r.data.items; // lista de productos del carrito que manda el backend
-      const precioTotal = Number(r.data.precioTotal ?? 0); // total del carrito que manda el backend
+          const items = r.data;
 
-      // badge del carrito: número de líneas/items
-      document.getElementById("cartCount").textContent = String(items.length);
-      cartItems.innerHTML = ""; // limpiamos antes de volver a pintar
+          document.getElementById("cartCount").textContent = String(items.length);
+          cartItems.innerHTML = "";
 
-      // calculamos SOLO el extra de parches para poder mostrar el desglose en el checkout
-      let extrasParches = 0;
+          
+          let extrasParches = 0;
 
-      // recorremos cada item del carrito y lo pintamos en pantalla
-      items.forEach(function (it) {
-        const idCamiseta = it.camiseta_Id ?? it.camisetaId ?? it.camiseta_id ?? it.camiseta ?? null;
-        const idNum = Number(idCamiseta);
-        if (!Number.isFinite(idNum)) return; // si no es un id válido, ignoramos este item
+          items.forEach(it => {
+            const idCamiseta = it.camiseta_Id ?? (it.camiseta ? it.camiseta.id : null);
+            const talla = it.tallaSeleccionada;
+            const cantidad = it.cantidad ?? 0;
+            const parche = !!it.llevaParche;
 
-        const talla = it.tallaSeleccionada; // talla del producto en el carrito
-        const cantidad = Number(it.cantidad ?? 0); // cantidad en el carrito
-        const parche = !!it.llevaParche; // si lleva parche (true/false)
+            if (parche) extrasParches += 5 * cantidad;
 
-        // si lleva parche, sumamos 5€ por unidad para mostrar los extras
-        if (parche) extrasParches += 5 * cantidad;
+            cartItems.insertAdjacentHTML("beforeend", `
+              <div class="card">
+                <div class="card-body py-2">
 
-        // se inserta el html del item del carrito (una card con controles)
-        cartItems.insertAdjacentHTML("beforeend", `
-          <div class="card">
-            <div class="card-body py-2">
-              <div class="fw-bold">Camiseta ID: ${idNum}</div>
+                  <div class="d-flex justify-content-between align-items-start">
 
-              <div class="muted small mb-2">
-                Talla: <strong>${talla}</strong> · Cantidad: <strong>${cantidad}</strong>
-              </div>
+                    <div>
+                      <div class="fw-bold">Camiseta ID: ${idCamiseta}</div>
 
-              <!-- checkbox para activar/quitar parche -->
-              <div class="form-check mb-2">
-                <input class="form-check-input"
-                       type="checkbox"
-                       ${parche ? "checked" : ""}
-                       data-action="parche"
-                       data-id="${idNum}"
-                       data-talla="${talla}">
-                <label class="form-check-label">Parche (+5€)</label>
-              </div>
+                      <div class="muted small mb-2">
+                        Talla:
+                        <strong>${talla}</strong>
+                        · Cantidad:
+                        <strong>${cantidad}</strong>
+                      </div>
 
-              <!-- inputs para nombre y dorsal -->
-              <div class="row g-2 mb-2">
-                <div class="col-7">
-                  <input class="form-control form-control-sm"
-                         placeholder="Nombre (ej: JUANITO)"
-                         value="${it.nombrePersonalizado ?? ""}"
-                         data-field="nombre"
-                         data-id="${idNum}"
-                         data-talla="${talla}">
-                </div>
-                <div class="col-5">
-                  <input class="form-control form-control-sm"
-                         type="number"
-                         min="0" max="99"
-                         placeholder="Dorsal"
-                         value="${it.numeroPersonalizado ?? 0}"
-                         data-field="dorsal"
-                         data-id="${idNum}"
-                         data-talla="${talla}">
-                </div>
-              </div>
+                      <!-- EDICIÓN DATOS -->
+                      <div class="row g-1 mb-2">
+                        <div class="col-6">
+                          <input class="form-control form-sm"
+                            placeholder="Nombre"
+                            data-field="nombre"
+                            data-id="${idCamiseta}"
+                            data-talla="${talla}"
+                            value="${it.nombrePersonalizado ?? ""}">
+                        </div>
 
-              <!-- botones de acciones: restar/sumar/eliminar + guardar datos -->
-              <div class="d-flex gap-2 flex-wrap">
-                <div class="btn-group btn-group-sm" role="group">
-                  <button class="btn btn-outline-secondary"
-                          data-action="restar"
-                          data-id="${idNum}"
+                        <div class="col-3">
+                          <input class="form-control form-sm"
+                            placeholder="Dorsal"
+                            type="number"
+                            min="0"
+                            max="99"
+                            data-field="dorsal"
+                            data-id="${idCamiseta}"
+                            data-talla="${talla}"
+                            value="${it.numeroPersonalizado ?? ""}">
+                        </div>
+
+                        <div class="col-3 d-flex align-items-center">
+                          <button class="btn btn-sm btn-outline-primary w-100"
+                            data-action="guardar-datos"
+                            data-id="${idCamiseta}"
+                            data-talla="${talla}">
+                            Guardar
+                          </button>
+                        </div>
+                      </div>
+
+                      <!-- PARCHE -->
+                      <div class="form-check mb-2">
+                        <input class="form-check-input"
+                          type="checkbox"
+                          data-action="parche"
+                          data-id="${idCamiseta}"
                           data-talla="${talla}"
-                          ${cantidad <= 1 ? "disabled" : ""}>-</button>
+                          ${parche ? "checked" : ""}>
+                        <label class="form-check-label">Parche (+5€)</label>
+                      </div>
 
-                  <button class="btn btn-outline-secondary"
+                      <!-- CANTIDAD -->
+                      <div class="btn-group btn-group-sm" role="group">
+                        <button class="btn btn-outline-secondary"
+                          data-action="restar"
+                          data-id="${idCamiseta}"
+                          data-talla="${talla}"
+                          ${cantidad <= 1 ? "disabled" : ""}>
+                          -
+                        </button>
+
+                        <button class="btn btn-outline-secondary"
                           data-action="sumar"
-                          data-id="${idNum}"
-                          data-talla="${talla}">+</button>
+                          data-id="${idCamiseta}"
+                          data-talla="${talla}">
+                          +
+                        </button>
 
-                  <button class="btn btn-outline-danger"
+                        <button class="btn btn-outline-danger"
                           data-action="eliminar"
-                          data-id="${idNum}"
-                          data-talla="${talla}">Quitar</button>
+                          data-id="${idCamiseta}"
+                          data-talla="${talla}">
+                          Quitar
+                        </button>
+                      </div>
+                    </div>
+
+                  </div>
                 </div>
-
-                <button class="btn btn-outline-primary btn-sm"
-                        data-action="guardar-datos"
-                        data-id="${idNum}"
-                        data-talla="${talla}">
-                  Guardar nombre/dorsal
-                </button>
               </div>
-            </div>
-          </div>
-        `);
-      });
+            `);
+          });
 
-      // mostramos totales (el total real viene del backend)
-      document.getElementById("cartSubtotal").textContent = euros(precioTotal);
-      document.getElementById("sumTotal").textContent = euros(precioTotal);
-      document.getElementById("sumExtras").textContent = euros(extrasParches);
-      document.getElementById("sumSubtotal").textContent = euros(precioTotal - extrasParches);
-    })
-    .catch(function (e) {
-      console.error(e);
-      toast("Error cargando carrito");
-    });
-}
+          
+          document.getElementById("cartSubtotal").textContent = "—";
+          document.getElementById("sumSubtotal").textContent = "—";
+          document.getElementById("sumExtras").textContent = euros(extrasParches);
+          document.getElementById("sumTotal").textContent = "—";
+        })
+        .catch(function (e) {
+          console.error(e);
+          toast("Error cargando carrito");
+        });
+    }
 
 
     //carrito acciones
     document.getElementById("cartItems").onclick = function (e) {
-      const el = e.target.matches('input[data-action]') ? e.target : e.target.closest("[data-action]"); //sino podria no funcionar el uso de los boones de +,- etc
+      const el = e.target.matches('input[data-action]') ? e.target : e.target.closest("[data-action]");
       if (!el) return;
 
       const action = el.dataset.action;
@@ -812,18 +832,9 @@
     };
 
 
-    //vaciar carrito enpdpoint
+    //
     document.getElementById("btnClearCart").onclick = function () {
-       fetchJsonOrText(API_BASE + "/carrito/vaciar", { credentials: "include" })
-    .then(function (r) {
-      // el backend devuelve texto ("Carrito vaciado" o "No has iniciado sesion")
-      toast(typeof r.data === "string" ? r.data : r.raw);
-      cargarCarrito(); // refresca carrito y totales
-    })
-    .catch(function (e) {
-      console.error(e);
-      toast("Error vaciando carrito");
-    });
+      toast("No hay endpoint de vaciar carrito todavía");
     };
 
 
@@ -843,29 +854,33 @@
         });
     };
 
-    //endpoint cargar las camisetas
-    function cargarCamisetasDesdeAPI() {
-  fetchJsonOrText(API_BASE + "/mostrarCamisetas/todas", { credentials: "include" })
-    .then(function (r) {
-      if (!Array.isArray(r.data)) {
-        toast(typeof r.data === "string" ? r.data : r.raw);
-        CATALOGO = [];
-        renderProducts(CATALOGO);
-        return;
-      }
-      CATALOGO = r.data;
-      renderProducts(CATALOGO);
-    })
-    .catch(function (e) {
-      console.error(e);
-      toast("Error cargando camisetas");
-    });
-}
 
-    //aplicar los filtros
+    function cargarCamisetasDesdeAPI() {
+      // llamada cargar las camisetas
+      fetchJsonOrText(API_BASE + "/mostrarCamisetas/todas", { credentials: "include" })
+        .then(function (r) {
+
+          // si el servidor devuelve "No has iniciado sesion" no peta
+          if (!Array.isArray(r.data)) {
+            console.log("Respuesta NO JSON en /mostrarCamisetas/todas =>", r.raw);
+            toast(typeof r.data === "string" ? r.data : r.raw);
+            CATALOGO = [];
+            renderProducts(CATALOGO);
+            return;
+          }
+
+          CATALOGO = r.data;
+          renderProducts(CATALOGO);
+        })
+        .catch(function (e) {
+          console.error(e);
+          toast("Error cargando camisetas");
+        });
+    }
+
+
     document.getElementById("btnApplyFilters").onclick = applyFiltersAndRender;
 
-    
     document.getElementById("btnClearSearch").onclick = () => {
       document.getElementById("searchInput").value = "";
       applyFiltersAndRender();
@@ -916,7 +931,6 @@
         password: document.getElementById("regPass").value
       };
 
-      //si no ha rellenado todos los campos
       if (Object.values(body).some(v => !v)) {
         toast("Rellena todos los campos");
         return;
@@ -927,7 +941,7 @@
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body) //se le pasa el json montado
+        body: JSON.stringify(body)
       })
         .then(function (resp) { return resp.text(); })
         .then(function (txt) {
@@ -947,35 +961,9 @@
 
 
     
-   window.onload = function () { //cuando la pagina ha terminado de cargar automaticamente hace
-
-    fetchJsonOrText(API_BASE + "/identificacion/perfil", { credentials: "include" }) //para ver quien es el usuario actual
-    .then(function (r) { //cuando se ejecuta el servidor responde
-
-    
-      const hayUsuario = r.ok && r.data && typeof r.data === "object" && (r.data.id != null || r.data.correo); //comprueba que hay usuario
-
-      if (!hayUsuario) {
-        new bootstrap.Modal(document.getElementById("modalRegister"), {
-          backdrop: "static",
-          keyboard: false
-        }).show();
-      }
-    })
-    .catch(function () { //sino se abre el registro automaticamente para que le obligue a registrarse
-      new bootstrap.Modal(document.getElementById("modalRegister"), {
-        backdrop: "static",
-        keyboard: false
-      }).show();
-    });
-
-  renderNavAuth();
-  cargarCamisetasDesdeAPI();
-  cargarCarrito();
-};
-
-
-
+    renderNavAuth();
+    cargarCamisetasDesdeAPI();
+    cargarCarrito();
 
   </script>
 </body>

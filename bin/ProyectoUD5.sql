@@ -1,4 +1,10 @@
 CREATE DATABASE if not exists ProyectoUD5;
+
+CREATE USER 'usuario_ud5'@'localhost' IDENTIFIED BY '1234';
+GRANT ALL PRIVILEGES ON ProyectoUD5.* TO 'usuario_ud5'@'localhost';
+FLUSH PRIVILEGES;
+
+USE ProyectoUD5;
 -- 1. Tabla Usuarios
 CREATE TABLE Usuarios (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -65,24 +71,58 @@ CREATE TABLE CarritoContenido (
     carrito_Id INT NOT NULL,
     camiseta_Id INT NOT NULL,
 	 cantidad INT,
+	 tallaSeleccionada ENUM(
+	 'S',
+	 'M',
+	 'L',
+	 'XL'
+	 )NOT NULL,
+	 nombrePersonalizado VARCHAR(100),
+	 numeroPersonalizado INT,
+	 llevaParche TINYINT,
     FOREIGN KEY (carrito_Id) REFERENCES Carrito(id) ON DELETE CASCADE,
+    FOREIGN KEY (camiseta_Id) REFERENCES Camisetas(id)
+);
+
+CREATE TABLE Pedidos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    usuario_Id INT NOT NULL,
+    fechaPedido DATETIME DEFAULT CURRENT_TIMESTAMP,
+    precioTotal DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (usuario_Id) REFERENCES Usuarios(id)
+);
+
+CREATE TABLE DetallePedidos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    pedido_Id INT NOT NULL,
+    camiseta_Id INT NOT NULL,
+    cantidad INT NOT NULL,
+    talla ENUM('S', 'M', 'L', 'XL') NOT NULL,
+    nombrePersonalizado VARCHAR(100),
+    numeroPersonalizado INT,
+    llevaParche TINYINT,
+    FOREIGN KEY (pedido_Id) REFERENCES Pedidos(id) ON DELETE CASCADE,
     FOREIGN KEY (camiseta_Id) REFERENCES Camisetas(id)
 );
 
 
 
+USE ProyectoUD5;
 
---inserts--
-INSERT INTO Usuarios (DNI, nombre, apellido, correo, pwd) VALUES
-('00000001A', 'Admin', '90T', 'admin@90t.com', 'admin123'),
-('00000002B', 'Quique', 'Martin', 'quique@90t.com', 'q1234'),
-('00000003C', 'Mercy', 'Perez', 'mercy@90t.com', 'm1234');
+-- ==========================================
+-- 1. Insertar Usuarios
+-- ==========================================
+INSERT INTO Usuarios (DNI, nombre, apellido, correo, pwd) VALUES 
+('12345678A', 'Juan', 'Pérez', 'juan.perez@email.com', 'pass1234'),
+('87654321B', 'María', 'García', 'maria.garcia@email.com', 'segura5678'),
+('11223344C', 'Carlos', 'López', 'carlos.lopez@email.com', 'admin9999');
 
--- =========================
--- 2) CAMISETAS (tu JSON)
--- Nota: parche=0 y nombreDorsal/numeroDorsal en NULL
--- =========================
-INSERT INTO Camisetas (equipo, imagen, precio, temporada, liga, parche, nombreDorsal, numeroDorsal) VALUES
+-- ==========================================
+-- 2. Insertar Camisetas (Variedad de Ligas y Temporadas)
+-- ==========================================
+INSERT INTO Camisetas
+(equipo, imagen, precio, temporada, liga, parche, nombreDorsal, numeroDorsal)
+VALUES
 ('Real Madrid', 'realmadrid_2000_2005.png', 85.00, '2000-2005', 'LaLiga', 0, NULL, NULL),
 ('FC Barcelona', 'barcelona_2000_2005.png', 85.00, '2000-2005', 'LaLiga', 0, NULL, NULL),
 ('Manchester United', 'manutd_2000_2005.png', 88.00, '2000-2005', 'Premier League', 0, NULL, NULL),
@@ -116,71 +156,51 @@ INSERT INTO Camisetas (equipo, imagen, precio, temporada, liga, parche, nombreDo
 ('Bayern Munich', 'bayern_2023_2026.png', 108.00, '2023-2026', 'Bundesliga', 0, NULL, NULL),
 ('Argentina', 'argentina_2023_2026.png', 110.00, '2023-2026', 'Selecciones', 0, NULL, NULL);
 
--- =========================
--- 3) STOCK POR TALLA
--- (valores de ejemplo; ajustadlos como queráis)
--- Insertamos usando SELECT del id para no depender de autoincrement exacto.
--- =========================
+-- ==========================================
+-- 3. Insertar StockPorTalla (Vinculado a Camisetas)
+-- ==========================================
+INSERT INTO StockPorTalla (camiseta_Id, stockS, stockM, stockL, stockXL) VALUES 
+(1, 10, 20, 15, 5),  -- Real Madrid: Buen stock
+(2, 5, 5, 0, 2),     -- Man City: Sin stock en L
+(3, 1, 1, 1, 0),     -- Milan Retro: Stock muy bajo (exclusivo)
+(4, 50, 50, 50, 50), -- España: Mucho stock
+(5, 10, 10, 10, 10); -- Bayern: Stock normal
 
-INSERT INTO StockPorTalla (camiseta_Id, stockS, stockM, stockL, stockXL)
-SELECT id, 6, 10, 8, 4 FROM Camisetas WHERE equipo='Real Madrid' AND temporada='2000-2005' AND liga='LaLiga';
-INSERT INTO StockPorTalla (camiseta_Id, stockS, stockM, stockL, stockXL)
-SELECT id, 5, 9, 7, 3 FROM Camisetas WHERE equipo='FC Barcelona' AND temporada='2000-2005' AND liga='LaLiga';
-INSERT INTO StockPorTalla (camiseta_Id, stockS, stockM, stockL, stockXL)
-SELECT id, 4, 8, 6, 2 FROM Camisetas WHERE equipo='Manchester United' AND temporada='2000-2005' AND liga='Premier League';
-INSERT INTO StockPorTalla (camiseta_Id, stockS, stockM, stockL, stockXL)
-SELECT id, 7, 11, 9, 5 FROM Camisetas WHERE equipo='Juventus' AND temporada='2000-2005' AND liga='Serie A';
-INSERT INTO StockPorTalla (camiseta_Id, stockS, stockM, stockL, stockXL)
-SELECT id, 6, 10, 8, 4 FROM Camisetas WHERE equipo='Bayern Munich' AND temporada='2000-2005' AND liga='Bundesliga';
-INSERT INTO StockPorTalla (camiseta_Id, stockS, stockM, stockL, stockXL)
-SELECT id, 8, 12, 10, 6 FROM Camisetas WHERE equipo='Brasil' AND temporada='2000-2005' AND liga='Selecciones';
+-- ==========================================
+-- 4. Insertar Carritos (Carrito activo)
+-- ==========================================
+-- Juan (ID 1) tiene un carrito pendiente
+INSERT INTO Carrito (usuario_Id, precioTotal, fechaCreacion) VALUES 
+(1, 165.50, '2023-10-25 10:00:00');
 
-INSERT INTO StockPorTalla (camiseta_Id, stockS, stockM, stockL, stockXL)
-SELECT id, 5, 9, 7, 3 FROM Camisetas WHERE equipo='Real Madrid' AND temporada='2006-2011' AND liga='LaLiga';
-INSERT INTO StockPorTalla (camiseta_Id, stockS, stockM, stockL, stockXL)
-SELECT id, 4, 8, 6, 2 FROM Camisetas WHERE equipo='FC Barcelona' AND temporada='2006-2011' AND liga='LaLiga';
-INSERT INTO StockPorTalla (camiseta_Id, stockS, stockM, stockL, stockXL)
-SELECT id, 6, 10, 8, 4 FROM Camisetas WHERE equipo='Chelsea' AND temporada='2006-2011' AND liga='Premier League';
-INSERT INTO StockPorTalla (camiseta_Id, stockS, stockM, stockL, stockXL)
-SELECT id, 7, 11, 9, 5 FROM Camisetas WHERE equipo='AC Milan' AND temporada='2006-2011' AND liga='Serie A';
-INSERT INTO StockPorTalla (camiseta_Id, stockS, stockM, stockL, stockXL)
-SELECT id, 6, 10, 8, 4 FROM Camisetas WHERE equipo='Bayern Munich' AND temporada='2006-2011' AND liga='Bundesliga';
-INSERT INTO StockPorTalla (camiseta_Id, stockS, stockM, stockL, stockXL)
-SELECT id, 8, 12, 10, 6 FROM Camisetas WHERE equipo='España' AND temporada='2006-2011' AND liga='Selecciones';
+-- ==========================================
+-- 5. Insertar Contenido del Carrito
+-- ==========================================
+-- El carrito de Juan tiene 2 items
+INSERT INTO CarritoContenido (carrito_Id, camiseta_Id, cantidad, tallaSeleccionada, nombrePersonalizado, numeroPersonalizado, llevaParche) VALUES 
+-- Camiseta Real Madrid (ID 1), Talla M
+(1, 1, 1, 'M', NULL, NULL, 1), 
+-- Camiseta Bayern (ID 5), Talla L, Personalizada con su nombre
+(1, 5, 1, 'L', 'JUANITO', 10, 0);
 
-INSERT INTO StockPorTalla (camiseta_Id, stockS, stockM, stockL, stockXL)
-SELECT id, 4, 8, 6, 2 FROM Camisetas WHERE equipo='FC Barcelona' AND temporada='2012-2017' AND liga='LaLiga';
-INSERT INTO StockPorTalla (camiseta_Id, stockS, stockM, stockL, stockXL)
-SELECT id, 5, 9, 7, 3 FROM Camisetas WHERE equipo='Real Madrid' AND temporada='2012-2017' AND liga='LaLiga';
-INSERT INTO StockPorTalla (camiseta_Id, stockS, stockM, stockL, stockXL)
-SELECT id, 6, 10, 8, 4 FROM Camisetas WHERE equipo='Manchester City' AND temporada='2012-2017' AND liga='Premier League';
-INSERT INTO StockPorTalla (camiseta_Id, stockS, stockM, stockL, stockXL)
-SELECT id, 7, 11, 9, 5 FROM Camisetas WHERE equipo='Juventus' AND temporada='2012-2017' AND liga='Serie A';
-INSERT INTO StockPorTalla (camiseta_Id, stockS, stockM, stockL, stockXL)
-SELECT id, 6, 10, 8, 4 FROM Camisetas WHERE equipo='Borussia Dortmund' AND temporada='2012-2017' AND liga='Bundesliga';
-INSERT INTO StockPorTalla (camiseta_Id, stockS, stockM, stockL, stockXL)
-SELECT id, 8, 12, 10, 6 FROM Camisetas WHERE equipo='Alemania' AND temporada='2012-2017' AND liga='Selecciones';
+-- ==========================================
+-- 6. Insertar Pedidos (Histórico de compras)
+-- ==========================================
+-- María (ID 2) ya realizó un pedido la semana pasada
+INSERT INTO Pedidos (usuario_Id, fechaPedido, precioTotal) VALUES 
+(2, '2023-10-20 15:30:00', 120.00);
 
-INSERT INTO StockPorTalla (camiseta_Id, stockS, stockM, stockL, stockXL)
-SELECT id, 5, 9, 7, 3 FROM Camisetas WHERE equipo='Real Madrid' AND temporada='2018-2022' AND liga='LaLiga';
-INSERT INTO StockPorTalla (camiseta_Id, stockS, stockM, stockL, stockXL)
-SELECT id, 6, 10, 8, 4 FROM Camisetas WHERE equipo='Liverpool' AND temporada='2018-2022' AND liga='Premier League';
-INSERT INTO StockPorTalla (camiseta_Id, stockS, stockM, stockL, stockXL)
-SELECT id, 7, 11, 9, 5 FROM Camisetas WHERE equipo='Inter' AND temporada='2018-2022' AND liga='Serie A';
-INSERT INTO StockPorTalla (camiseta_Id, stockS, stockM, stockL, stockXL)
-SELECT id, 6, 10, 8, 4 FROM Camisetas WHERE equipo='Bayern Munich' AND temporada='2018-2022' AND liga='Bundesliga';
-INSERT INTO StockPorTalla (camiseta_Id, stockS, stockM, stockL, stockXL)
-SELECT id, 8, 12, 10, 6 FROM Camisetas WHERE equipo='Francia' AND temporada='2018-2022' AND liga='Selecciones';
-
-INSERT INTO StockPorTalla (camiseta_Id, stockS, stockM, stockL, stockXL)
-SELECT id, 4, 7, 6, 2 FROM Camisetas WHERE equipo='Real Madrid' AND temporada='2023-2026' AND liga='LaLiga';
-INSERT INTO StockPorTalla (camiseta_Id, stockS, stockM, stockL, stockXL)
-SELECT id, 4, 7, 6, 2 FROM Camisetas WHERE equipo='Manchester City' AND temporada='2023-2026' AND liga='Premier League';
-INSERT INTO StockPorTalla (camiseta_Id, stockS, stockM, stockL, stockXL)
-SELECT id, 5, 8, 7, 3 FROM Camisetas WHERE equipo='Napoli' AND temporada='2023-2026' AND liga='Serie A';
-INSERT INTO StockPorTalla (camiseta_Id, stockS, stockM, stockL, stockXL)
-SELECT id, 4, 7, 6, 2 FROM Camisetas WHERE equipo='Bayern Munich' AND temporada='2023-2026' AND liga='Bundesliga';
-INSERT INTO StockPorTalla (camiseta_Id, stockS, stockM, stockL, stockXL)
-SELECT id, 6, 9, 8, 4 FROM Camisetas WHERE equipo='Argentina' AND temporada='2023-2026' AND liga='Selecciones';
+-- ==========================================
+-- 7. Insertar Detalle de Pedidos
+-- ==========================================
+-- El pedido de María fue la camiseta retro del Milan
+INSERT INTO DetallePedidos (pedido_Id, camiseta_Id, cantidad, talla, nombrePersonalizado, numeroPersonalizado, llevaParche) VALUES 
+(1, 3, 1, 'S', 'KAKA', 22, 0);
 
 
+
+INSERT INTO StockPorTalla (camiseta_Id, stockS, stockM, stockL, stockXL)
+SELECT c.id, 20, 20, 20, 20
+FROM Camisetas c
+LEFT JOIN StockPorTalla s ON s.camiseta_Id = c.id
+WHERE s.camiseta_Id IS NULL;

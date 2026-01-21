@@ -131,13 +131,16 @@ public class AdminCamisetasEndpoints {
 		return jdbcTemplate.query(sql, new UsuariosMapper());
 	}
 
-	@GetMapping("/pedidos")
-	public List<Pedidos> mostrarPedidos() {
+	@GetMapping("/pedidos/{idUsuario}")
+	public List<Pedidos> mostrarPedidos(@PathVariable int idUsuario) {
+
 		String sql = """
 				    SELECT id, usuario_Id, fechaPedido, precioTotal
-				    FROM Pedidos where usuario_Id = ?;
+				    FROM Pedidos
+				    WHERE usuario_Id = ?
 				""";
-		return jdbcTemplate.query(sql, new PedidosMapper());
+
+		return jdbcTemplate.query(sql, new PedidosMapper(), idUsuario);
 	}
 
 	@GetMapping("/verTodosLosPedidos")

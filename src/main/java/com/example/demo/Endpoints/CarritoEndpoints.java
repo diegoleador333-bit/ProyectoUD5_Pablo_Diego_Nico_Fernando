@@ -43,7 +43,7 @@ public class CarritoEndpoints {
 		Carrito carrito = jdbcTemplate.queryForObject("SELECT * FROM Carrito WHERE usuario_Id = ?", new CarritoMapper(),
 				usuario.getId());
 
-		List<CarritoContenido> contenido = jdbcTemplate.query("SELECT * FROM carritocontenido WHERE carrito_Id = ?",
+		List<CarritoContenido> contenido = jdbcTemplate.query("SELECT * FROM CarritoContenido WHERE carrito_Id = ?",
 				new contenidoMapper(), carrito.getId());
 
 		return contenido;
@@ -60,7 +60,7 @@ public class CarritoEndpoints {
 		Carrito carrito = jdbcTemplate.queryForObject("SELECT * FROM Carrito WHERE usuario_Id = ?", new CarritoMapper(),
 				usuario.getId());
 
-		jdbcTemplate.update("DELETE FROM carritocontenido WHERE carrito_Id = ?", carrito.getId());
+		jdbcTemplate.update("DELETE FROM CarritoContenido WHERE carrito_Id = ?", carrito.getId());
 
 		jdbcTemplate.update("UPDATE Carrito SET precioTotal = 0 WHERE id = ?", carrito.getId());
 
@@ -80,11 +80,11 @@ public class CarritoEndpoints {
 				usuario.getId());
 
 		boolean parche = jdbcTemplate.queryForObject(
-				"SELECT llevaParche FROM carritocontenido WHERE camiseta_Id = ? AND tallaSeleccionada = ? AND carrito_Id = ?",
+				"SELECT llevaParche FROM CarritoContenido WHERE camiseta_Id = ? AND tallaSeleccionada = ? AND carrito_Id = ?",
 				Boolean.class, idCamiseta, talla, carrito.getId());
 
 		Integer cantidad = jdbcTemplate.queryForObject(
-				"SELECT cantidad FROM carritocontenido WHERE carrito_Id = ? AND camiseta_Id = ? AND tallaSeleccionada = ?",
+				"SELECT cantidad FROM CarritoContenido WHERE carrito_Id = ? AND camiseta_Id = ? AND tallaSeleccionada = ?",
 				Integer.class, carrito.getId(), idCamiseta, talla);
 
 		double precioUnidad = jdbcTemplate.queryForObject("SELECT precio FROM Camisetas WHERE id = ?", Double.class,
@@ -97,7 +97,7 @@ public class CarritoEndpoints {
 		}
 
 		jdbcTemplate.update(
-				"DELETE FROM carritocontenido WHERE camiseta_Id = ? AND carrito_Id = ? AND tallaSeleccionada = ?",
+				"DELETE FROM CarritoContenido WHERE camiseta_Id = ? AND carrito_Id = ? AND tallaSeleccionada = ?",
 				idCamiseta, carrito.getId(), talla);
 
 		jdbcTemplate.update("UPDATE Carrito SET precioTotal = precioTotal - ? WHERE id = ?", totalResta,
@@ -117,7 +117,7 @@ public class CarritoEndpoints {
 		Carrito carrito = jdbcTemplate.queryForObject("SELECT * FROM Carrito WHERE usuario_Id = ?", new CarritoMapper(),
 				usuario.getId());
 
-		List<CarritoContenido> contenido = jdbcTemplate.query("SELECT * FROM carritocontenido WHERE carrito_Id = ?",
+		List<CarritoContenido> contenido = jdbcTemplate.query("SELECT * FROM CarritoContenido WHERE carrito_Id = ?",
 				new contenidoMapper(), carrito.getId());
 
 		if (contenido.isEmpty()) {
@@ -163,7 +163,7 @@ public class CarritoEndpoints {
 					item.getNombrePersonalizado(), item.getNumeroPersonalizado(), item.isLlevaParche() ? 1 : 0);
 		}
 
-		jdbcTemplate.update("DELETE FROM carritocontenido WHERE carrito_Id = ?", carrito.getId());
+		jdbcTemplate.update("DELETE FROM CarritoContenido WHERE carrito_Id = ?", carrito.getId());
 
 		jdbcTemplate.update("UPDATE Carrito SET precioTotal = 0 WHERE id = ?", carrito.getId());
 
@@ -181,14 +181,14 @@ public class CarritoEndpoints {
 				usuario.getId());
 
 		boolean parche = jdbcTemplate.queryForObject(
-				"SELECT llevaParche FROM carritocontenido WHERE camiseta_Id = ? AND tallaSeleccionada = ? AND carrito_Id = ?",
+				"SELECT llevaParche FROM CarritoContenido WHERE camiseta_Id = ? AND tallaSeleccionada = ? AND carrito_Id = ?",
 				Boolean.class, idCamiseta, talla, carrito.getId());
 		String columnaStock = "stock" + talla;
 		Integer stockDisponible = jdbcTemplate.queryForObject(
 				"SELECT " + columnaStock + " FROM StockPorTalla WHERE camiseta_Id = ?", Integer.class, idCamiseta);
 
 		Integer cantidadCarrito = jdbcTemplate.queryForObject(
-				"SELECT cantidad FROM carritocontenido WHERE carrito_Id = ? AND camiseta_Id = ? AND tallaSeleccionada = ?",
+				"SELECT cantidad FROM CarritoContenido WHERE carrito_Id = ? AND camiseta_Id = ? AND tallaSeleccionada = ?",
 				Integer.class, carrito.getId(), idCamiseta, talla);
 
 		if (cantidadCarrito >= stockDisponible) {
@@ -202,7 +202,7 @@ public class CarritoEndpoints {
 		}
 
 		jdbcTemplate.update(
-				"UPDATE carritocontenido SET cantidad = cantidad + 1 WHERE carrito_Id = ? AND camiseta_Id = ? AND tallaSeleccionada = ?",
+				"UPDATE CarritoContenido SET cantidad = cantidad + 1 WHERE carrito_Id = ? AND camiseta_Id = ? AND tallaSeleccionada = ?",
 				carrito.getId(), idCamiseta, talla);
 
 		jdbcTemplate.update("UPDATE Carrito SET precioTotal = precioTotal + ? WHERE id = ?", precioUnidad,
@@ -224,7 +224,7 @@ public class CarritoEndpoints {
 				usuario.getId());
 
 		boolean parche = jdbcTemplate.queryForObject(
-				"SELECT llevaParche FROM carritocontenido WHERE camiseta_Id = ? AND tallaSeleccionada = ? AND carrito_Id = ?",
+				"SELECT llevaParche FROM CarritoContenido WHERE camiseta_Id = ? AND tallaSeleccionada = ? AND carrito_Id = ?",
 				Boolean.class, idCamiseta, talla, carrito.getId());
 
 		double precioUnidad = jdbcTemplate.queryForObject("SELECT precio FROM Camisetas WHERE id = ?", Double.class,
@@ -235,7 +235,7 @@ public class CarritoEndpoints {
 		}
 
 		jdbcTemplate.update(
-				"UPDATE carritocontenido SET cantidad = cantidad - 1 "
+				"UPDATE CarritoContenido SET cantidad = cantidad - 1 "
 						+ "WHERE carrito_Id = ? AND camiseta_Id = ? AND cantidad > 1 AND tallaSeleccionada = ?",
 				carrito.getId(), idCamiseta, talla);
 
@@ -257,25 +257,25 @@ public class CarritoEndpoints {
 				usuario.getId());
 
 		boolean parche = jdbcTemplate.queryForObject(
-				"SELECT llevaParche FROM carritocontenido WHERE camiseta_Id = ? AND tallaSeleccionada = ? AND carrito_Id = ?",
+				"SELECT llevaParche FROM CarritoContenido WHERE camiseta_Id = ? AND tallaSeleccionada = ? AND carrito_Id = ?",
 				Boolean.class, idCamiseta, talla, carrito.getId());
 
 		Integer cantidadCarrito = jdbcTemplate.queryForObject(
-				"SELECT cantidad FROM carritocontenido WHERE carrito_Id = ? AND camiseta_Id = ? AND tallaSeleccionada = ?",
+				"SELECT cantidad FROM CarritoContenido WHERE carrito_Id = ? AND camiseta_Id = ? AND tallaSeleccionada = ?",
 				Integer.class, carrito.getId(), idCamiseta, talla);
 
 		double precioFinal = 5.00 * cantidadCarrito;
 
 		if (parche) {
 			jdbcTemplate.update(
-					"UPDATE carritocontenido SET llevaParche = 0 WHERE carrito_Id = ? AND camiseta_Id = ? AND tallaSeleccionada = ?",
+					"UPDATE CarritoContenido SET llevaParche = 0 WHERE carrito_Id = ? AND camiseta_Id = ? AND tallaSeleccionada = ?",
 					carrito.getId(), idCamiseta, talla);
 			jdbcTemplate.update("UPDATE Carrito SET precioTotal = precioTotal - ? WHERE id = ?", precioFinal,
 					carrito.getId());
 			return "Parche quitado";
 		} else {
 			jdbcTemplate.update(
-					"UPDATE carritocontenido SET llevaParche = 1 WHERE carrito_Id = ? AND camiseta_Id = ? AND tallaSeleccionada = ?",
+					"UPDATE CarritoContenido SET llevaParche = 1 WHERE carrito_Id = ? AND camiseta_Id = ? AND tallaSeleccionada = ?",
 					carrito.getId(), idCamiseta, talla);
 			jdbcTemplate.update("UPDATE Carrito SET precioTotal = precioTotal + ? WHERE id = ?", precioFinal,
 					carrito.getId());
@@ -298,7 +298,7 @@ public class CarritoEndpoints {
 				usuario.getId());
 
 		jdbcTemplate.update(
-				"UPDATE carritocontenido SET nombrePersonalizado = ?, numeroPersonalizado = ? "
+				"UPDATE CarritoContenido SET nombrePersonalizado = ?, numeroPersonalizado = ? "
 						+ "WHERE carrito_Id = ? AND camiseta_Id = ? AND tallaSeleccionada = ?",
 				nombrePersonalizado, numeroPersonalizado, carrito.getId(), idCamiseta, talla);
 

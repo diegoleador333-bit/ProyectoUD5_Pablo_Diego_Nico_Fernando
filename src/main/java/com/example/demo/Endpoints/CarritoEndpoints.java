@@ -2,6 +2,7 @@ package com.example.demo.Endpoints;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -33,15 +34,11 @@ public class CarritoEndpoints {
 	}
 
 	@GetMapping("/productos")
-	public HashMap<Object, Object> verCarrito(HttpSession session) {
+	public Map<String, Object> verCarrito(HttpSession session) {
 		Usuarios usuario = (Usuarios) session.getAttribute("usuario");
 		if (usuario == null) {
-			HashMap<Object, Object> response = new HashMap<>();
-			response.put("No has iniciado sesion ", "No has iniciado sesion");
-			return response;
+			return Map.of("error", "No has iniciado sesión");
 		}
-
-		HashMap<Object, Object> response = new HashMap<>();
 
 		Carrito carrito = jdbcTemplate.queryForObject("SELECT * FROM carrito WHERE usuario_id = ?", new CarritoMapper(),
 				usuario.getId());
@@ -49,8 +46,7 @@ public class CarritoEndpoints {
 		List<CarritoContenido> contenido = jdbcTemplate.query("SELECT * FROM carritocontenido WHERE carrito_id = ?",
 				new contenidoMapper(), carrito.getId());
 
-		response.put(contenido, carrito);
-		return response;
+		return Map.of("items", contenido, "precioTotal", carrito.getPrecioTotal());
 	}
 
 	@GetMapping("/vaciar")

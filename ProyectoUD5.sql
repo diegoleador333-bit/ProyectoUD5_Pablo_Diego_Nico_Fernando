@@ -120,21 +120,41 @@ INSERT INTO Usuarios (DNI, nombre, apellido, correo, pwd) VALUES
 -- ==========================================
 -- 2. Insertar Camisetas (Variedad de Ligas y Temporadas)
 -- ==========================================
-INSERT INTO Camisetas (equipo, imagen, precio, temporada, liga, parche, nombreDorsal, numeroDorsal) VALUES 
--- ID 1: LaLiga (Actual) - Estaba en el JSON
-('Real Madrid', 'realmadrid_2023_2026.png', 85.50, '2023-2026', 'LaLiga', 1, 'VINICIUS JR', 7),
+INSERT INTO Camisetas
+(equipo, imagen, precio, temporada, liga, parche, nombreDorsal, numeroDorsal)
+VALUES
+('Real Madrid', 'realmadrid_2000_2005.png', 85.00, '2000-2005', 'LaLiga', 0, NULL, NULL),
+('FC Barcelona', 'barcelona_2000_2005.png', 85.00, '2000-2005', 'LaLiga', 0, NULL, NULL),
+('Manchester United', 'manutd_2000_2005.png', 88.00, '2000-2005', 'Premier League', 0, NULL, NULL),
+('Juventus', 'juventus_2000_2005.png', 82.00, '2000-2005', 'Serie A', 0, NULL, NULL),
+('Bayern Munich', 'bayern_2000_2005.png', 87.00, '2000-2005', 'Bundesliga', 0, NULL, NULL),
+('Brasil', 'brasil_2000_2005.png', 80.00, '2000-2005', 'Selecciones', 0, NULL, NULL),
 
--- ID 2: Premier League (Reciente) - Generado (No estaba en el JSON para esa temporada)
-('Manchester City', 'mancity_2018_2022.png', 90.00, '2018-2022', 'Premier League', 1, 'HAALAND', 9),
+('Real Madrid', 'realmadrid_2006_2011.png', 90.00, '2006-2011', 'LaLiga', 0, NULL, NULL),
+('FC Barcelona', 'barcelona_2006_2011.png', 92.00, '2006-2011', 'LaLiga', 0, NULL, NULL),
+('Chelsea', 'chelsea_2006_2011.png', 90.00, '2006-2011', 'Premier League', 0, NULL, NULL),
+('AC Milan', 'milan_2006_2011.png', 88.00, '2006-2011', 'Serie A', 0, NULL, NULL),
+('Bayern Munich', 'bayern_2006_2011.png', 89.00, '2006-2011', 'Bundesliga', 0, NULL, NULL),
+('España', 'espana_2006_2011.png', 85.00, '2006-2011', 'Selecciones', 0, NULL, NULL),
 
--- ID 3: Serie A (Clásica) - Estaba en el JSON
-('AC Milan', 'milan_2006_2011.png', 120.00, '2006-2011', 'Serie A', 0, 'KAKA', 22),
+('FC Barcelona', 'barcelona_2012_2017.png', 95.00, '2012-2017', 'LaLiga', 0, NULL, NULL),
+('Real Madrid', 'realmadrid_2012_2017.png', 95.00, '2012-2017', 'LaLiga', 0, NULL, NULL),
+('Manchester City', 'mancity_2012_2017.png', 94.00, '2012-2017', 'Premier League', 0, NULL, NULL),
+('Juventus', 'juventus_2012_2017.png', 90.00, '2012-2017', 'Serie A', 0, NULL, NULL),
+('Borussia Dortmund', 'dortmund_2012_2017.png', 88.00, '2012-2017', 'Bundesliga', 0, NULL, NULL),
+('Alemania', 'alemania_2012_2017.png', 90.00, '2012-2017', 'Selecciones', 0, NULL, NULL),
 
--- ID 4: Selecciones (Mundial) - Estaba en el JSON
-('España', 'espana_2006_2011.png', 75.00, '2006-2011', 'Selecciones', 1, 'INIESTA', 6),
+('Real Madrid', 'realmadrid_2018_2022.png', 100.00, '2018-2022', 'LaLiga', 0, NULL, NULL),
+('Liverpool', 'liverpool_2018_2022.png', 98.00, '2018-2022', 'Premier League', 0, NULL, NULL),
+('Inter', 'inter_2018_2022.png', 95.00, '2018-2022', 'Serie A', 0, NULL, NULL),
+('Bayern Munich', 'bayern_2018_2022.png', 98.00, '2018-2022', 'Bundesliga', 0, NULL, NULL),
+('Francia', 'francia_2018_2022.png', 95.00, '2018-2022', 'Selecciones', 0, NULL, NULL),
 
--- ID 5: Bundesliga (Actual) - Estaba en el JSON
-('Bayern Munich', 'bayern_2023_2026.png', 80.00, '2023-2026', 'Bundesliga', 0, NULL, NULL);
+('Real Madrid', 'realmadrid_2023_2026.png', 110.00, '2023-2026', 'LaLiga', 0, NULL, NULL),
+('Manchester City', 'mancity_2023_2026.png', 110.00, '2023-2026', 'Premier League', 0, NULL, NULL),
+('Napoli', 'napoli_2023_2026.png', 105.00, '2023-2026', 'Serie A', 0, NULL, NULL),
+('Bayern Munich', 'bayern_2023_2026.png', 108.00, '2023-2026', 'Bundesliga', 0, NULL, NULL),
+('Argentina', 'argentina_2023_2026.png', 110.00, '2023-2026', 'Selecciones', 0, NULL, NULL);
 
 -- ==========================================
 -- 3. Insertar StockPorTalla (Vinculado a Camisetas)

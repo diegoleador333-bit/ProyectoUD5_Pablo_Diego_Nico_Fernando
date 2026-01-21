@@ -99,18 +99,16 @@ public class AdminCamisetasEndpoints {
 
 	@PostMapping("/actualizarStock/{idCamiseta}")
 	@ResponseBody
-	public String actualizarStockCamisetas(HttpSession session, @PathVariable int idCamiseta,
-			@RequestBody StockPorTalla stock) {
-//		Usuarios usuario = (Usuarios) session.getAttribute("usuario");
-//		if (usuario == null)
-//			return "No has iniciado sesion";
+	public String actualizarStockCamisetas(@PathVariable int idCamiseta, @RequestBody Map<String, Integer> stock) {
+		int stockS = stock.getOrDefault("stockS", 0);
+		int stockM = stock.getOrDefault("stockM", 0);
+		int stockL = stock.getOrDefault("stockL", 0);
+		int stockXL = stock.getOrDefault("stockXL", 0);
+
 		String sql = "UPDATE StockPorTalla SET stockS = ?, stockM = ?, stockL = ?, stockXL = ? WHERE camiseta_Id = ?";
-		int resultado = jdbcTemplate.update(sql, stock.getStockS(), stock.getStockM(), stock.getStockL(),
-				stock.getStockXL(), idCamiseta);
-		if (resultado == 1)
-			return "Stock actualizado con exito";
-		else
-			return "No se pudo actualizar el stock";
+		int resultado = jdbcTemplate.update(sql, stockS, stockM, stockL, stockXL, idCamiseta);
+
+		return resultado == 1 ? "Stock actualizado con éxito" : "No se pudo actualizar el stock";
 	}
 
 	@GetMapping("/camisetas")
@@ -131,13 +129,16 @@ public class AdminCamisetasEndpoints {
 		return jdbcTemplate.query(sql, new UsuariosMapper());
 	}
 
-	@GetMapping("/pedidos")
-	public List<Pedidos> mostrarPedidos() {
+	@GetMapping("/pedidos/{idUsuario}")
+	public List<Pedidos> mostrarPedidos(@PathVariable int idUsuario) {
+
 		String sql = """
 				    SELECT id, usuario_Id, fechaPedido, precioTotal
-				    FROM Pedidos where usuario_Id = ?;
+				    FROM Pedidos
+				    WHERE usuario_Id = ?
 				""";
-		return jdbcTemplate.query(sql, new PedidosMapper());
+
+		return jdbcTemplate.query(sql, new PedidosMapper(), idUsuario);
 	}
 
 	@GetMapping("/verTodosLosPedidos")

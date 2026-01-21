@@ -173,10 +173,11 @@ public class ClienteApi {
 		return respuesta;
 	}
 
-	public static String mostrarPedidos() throws Exception {
-		URL url = new URL(BASE_URL + "/pedidos");
+	public static String mostrarPedidos(int idUsuario) throws Exception {
+		URL url = new URL(BASE_URL + "/pedidos/" + idUsuario);
 		HttpURLConnection con = (HttpURLConnection) url.openConnection();
 		con.setRequestMethod("GET");
+
 		String respuesta = leerRespuesta(con);
 		con.disconnect();
 		return respuesta;

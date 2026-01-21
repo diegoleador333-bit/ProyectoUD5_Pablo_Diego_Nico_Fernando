@@ -121,12 +121,12 @@ public class camisetasEndpoints {
 		String talla = item.getTallaSeleccionada();
 
 		Integer existe = jdbcTemplate.queryForObject(
-				"SELECT COUNT(*) FROM CarritoContenido WHERE carrito_Id = ? AND camiseta_Id = ? AND tallaSeleccionada = ?",
+				"SELECT COUNT(*) FROM carritocontenido WHERE carrito_Id = ? AND camiseta_Id = ? AND tallaSeleccionada = ?",
 				Integer.class, carrito.getId(), idCamiseta, talla);
 
 		if (existe != null && existe > 0) {
 			jdbcTemplate.update(
-					"UPDATE CarritoContenido SET cantidad = cantidad + ? WHERE carrito_Id = ? AND camiseta_Id = ? AND tallaSeleccionada = ?",
+					"UPDATE carritocontenido SET cantidad = cantidad + ? WHERE carrito_Id = ? AND camiseta_Id = ? AND tallaSeleccionada = ?",
 					cantidad, carrito.getId(), idCamiseta, talla);
 		} else {
 			jdbcTemplate.update(

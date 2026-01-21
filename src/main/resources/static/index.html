@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>90T — Reserva de camisetas</title>
 
-  <!-- Bootstrap 5 -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
   <style>
@@ -37,12 +36,11 @@
         </ul>
 
         <div class="d-flex align-items-center gap-2">
-          <!-- carrito -->
+
           <button class="btn btn-outline-info" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCart">
             Carrito <span class="badge bg-info text-dark" id="cartCount">0</span>
           </button>
 
-          <!-- auth area -->
           <div class="d-flex align-items-center gap-2" id="navAuthArea"></div>
         </div>
       </div>
@@ -51,7 +49,6 @@
 
   <main class="container py-4">
 
-    <!-- HEADER -->
     <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mb-3">
       <div>
         <h1 class="h3 mb-1">Catálogo de camisetas</h1>
@@ -59,7 +56,6 @@
       </div>
     </div>
 
-    <!-- FILTROS -->
     <div class="card mb-4">
       <div class="card-body">
         <div class="row g-3 align-items-end">
@@ -112,17 +108,10 @@
       </div>
     </div>
 
-    <!-- INFO: cuántas camisetas se ven -->
-    <div class="mb-2 muted">
-      Mostrando <strong id="countShown">0</strong> camisetas
-    </div>
-
-    <!-- GRID -->
     <div class="row g-4" id="productsGrid"></div>
-
   </main>
 
-  <!-- LOGIN -->
+
   <div class="modal fade" id="modalLogin" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -141,7 +130,6 @@
             <input id="loginPass" class="form-control" type="password" placeholder="••••••••">
           </div>
 
-        
         </div>
         <div class="modal-footer d-flex justify-content-between">
           <button class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#modalRegister">
@@ -153,7 +141,7 @@
     </div>
   </div>
 
-  <!-- REGISTER -->
+
   <div class="modal fade" id="modalRegister" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -164,30 +152,30 @@
         <div class="modal-body">
 
           <div class="mb-3">
-  <label class="form-label">Nombre</label>
-  <input id="regName" class="form-control" type="text" placeholder="Tu nombre">
-</div>
+            <label class="form-label">Nombre</label>
+            <input id="regName" class="form-control" type="text" placeholder="Tu nombre">
+          </div>
 
-<div class="mb-3">
-  <label class="form-label">Apellidos</label>
-  <input id="regApellido" class="form-control" type="text" placeholder="Tus apellidos">
-</div>
+          <div class="mb-3">
+            <label class="form-label">Apellidos</label>
+            <input id="regApellido" class="form-control" type="text" placeholder="Tus apellidos">
+          </div>
 
-<div class="mb-3">
-  <label class="form-label">DNI</label>
-  <input id="regDni" class="form-control" type="text" placeholder="12345678A">
-</div>
+          <div class="mb-3">
+            <label class="form-label">DNI</label>
+            <input id="regDni" class="form-control" type="text" placeholder="12345678A">
+          </div>
 
-<div class="mb-3">
-  <label class="form-label">Email</label>
-  <input id="regEmail" class="form-control" type="email" placeholder="tu@email.com">
-</div>
+          <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input id="regEmail" class="form-control" type="email" placeholder="tu@email.com">
+          </div>
+
           <div class="mb-3">
             <label class="form-label">Contraseña</label>
             <input id="regPass" class="form-control" type="password" placeholder="••••••••">
           </div>
 
-        
         </div>
         <div class="modal-footer d-flex justify-content-between">
           <button class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#modalLogin">
@@ -199,7 +187,7 @@
     </div>
   </div>
 
-  <!-- OFFCANVAS CARRITO -->
+
   <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasCart" aria-labelledby="offcanvasCartLabel">
     <div class="offcanvas-header">
       <h5 class="offcanvas-title" id="offcanvasCartLabel">Carrito</h5>
@@ -207,11 +195,8 @@
     </div>
 
     <div class="offcanvas-body">
-      <div id="cartItems" class="vstack gap-2">
-        <p class="muted mb-0">Tu carrito está vacío.</p>
-      </div>
-
       <hr>
+      <div id="cartItems" class="d-grid gap-2"></div>
 
       <div class="d-flex justify-content-between">
         <span class="muted">Subtotal</span>
@@ -220,7 +205,7 @@
 
       <div class="d-grid gap-2 mt-3">
         <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalCheckout">
-          Comprar / Reservar
+          Reservar
         </button>
         <button class="btn btn-outline-danger" id="btnClearCart">
           Vaciar carrito
@@ -229,7 +214,7 @@
     </div>
   </div>
 
-  <!-- MODAL PRODUCTO -->
+
   <div class="modal fade" id="modalProduct" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
@@ -261,12 +246,12 @@
 
                 <div class="col-12 col-md-4">
                   <label class="form-label">Nombre</label>
-                  <input class="form-control" id="inpName" type="text" placeholder="RONALDO">
+                  <input class="form-control" id="inpName" type="text" placeholder="">
                 </div>
 
                 <div class="col-12 col-md-4">
                   <label class="form-label">Dorsal</label>
-                  <input class="form-control" id="inpNumber" type="number" min="0" max="99" placeholder="7">
+                  <input class="form-control" id="inpNumber" type="number" min="0" max="99" placeholder="">
                 </div>
 
                 <div class="col-12">
@@ -280,8 +265,7 @@
               </div>
 
               <div class="mt-3">
-                <p class="mb-1"><strong>Total estimado:</strong> <span id="estimatedTotal">—</span></p>
-                <p class="muted mb-0 small">* Precio final al confirmar compra.</p>
+                <p class="mb-1"><strong>Total:</strong> <span id="estimatedTotal">—</span></p>
               </div>
 
             </div>
@@ -298,7 +282,7 @@
     </div>
   </div>
 
-  <!-- MODAL CHECKOUT -->
+
   <div class="modal fade" id="modalCheckout" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
@@ -371,7 +355,7 @@
     </div>
   </div>
 
-  <!-- TOAST (mensajitos) -->
+
   <div class="position-fixed bottom-0 end-0 p-3" style="z-index:1080">
     <div id="appToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
       <div class="toast-header">
@@ -383,175 +367,168 @@
     </div>
   </div>
 
-  <!-- Bootstrap JS -->
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
   <script>
 
     const API_BASE = "http://127.0.0.1:8080";
 
-
-    // ========= 2) STORAGE (para que NO se pierda el carrito al recargar) =========
-    // Esto sí compensa hacerlo con 2 mini funciones, para no copiar 10 líneas muchas veces.
-    const CART_KEY = "cart90t";
-    let cart = []; //array donde se va a guardar el carrito
     let CATALOGO = [];
 
-    function saveCart() {
-      localStorage.setItem(CART_KEY, JSON.stringify(cart));
-    }
-
-    function loadCart() {
-      try {
-        const raw = localStorage.getItem(CART_KEY);
-        cart = raw ? JSON.parse(raw) : [];
-        if (!Array.isArray(cart)) cart = [];
-      } catch {
-        cart = [];
-      }
-    }
-
     
+    // Lee SIEMPRE como texto, e intenta parsear a JSON.
+    // Así NO peta si el servidor te devuelve "No has iniciado sesión" o HTML de error.
+    function fetchJsonOrText(url, options) {
+      return fetch(url, options)
+        .then(function (resp) {
+          return resp.text().then(function (txt) {
+            let data = txt;
+            try { data = JSON.parse(txt); } catch { }
+            return { ok: resp.ok, status: resp.status, data: data, raw: txt };
+          });
+        });
+    }
 
-
-    // Formatear euros 
+    //formatear a euros
     function euros(n) {
       return Number(n).toFixed(2) + "€";
     }
 
-    // Toast para errores u otras cosas que necesiten un mensaje por pantalla, se le pasa por parametro el mensaje que se vaya a poner 
+    // Toast para errores u otras cosas que necesiten un mensaje por pantalla, se le pasa por parametro el mensaje que se vaya a poner
     function toast(msg) {
       document.getElementById("toastBody").textContent = msg;
       bootstrap.Toast.getOrCreateInstance(document.getElementById("appToast"), { delay: 1500 }).show();
     }
 
-    //==================NAVBAR==================
-    async function renderNavAuth() {
-  const area = document.getElementById("navAuthArea");
 
-  try {
-    const resp = await fetch(`${API_BASE}/identificacion/perfil`, {
-      credentials: "include"
-    });
+    function renderNavAuth() {
+      var area = document.getElementById("navAuthArea");
 
-    const user = await resp.json(); // user será null si no hay sesión
+      area.innerHTML =
+        '<button class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#modalLogin">Login</button>' +
+        '<button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalRegister">Registro</button>';
 
-    if (!user) throw new Error("No session");
+      //Perfil endpoint
+      fetchJsonOrText(API_BASE + "/identificacion/perfil", { credentials: "include" })
+        .then(function (r) {
 
-    // Hay sesión -> muestro dropdown
-    area.innerHTML = `
-      <div class="dropdown">
-        <button class="btn btn-outline-light dropdown-toggle" data-bs-toggle="dropdown">
-          ${user.nombre || "Mi cuenta"}
-        </button>
-        <ul class="dropdown-menu dropdown-menu-end">
-          <li><span class="dropdown-item-text muted">${user.correo || ""}</span></li>
-          <li><hr class="dropdown-divider"></li>
-          <li><button class="dropdown-item text-danger" id="btnLogout">Cerrar sesión</button></li>
-        </ul>
-      </div>
-    `;
+          // si no hay sesión (401/403)
+          if (!r.ok) return;
 
-    document.getElementById("btnLogout").onclick = async () => {
-      await fetch(`${API_BASE}/identificacion/cerrar`, {
-        method: "POST",
-        credentials: "include"
-      });
-      toast("Sesión cerrada");
-      renderNavAuth();
-    };
+          // si responde 200 pero no es JSON objeto -> dejamos botones
+          if (typeof r.data !== "object" || !r.data) return;
 
-  } catch (e) {
-    // No hay sesión -> muestro login/registro
-    area.innerHTML = `
-      <button class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#modalLogin">Login</button>
-      <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalRegister">Registro</button>
-    `;
-  }
-}
+          var user = r.data;
+
+          // hay usuario -> pintamos dropdown
+          area.innerHTML =
+            '<div class="dropdown">' +
+              '<button class="btn btn-outline-light dropdown-toggle" data-bs-toggle="dropdown">' +
+                (user.nombre || "Mi cuenta") +
+              '</button>' +
+              '<ul class="dropdown-menu dropdown-menu-end">' +
+                '<li><span class="dropdown-item-text muted">' + (user.correo || "") + '</span></li>' +
+                '<li><hr class="dropdown-divider"></li>' +
+                '<li><button class="dropdown-item text-danger" id="btnLogout">Cerrar sesión</button></li>' +
+              '</ul>' +
+            '</div>';
+
+          //CERRAR SESIÓN endpoint
+          document.getElementById("btnLogout").onclick = function () {
+            fetch(API_BASE + "/identificacion/cerrar", { method: "POST", credentials: "include" })
+              .then(function (resp) { return resp.text(); })
+              .then(function () {
+                toast("Sesión cerrada");
+                renderNavAuth();
+                cargarCarrito();
+              })
+              .catch(function (e) {
+                console.error(e);
+                toast("Error cerrando sesión");
+              });
+          };
+        })
+        .catch(function (e) {
+          console.error(e); 
+        });
+    }
 
 
-    //====================================
+    //Mostrar las cards
+    function renderProducts(list) {
 
-    
-    // Entra una lista y se dibuja tal cual (sin paginar).
-   function renderProducts(list) {
+      //contenedor donde van las cards
+      const grid = document.getElementById("productsGrid");
 
-  // 1. Cogemos el contenedor donde van las cards
-  const grid = document.getElementById("productsGrid");
+      //borramos cards anteriores
+      grid.innerHTML = "";
 
-  // 2. Lo vaciamos entero (borramos cards anteriores)
-  grid.innerHTML = "";
-
-  // 3. Mostramos cuántos productos hay
-  document.getElementById("countShown").textContent = list.length;
-
-  // 4. Si NO hay productos, mostramos un mensaje y salimos
-  if (list.length === 0) {
-    grid.innerHTML =
-      '<div class="col-12">' +
-        '<div class="alert alert-warning">' +
-          'No hay camisetas con esos filtros.' +
-        '</div>' +
-      '</div>';
-    return;
-  }
-
-  // 5. Recorremos la lista producto a producto
-  for (let i = 0; i < list.length; i++) {
-
-    const p = list[i]; // producto actual
-
-    // 6. Creamos el HTML de UNA card
-    const cardHTML =
-      '<div class="col-12 col-md-4">' +
-        '<div class="card h-100 shadow-sm">' +
-
-          '<img src="' + API_BASE + '/' + p.imagen + '" class="card-img-top" alt="' + p.equipo + '">'
- +
-
-          '<div class="card-body d-flex flex-column">' +
-            '<h5 class="card-title">' + p.equipo + '</h5>' +
-
-            '<p class="text-muted">' +
-              'Liga: <strong>' + p.liga + '</strong><br>' +
-              'Temporada: <strong>' + p.temporada + '</strong>' +
-            '</p>' +
-
-            '<div class="mt-auto d-flex justify-content-between align-items-center">' +
-              '<span class="fw-bold">' + p.precio.toFixed(2) + '€</span>' +
-              '<button class="btn btn-sm btn-primary btn-open">Ver / Reservar</button>' +
+      //Si NO hay productos, mostramos un mensaje y salimos
+      if (list.length === 0) {
+        grid.innerHTML =
+          '<div class="col-12">' +
+            '<div class="alert alert-warning">' +
+              'No hay camisetas con esos filtros.' +
             '</div>' +
-          '</div>' +
+          '</div>';
+        return;
+      }
 
-        '</div>' +
-      '</div>';
+      //Recorremos la lista de camisetas
+      for (let i = 0; i < list.length; i++) {
 
-    // 7. Añadimos la card al grid
-    grid.insertAdjacentHTML("beforeend", cardHTML);
+        const p = list[i]; // camiseata actual
 
-    // 8. Cogemos EL ÚLTIMO botón que acabamos de crear
-    const buttons = grid.getElementsByClassName("btn-open");
-    const lastButton = buttons[buttons.length - 1];
+        // creamos la card
+        const cardHTML =
+          '<div class="col-12 col-md-4">' +
+            '<div class="card h-100 shadow-sm">' +
 
-    // 9. Al hacer click, abrimos el modal con ESTE producto
-    lastButton.onclick = function () {
-      openProduct(p);
-    };
-  }
-}
+              '<img src="' + API_BASE + '/' + p.imagen + '" class="card-img-top" alt="' + p.equipo + '">' +
+
+              '<div class="card-body d-flex flex-column">' +
+                '<h5 class="card-title">' + p.equipo + '</h5>' +
+
+                '<p class="text-muted">' +
+                  'Liga: <strong>' + p.liga + '</strong><br>' +
+                  'Temporada: <strong>' + p.temporada + '</strong>' +
+                '</p>' +
+
+                '<div class="mt-auto d-flex justify-content-between align-items-center">' +
+                  '<span class="fw-bold">' + p.precio.toFixed(2) + '€</span>' +
+                  '<button class="btn btn-sm btn-primary btn-open">Ver / Reservar</button>' +
+                '</div>' +
+              '</div>' +
+
+            '</div>' +
+          '</div>';
+
+        // Se añade al grid
+        grid.insertAdjacentHTML("beforeend", cardHTML);
+
+        // Cogemos EL ÚLTIMO botón que acabamos de crear
+        const buttons = grid.getElementsByClassName("btn-open");
+        const lastButton = buttons[buttons.length - 1];
+
+        //Al hacer click, abrimos para personalizar la camiseta
+        lastButton.onclick = function () {
+          openProduct(p);
+        };
+      }
+    }
 
 
-    // =========FILTROS=========
+    //Funcion para los filtros
     function applyFiltersAndRender() {
-      const q = document.getElementById("searchInput").value.trim().toLowerCase();
-      const liga = document.getElementById("filterLiga").value;
-      const temp = document.getElementById("filterYear").value;
-      const order = document.getElementById("sortPrice").value;
+      const q = document.getElementById("searchInput").value.trim().toLowerCase();//filtro para buscar
+      const liga = document.getElementById("filterLiga").value; //filtro de la liga
+      const temp = document.getElementById("filterYear").value; //filtro de el año
+      const order = document.getElementById("sortPrice").value; //filtro del precio
 
-      let list = [...CATALOGO];
+      let list = [...CATALOGO]; //se copia el catalogo entero en un array nuevo
 
-      // buscar por equipo
+      // buscar por equipo si no esta vacio
       if (q) list = list.filter(p => p.equipo.toLowerCase().includes(q));
 
       // filtrar liga
@@ -561,24 +538,32 @@
       if (temp) list = list.filter(p => p.temporada === temp);
 
       // ordenar por precio
-      list.sort((a,b) => order === "asc" ? a.precio - b.precio : b.precio - a.precio);
+      if (order === "asc") {
+        list.sort(function (a, b) {
+          return a.precio - b.precio;
+        });
+      } else {
+        list.sort(function (a, b) {
+          return b.precio - a.precio;
+        });
+      }
 
       renderProducts(list);
     }
 
-    // =========PERSONALIZAR PRODUCTO Y AÑADIR=========
+
+    //personalizar producto
     let currentProduct = null;
 
     function openProduct(product) {
       currentProduct = product;
 
-      document.getElementById("modalProductTitle").textContent = product.equipo;
+      document.getElementById("modalProductTitle").textContent = product.equipo; //titulo camiseta
       document.getElementById("modalProductMeta").textContent = `${product.liga} · ${product.temporada}`;
       document.getElementById("modalProductPrice").textContent = euros(product.precio);
 
       // imagen
       document.getElementById("modalImg").src = API_BASE + "/" + product.imagen;
-
 
       // reset campos
       document.getElementById("selSize").value = "M";
@@ -592,225 +577,393 @@
       bootstrap.Modal.getOrCreateInstance(document.getElementById("modalProduct")).show();
     }
 
+
     //CUANDO SE MARCA EL PARCHE DE LA LIGA SE AÑADE EL PRECIO DEL PARCHE AL PRECIO FINAL
     document.getElementById("chkPatch").onchange = () => {
       if (!currentProduct) return;
-      const extra = document.getElementById("chkPatch").checked ? 5 : 0;
+      var extra = 0;
+
+      if (document.getElementById("chkPatch").checked) {
+        extra = 5;
+      }
+
       document.getElementById("estimatedTotal").textContent = euros(currentProduct.precio + extra);
     };
 
-    // Añadir al carrito 
-    document.getElementById("btnAddToCart").onclick = () => {
+
+    // Añadir al carrito  
+    document.getElementById("btnAddToCart").onclick = function () {
       if (!currentProduct) return;
 
-      const dorsal = document.getElementById("inpNumber").value.trim();
-      if (dorsal && (Number(dorsal) < 0 || Number(dorsal) > 99)) {
-        toast("Dorsal inválido (0-99)"); //COMPROBAR QUE NO SE HA INTRODUCIDO U DORSAR MENOR QUE 0 O MAYOR QUE 99
-        return;
-      }
+      const talla = document.getElementById("selSize").value;
+      const nombre = document.getElementById("inpName").value.trim();
 
-      cart.push({ //se crea un objto de la camiseta y la personalizacion elegida se guarda en el carrito y se actualiza la pantalla
-        equipo: currentProduct.equipo,
-        imagen: currentProduct.imagen,
-        liga: currentProduct.liga,
-        temporada: currentProduct.temporada,
-        precio: currentProduct.precio,
-        talla: document.getElementById("selSize").value,
-        nombreDorsal: document.getElementById("inpName").value.trim() || null,
-        numeroDorsal: dorsal ? Number(dorsal) : null,
-        parche: document.getElementById("chkPatch").checked
-      });
 
-      saveCart();
-      updateCartUI();
-      toast("Añadido al carrito");
+      const dorsalStr = document.getElementById("inpNumber").value.trim();
+      const dorsal = dorsalStr === "" ? 0 : Number(dorsalStr);
 
-      bootstrap.Modal.getInstance(document.getElementById("modalProduct"))?.hide();
+      const parche = document.getElementById("chkPatch").checked;
+
+      
+      const body = {
+        cantidad: 1,
+        tallaSeleccionada: talla,
+        nombrePersonalizado: nombre || "",
+        numeroPersonalizado: Number.isFinite(dorsal) ? dorsal : 0,
+        llevaParche: parche
+      };
+
+      //mostrar camisetas endpoint
+      fetch(API_BASE + "/mostrarCamisetas/camisetas/" + currentProduct.id, {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body)
+      })
+        .then(function (resp) { return resp.text(); })
+        .then(function (txt) {
+          toast(txt);
+
+          // refresca carrito
+          cargarCarrito();
+
+          // opcional: cerrar modal
+          bootstrap.Modal.getInstance(document.getElementById("modalProduct"))?.hide();
+        })
+        .catch(function (e) {
+          console.error(e);
+          toast("Error añadiendo al carrito");
+        });
     };
 
+
     // Comprar se añade al carrito y se muestra la ventana de checkout
-    document.getElementById("btnBuyNow").onclick = () => {
-      document.getElementById("btnAddToCart").click(); // reutilizamos el mismo flujo
+    document.getElementById("btnBuyNow").onclick = function () {
+
+      // añadir al carrito (espera a que termine) -> reutilizo el mismo fetch que AddToCart
+      document.getElementById("btnAddToCart").onclick();
+
+      //abrir carrito + checkout
       bootstrap.Offcanvas.getOrCreateInstance(document.getElementById("offcanvasCart")).show();
       bootstrap.Modal.getOrCreateInstance(document.getElementById("modalCheckout")).show();
     };
 
-    //==================CARRITO==================
-    function updateCartUI() {
-      document.getElementById("cartCount").textContent = cart.length;
 
-      const cartItems = document.getElementById("cartItems");
+    //carrito api
 
-      if (cart.length === 0) {
-        cartItems.innerHTML = `<p class="muted mb-0">Tu carrito está vacío.</p>`; //si el carrito esta vacio
-      } else {
-        cartItems.innerHTML = "";
-        cart.forEach((it, i) => {//se coge lo que hay en el carrito
-          const extras = [];
-          extras.push(`Talla: ${it.talla}`);
-          if (it.nombreDorsal) extras.push(`Nombre: ${it.nombreDorsal}`);
-          if (it.numeroDorsal !== null) extras.push(`Dorsal: ${it.numeroDorsal}`);
-          if (it.parche) extras.push(`Parche (+5€)`);
+    function cargarCarrito() {
+      // carrido productos llamada api
+      fetchJsonOrText(API_BASE + "/carrito/productos", { credentials: "include" })
+        .then(function (r) {
 
-          cartItems.insertAdjacentHTML("beforeend", `
-            <div class="card">
-              <div class="card-body py-2">
-                <div class="d-flex justify-content-between align-items-start">
-                  <div>
-                    <div class="fw-bold">${it.equipo}</div>
-                    <div class="muted small">${extras.join(" · ")}</div>
+          const cartItems = document.getElementById("cartItems");
+
+          if (!Array.isArray(r.data)) {
+            // si el endpoint devuelve texto en vez de JSON array
+            document.getElementById("cartCount").textContent = "0";
+            cartItems.innerHTML = `<p class="muted mb-0">${typeof r.data === "string" ? r.data : r.raw}</p>`;
+            document.getElementById("cartSubtotal").textContent = "0€";
+            document.getElementById("sumSubtotal").textContent = "0€";
+            document.getElementById("sumExtras").textContent = "0€";
+            document.getElementById("sumTotal").textContent = "0€";
+            return;
+          }
+
+          const items = r.data;
+
+          document.getElementById("cartCount").textContent = String(items.length);
+          cartItems.innerHTML = "";
+
+          
+          let extrasParches = 0;
+
+          items.forEach(it => {
+            const idCamiseta = it.camiseta_Id ?? (it.camiseta ? it.camiseta.id : null);
+            const talla = it.tallaSeleccionada;
+            const cantidad = it.cantidad ?? 0;
+            const parche = !!it.llevaParche;
+
+            if (parche) extrasParches += 5 * cantidad;
+
+            cartItems.insertAdjacentHTML("beforeend", `
+              <div class="card">
+                <div class="card-body py-2">
+
+                  <div class="d-flex justify-content-between align-items-start">
+
+                    <div>
+                      <div class="fw-bold">Camiseta ID: ${idCamiseta}</div>
+
+                      <div class="muted small mb-2">
+                        Talla:
+                        <strong>${talla}</strong>
+                        · Cantidad:
+                        <strong>${cantidad}</strong>
+                      </div>
+
+                      <!-- EDICIÓN DATOS -->
+                      <div class="row g-1 mb-2">
+                        <div class="col-6">
+                          <input class="form-control form-sm"
+                            placeholder="Nombre"
+                            data-field="nombre"
+                            data-id="${idCamiseta}"
+                            data-talla="${talla}"
+                            value="${it.nombrePersonalizado ?? ""}">
+                        </div>
+
+                        <div class="col-3">
+                          <input class="form-control form-sm"
+                            placeholder="Dorsal"
+                            type="number"
+                            min="0"
+                            max="99"
+                            data-field="dorsal"
+                            data-id="${idCamiseta}"
+                            data-talla="${talla}"
+                            value="${it.numeroPersonalizado ?? ""}">
+                        </div>
+
+                        <div class="col-3 d-flex align-items-center">
+                          <button class="btn btn-sm btn-outline-primary w-100"
+                            data-action="guardar-datos"
+                            data-id="${idCamiseta}"
+                            data-talla="${talla}">
+                            Guardar
+                          </button>
+                        </div>
+                      </div>
+
+                      <!-- PARCHE -->
+                      <div class="form-check mb-2">
+                        <input class="form-check-input"
+                          type="checkbox"
+                          data-action="parche"
+                          data-id="${idCamiseta}"
+                          data-talla="${talla}"
+                          ${parche ? "checked" : ""}>
+                        <label class="form-check-label">Parche (+5€)</label>
+                      </div>
+
+                      <!-- CANTIDAD -->
+                      <div class="btn-group btn-group-sm" role="group">
+                        <button class="btn btn-outline-secondary"
+                          data-action="restar"
+                          data-id="${idCamiseta}"
+                          data-talla="${talla}"
+                          ${cantidad <= 1 ? "disabled" : ""}>
+                          -
+                        </button>
+
+                        <button class="btn btn-outline-secondary"
+                          data-action="sumar"
+                          data-id="${idCamiseta}"
+                          data-talla="${talla}">
+                          +
+                        </button>
+
+                        <button class="btn btn-outline-danger"
+                          data-action="eliminar"
+                          data-id="${idCamiseta}"
+                          data-talla="${talla}">
+                          Quitar
+                        </button>
+                      </div>
+                    </div>
+
                   </div>
-                  <button class="btn btn-sm btn-outline-danger" data-remove="${i}">Quitar</button>
                 </div>
               </div>
-            </div>
-          `);
+            `);
+          });
+
+          
+          document.getElementById("cartSubtotal").textContent = "—";
+          document.getElementById("sumSubtotal").textContent = "—";
+          document.getElementById("sumExtras").textContent = euros(extrasParches);
+          document.getElementById("sumTotal").textContent = "—";
+        })
+        .catch(function (e) {
+          console.error(e);
+          toast("Error cargando carrito");
         });
+    }
 
-        // Quitar item, cuando hago click en el carrito, si pulso el boton de quitar, se ve el producto que es, lo elimino guardo el cambio y actualizo la pantalla
-        cartItems.onclick = (e) => {
-          const btn = e.target.closest("button[data-remove]");
-          if (!btn) return;
-          cart.splice(Number(btn.dataset.remove), 1);
-          saveCart();
-          updateCartUI();
-        };
+
+    //carrito acciones
+    document.getElementById("cartItems").onclick = function (e) {
+      const el = e.target.matches('input[data-action]') ? e.target : e.target.closest("[data-action]");
+      if (!el) return;
+
+      const action = el.dataset.action;
+      const id = el.dataset.id;
+      const talla = el.dataset.talla;
+
+      let url = null;
+
+      if (action === "parche") {
+        url = API_BASE + "/carrito/parche/" + id + "/" + talla;
+      } else if (action === "sumar") {
+        url = API_BASE + "/carrito/sumar/" + id + "/" + talla;
+      } else if (action === "restar") {
+        url = API_BASE + "/carrito/restar/" + id + "/" + talla;
+      } else if (action === "eliminar") {
+        url = API_BASE + "/carrito/eliminar/" + id + "/" + talla;
+      } else if (action === "guardar-datos") {
+        const nombre = (document.querySelector(`input[data-field="nombre"][data-id="${id}"][data-talla="${talla}"]`)?.value ?? "").trim();
+        const dorsal = (document.querySelector(`input[data-field="dorsal"][data-id="${id}"][data-talla="${talla}"]`)?.value ?? "").trim() || "0";
+        url = API_BASE + "/carrito/datos/" + id + "/" + talla +
+          "?nombrePersonalizado=" + encodeURIComponent(nombre) +
+          "&numeroPersonalizado=" + encodeURIComponent(dorsal);
       }
 
-      // subtotal 
-      let subtotal = 0;
-      let extrasParches = 0;
-      cart.forEach(it => {
-        subtotal += it.precio;
-        if (it.parche) { subtotal += 5; extrasParches += 5; } //se suman al total apra calcular el final
-      });
+      if (!url) return;
 
-      document.getElementById("cartSubtotal").textContent = euros(subtotal);
-      document.getElementById("sumSubtotal").textContent = euros(subtotal - extrasParches);
-      document.getElementById("sumExtras").textContent = euros(extrasParches);
-      document.getElementById("sumTotal").textContent = euros(subtotal);
-       
+      fetch(url, { method: "POST", credentials: "include" })
+        .then(function (resp) { return resp.text(); })
+        .then(function (txt) {
+          toast(txt);
+          cargarCarrito();
+        })
+        .catch(function (e2) {
+          console.error(e2);
+          toast("Error actualizando carrito");
+        });
     };
 
-    // Confirmar pedido 
-    document.getElementById("btnConfirmOrder").onclick = () => {
-      if (cart.length === 0) {
-        toast("El carrito está vacío");
-        return;
-      }
 
-      // Aquí iría tu API (POST /orders). En demo, solo vaciamos.
-      toast("Reserva confirmada (demo)");
-      cart = [];
-      saveCart();
-      updateCartUI();
-
-      bootstrap.Modal.getInstance(document.getElementById("modalCheckout"))?.hide();
-      bootstrap.Offcanvas.getInstance(document.getElementById("offcanvasCart"))?.hide();
+    //
+    document.getElementById("btnClearCart").onclick = function () {
+      toast("No hay endpoint de vaciar carrito todavía");
     };
 
-    // =========  LOGIN/REGISTER  =========
-document.getElementById("btnLogin").onclick = async () => {
-  const correo = document.getElementById("loginEmail").value.trim();
-  const pass   = document.getElementById("loginPass").value.trim();
 
-  if (!correo || !pass) return toast("Rellena email y contraseña");
-
-  const resp = await fetch(`${API_BASE}/identificacion/login`, {
-    method: "POST",
-    credentials: "include",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ correo: correo, password: pass })
-  });
-
-  const txt = (await resp.text()).trim();
-  toast(txt);
-
-  if (txt === "Login correcto") {
-    await renderNavAuth();
-    bootstrap.Modal.getInstance(document.getElementById("modalLogin"))?.hide();
-  } else {
-    //si falla, cierro sesión por si había una previa
-    await fetch(`${API_BASE}/identificacion/cerrar`, {
-      method: "POST",
-      credentials: "include"
-    });
-    await renderNavAuth();
-  }
-};
+    // Confirmar reserva  también /carrito/comprar 
+    document.getElementById("btnConfirmOrder").onclick = function () {
+      fetch(API_BASE + "/carrito/comprar", { method: "POST", credentials: "include" })
+        .then(function (resp) { return resp.text(); })
+        .then(function (txt) {
+          toast(txt);
+          cargarCarrito();
+          bootstrap.Modal.getInstance(document.getElementById("modalCheckout"))?.hide();
+          bootstrap.Offcanvas.getInstance(document.getElementById("offcanvasCart"))?.hide();
+        })
+        .catch(function (e) {
+          console.error(e);
+          toast("Error confirmando reserva");
+        });
+    };
 
 
+    function cargarCamisetasDesdeAPI() {
+      // llamada cargar las camisetas
+      fetchJsonOrText(API_BASE + "/mostrarCamisetas/todas", { credentials: "include" })
+        .then(function (r) {
 
-   document.getElementById("btnRegister").onclick = async () => {
-  const nombre   = document.getElementById("regName").value.trim();
-  const apellido = document.getElementById("regApellido").value.trim();
-  const dni      = document.getElementById("regDni").value.trim();
-  const correo   = document.getElementById("regEmail").value.trim();
-  const pass     = document.getElementById("regPass").value.trim();
+          // si el servidor devuelve "No has iniciado sesion" no peta
+          if (!Array.isArray(r.data)) {
+            console.log("Respuesta NO JSON en /mostrarCamisetas/todas =>", r.raw);
+            toast(typeof r.data === "string" ? r.data : r.raw);
+            CATALOGO = [];
+            renderProducts(CATALOGO);
+            return;
+          }
 
-  if (!nombre || !apellido || !dni || !correo || !pass) {
-    return toast("Rellena todos los campos");
-  }
-
-  const resp = await fetch(`${API_BASE}/identificacion/registro`, {
-    method: "POST",
-    credentials: "include",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      nombre: nombre,
-      apellido: apellido,
-      dni: dni,
-      correo: correo,
-      password: pass
-    })
-  });
-
-  const txt = await resp.text();
-  toast(txt);
-
-  if (txt.toLowerCase().includes("registrado correctamente")) {
-    await renderNavAuth();
-    bootstrap.Modal.getInstance(document.getElementById("modalRegister"))?.hide();
-  }
-};
+          CATALOGO = r.data;
+          renderProducts(CATALOGO);
+        })
+        .catch(function (e) {
+          console.error(e);
+          toast("Error cargando camisetas");
+        });
+    }
 
 
-async function cargarCamisetasDesdeAPI() {
-  const resp = await fetch(`${API_BASE}/mostrarCamisetas/todas`, {
-    credentials: "include"
-  });
+    document.getElementById("btnApplyFilters").onclick = applyFiltersAndRender;
 
-  const data = await resp.json();
-
-  // guardo en variable global para filtros
-  CATALOGO = Array.isArray(data) ? data : [];
-
-  // dibujo
-  renderProducts(CATALOGO);
-}
-
-
-    // =========BOTONES FILTROS=========
-    document.getElementById("btnApplyFilters").onclick = applyFiltersAndRender;//Se aplican los filtros
-
-    document.getElementById("btnClearSearch").onclick = () => { //boton x para vcaciar la barra de busqueda
+    document.getElementById("btnClearSearch").onclick = () => {
       document.getElementById("searchInput").value = "";
       applyFiltersAndRender();
     };
 
 
-    // Vaciar carrito
-   document.getElementById("btnClearCart").onclick = () => {
-    cart = [];
-    saveCart();
-    updateCartUI();
-    toast("Carrito vaciado");
+    // Login
+    document.getElementById("btnLogin").onclick = function () {
+      const correo = document.getElementById("loginEmail").value.trim();
+      const pwd = document.getElementById("loginPass").value;
+
+      if (!correo || !pwd) {
+        toast("Rellena email y contraseña");
+        return;
+      }
+
+      //llamada api login
+      fetch(API_BASE + "/identificacion/login", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ correo: correo, password: pwd })
+      })
+        .then(function (resp) { return resp.text(); })
+        .then(function (txt) {
+          toast(txt);
+
+          if (txt.toLowerCase().includes("login correcto")) {
+            bootstrap.Modal.getInstance(document.getElementById("modalLogin"))?.hide();
+            renderNavAuth();
+            cargarCarrito();
+          }
+        })
+        .catch(function (e) {
+          console.error(e);
+          toast("Error en login");
+        });
     };
 
-  loadCart();
-  updateCartUI();
-  renderNavAuth();
-  cargarCamisetasDesdeAPI();
+
+    //Registro
+    document.getElementById("btnRegister").onclick = function () {
+      const body = {
+        nombre: document.getElementById("regName").value.trim(),
+        apellido: document.getElementById("regApellido").value.trim(),
+        dni: document.getElementById("regDni").value.trim(),
+        correo: document.getElementById("regEmail").value.trim(),
+        password: document.getElementById("regPass").value
+      };
+
+      if (Object.values(body).some(v => !v)) {
+        toast("Rellena todos los campos");
+        return;
+      }
+
+      //llamad api registro
+      fetch(API_BASE + "/identificacion/registro", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body)
+      })
+        .then(function (resp) { return resp.text(); })
+        .then(function (txt) {
+          toast(txt);
+
+          if (txt.toLowerCase().includes("registrado")) {
+            bootstrap.Modal.getInstance(document.getElementById("modalRegister"))?.hide();
+            renderNavAuth();
+            cargarCarrito();
+          }
+        })
+        .catch(function (e) {
+          console.error(e);
+          toast("Error en registro");
+        });
+    };
+
+
+    
+    renderNavAuth();
+    cargarCamisetasDesdeAPI();
+    cargarCarrito();
 
   </script>
 </body>

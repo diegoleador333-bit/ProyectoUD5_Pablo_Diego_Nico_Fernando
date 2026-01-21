@@ -1,16 +1,16 @@
 package com.example.demo.CarritoContenido;
 
 public class CarritoContenido {
-	private int id;
-	private int carrito;
-	private int camiseta;
-	private int cantidad;
+	private Integer id;
+	private Integer carrito;
+	private Integer camiseta;
+	private Integer cantidad;
 	private String tallaSeleccionada;
 	private String nombrePersonalizado;
 	private Integer numeroPersonalizado;
 	private boolean llevaParche;
 
-	public CarritoContenido(int id, int carrito, int camiseta, int cantidad, String tallaSeleccionada,
+	public CarritoContenido(Integer id, Integer carrito, Integer camiseta, Integer cantidad, String tallaSeleccionada,
 			String nombrePersonalizado, Integer numeroPersonalizado, boolean llevaParche) {
 		super();
 		this.id = id;
@@ -31,29 +31,19 @@ public class CarritoContenido {
 		this.id = id;
 	}
 
-	public int getCarrito() {
+	public Integer getCarrito() {
 		return carrito;
 	}
 
-	public void setCarrito(int carrito) {
+	public void setCarrito(Integer carrito) {
 		this.carrito = carrito;
 	}
 
-	public int getCamiseta() {
-		return camiseta;
-	}
+	public Integer getCamiseta() { return camiseta; }
+    public void setCamiseta(Integer camiseta) { this.camiseta = camiseta; }
 
-	public void setCamiseta(int camiseta) {
-		this.camiseta = camiseta;
-	}
-
-	public Integer getCantidad() {
-		return cantidad;
-	}
-
-	public void setCantidad(Integer cantidad) {
-		this.cantidad = cantidad;
-	}
+    public Integer getCantidad() { return cantidad; }
+    public void setCantidad(Integer cantidad) { this.cantidad = cantidad; }
 
 	public String getTallaSeleccionada() {
 		return tallaSeleccionada;

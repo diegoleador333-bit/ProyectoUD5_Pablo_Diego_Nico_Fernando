@@ -99,13 +99,14 @@ public class AdminCamisetasEndpoints {
 
 	@PostMapping("/actualizarStock/{idCamiseta}")
 	@ResponseBody
-	public String actualizarStockCamisetas(HttpSession session, @RequestBody StockPorTalla stock) {
+	public String actualizarStockCamisetas(HttpSession session, @PathVariable int idCamiseta,
+			@RequestBody StockPorTalla stock) {
 //		Usuarios usuario = (Usuarios) session.getAttribute("usuario");
 //		if (usuario == null)
 //			return "No has iniciado sesion";
 		String sql = "UPDATE StockPorTalla SET stockS = ?, stockM = ?, stockL = ?, stockXL = ? WHERE camiseta_Id = ?";
 		int resultado = jdbcTemplate.update(sql, stock.getStockS(), stock.getStockM(), stock.getStockL(),
-				stock.getStockXL());
+				stock.getStockXL(), idCamiseta);
 		if (resultado == 1)
 			return "Stock actualizado con exito";
 		else

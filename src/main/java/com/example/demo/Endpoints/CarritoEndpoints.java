@@ -1,6 +1,8 @@
 package com.example.demo.Endpoints;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -32,20 +34,19 @@ public class CarritoEndpoints {
 	}
 
 	@GetMapping("/productos")
-	public Object verCarrito(HttpSession session) {
+	public Map<String, Object> verCarrito(HttpSession session) {
 		Usuarios usuario = (Usuarios) session.getAttribute("usuario");
 		if (usuario == null) {
-			return "No has iniciado sesion";
+			return Map.of("error", "No has iniciado sesión");
 		}
-		
+
 		Carrito carrito = jdbcTemplate.queryForObject("SELECT * FROM carrito WHERE usuario_id = ?", new CarritoMapper(),
 				usuario.getId());
 
-		
 		List<CarritoContenido> contenido = jdbcTemplate.query("SELECT * FROM carritocontenido WHERE carrito_id = ?",
 				new contenidoMapper(), carrito.getId());
 
-		return java.util.Map.of("items", contenido, "precioTotal", carrito.getPrecioTotal());
+		return Map.of("items", contenido, "precioTotal", carrito.getPrecioTotal());
 	}
 
 	@GetMapping("/vaciar")
@@ -145,17 +146,16 @@ public class CarritoEndpoints {
 					item.getCantidad(), item.getCamiseta());
 		}
 
-		// pedidos y usuario_id en minúscula
-		jdbcTemplate.update("INSERT INTO pedidos (usuario_id, precioTotal) VALUES (?, ?)", carrito.getUsuario(),
+		jdbcTemplate.update("INSERT INTO Pedidos (usuario_Id, precioTotal) VALUES (?, ?)", carrito.getUsuario(),
 				carrito.getPrecioTotal());
 
 		Integer idPedido = jdbcTemplate.queryForObject("SELECT MAX(id) FROM pedidos", Integer.class);
 
 		for (int i = 0; i < contenido.size(); i++) {
 			CarritoContenido item = contenido.get(i);
-			// detallepedidos y columnas en minúscula
+
 			jdbcTemplate.update(
-					"INSERT INTO detallepedidos (pedido_id, camiseta_id, cantidad, talla, nombrePersonalizado, numeroPersonalizado, llevaParche) "
+					"INSERT INTO DetallePedidos (pedido_Id, camiseta_Id, cantidad, talla, nombrePersonalizado, numeroPersonalizado, llevaParche) "
 							+ "VALUES (?, ?, ?, ?, ?, ?, ?)",
 					idPedido, item.getCamiseta(), item.getCantidad(), item.getTallaSeleccionada().toUpperCase(),
 					item.getNombrePersonalizado(), item.getNumeroPersonalizado(), item.isLlevaParche() ? 1 : 0);

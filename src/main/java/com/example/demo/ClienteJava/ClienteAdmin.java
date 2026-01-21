@@ -2,6 +2,8 @@ package com.example.demo.ClienteJava;
 
 import java.util.Scanner;
 
+import com.example.demo.Stock.StockPorTalla;
+
 public class ClienteAdmin {
 
 	public static void main(String[] args) {
@@ -18,7 +20,8 @@ public class ClienteAdmin {
 			System.out.println("5. Mostrar camisetas");
 			System.out.println("6. Mostrar usuarios");
 			System.out.println("7. Mostrar pedidos");
-			System.out.println("8. Salir");
+			System.out.println("8. Mostrar el contenido de los pedidos");
+			System.out.println("9. Salir");
 			System.out.print("Elige una opción: ");
 
 			opcion = sc.nextInt();
@@ -87,10 +90,30 @@ public class ClienteAdmin {
 
 					System.out.print("ID camiseta: ");
 					int idStock = sc.nextInt();
+					sc.nextLine(); // Limpiar buffer
 
-					// Enseñamos el stock y mandamos el id al metodo verStock
-					String stock = ClienteApi.verStock(idStock);
-					System.out.println(stock);
+					StockPorTalla stockObj = ClienteApi.verStockObjeto(idStock);
+
+					// VALIDACIÓN DE NULL
+					if (stockObj == null) {
+						System.out.println("Error: No se encontró stock o falló la conexión.");
+						break;
+					}
+
+					System.out.println(stockObj.toString()); // Asumiendo que tiene toString
+					System.out.println("¿Actualizar? (1. Si / 2. No)");
+					int respuesta = sc.nextInt();
+					if (respuesta == 1) {
+						System.out.println("¿Cuantas talla S?");
+						stockObj.setStockS(sc.nextInt());
+						System.out.println("¿Cuantas talla M?");
+						stockObj.setStockM(sc.nextInt());
+						System.out.println("¿Cuantas talla L?");
+						stockObj.setStockL(sc.nextInt());
+						System.out.println("¿Cuantas talla XL?");
+						stockObj.setStockXL(sc.nextInt());
+						ClienteApi.actualizarStock(idStock, stockObj);
+					}
 					break;
 
 				case 5:
@@ -104,14 +127,18 @@ public class ClienteAdmin {
 				case 7:
 					System.out.println(ClienteApi.mostrarPedidos());
 					break;
+				case 8:
+					System.out.println(ClienteApi.mostrarContenidoPedidos());
+					break;
 
 				}
 
 			} catch (Exception e) {
 				System.out.println("Error: " + e.getMessage());
+				sc.nextLine();
 			}
 
-		} while (opcion != 8);
+		} while (opcion != 9);
 
 		sc.close();
 	}

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.Camisetas.Camisetas;
@@ -22,6 +23,9 @@ import com.example.demo.Usuarios.UsuariosMapper;
 
 import Pedidos.Pedidos;
 import Pedidos.PedidosMapper;
+import PedidosItems.DetallePedido;
+import PedidosItems.PedidoItemsMapper;
+import jakarta.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("/admin")
@@ -82,15 +86,30 @@ public class AdminCamisetasEndpoints {
 
 	// ver el stock y actualizarlo (por hacer)
 	@GetMapping("/stock/{idCamiseta}")
-	public List<StockPorTalla> verStock(@PathVariable int idCamiseta) {
+	public StockPorTalla verStock(@PathVariable int idCamiseta) {
 
 		String sql = """
-				    SELECT stockS, stockM, stockL, stockXL
+				    SELECT *
 				    FROM StockPorTalla
 				    WHERE camiseta_Id = ?
 				""";
 
-		return jdbcTemplate.query(sql, new StockMapper(), idCamiseta);
+		return jdbcTemplate.queryForObject(sql, new StockMapper(), idCamiseta);
+	}
+
+	@PostMapping("/actualizarStock/{idCamiseta}")
+	@ResponseBody
+	public String actualizarStockCamisetas(HttpSession session, @RequestBody StockPorTalla stock) {
+//		Usuarios usuario = (Usuarios) session.getAttribute("usuario");
+//		if (usuario == null)
+//			return "No has iniciado sesion";
+		String sql = "UPDATE StockPorTalla SET stockS = ?, stockM = ?, stockL = ?, stockXL = ? WHERE camiseta_Id = ?";
+		int resultado = jdbcTemplate.update(sql, stock.getStockS(), stock.getStockM(), stock.getStockL(),
+				stock.getStockXL());
+		if (resultado == 1)
+			return "Stock actualizado con exito";
+		else
+			return "No se pudo actualizar el stock";
 	}
 
 	@GetMapping("/camisetas")
@@ -115,9 +134,15 @@ public class AdminCamisetasEndpoints {
 	public List<Pedidos> mostrarPedidos() {
 		String sql = """
 				    SELECT id, usuario_Id, fechaPedido, precioTotal
-				    FROM Pedidos
+				    FROM Pedidos where usuario_Id = ?;
 				""";
 		return jdbcTemplate.query(sql, new PedidosMapper());
+	}
+
+	@GetMapping("/verTodosLosPedidos")
+	public List<DetallePedido> verTodosLosDetalles() {
+		String sql = "SELECT * FROM DetallePedidos";
+		return jdbcTemplate.query(sql, new PedidoItemsMapper());
 	}
 
 }

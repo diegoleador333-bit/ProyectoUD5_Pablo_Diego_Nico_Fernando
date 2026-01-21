@@ -18,11 +18,16 @@ public class StockPorTalla {
 		this.stockL = stockL;
 		this.stockXL = stockXL;
 	}
-	
+
 	public StockPorTalla() {
-		
+
 	}
 
+	@Override
+	public String toString() {
+		return "StockPorTalla [id=" + id + ", camiseta=" + camiseta + ", stockS=" + stockS + ", stockM=" + stockM
+				+ ", stockL=" + stockL + ", stockXL=" + stockXL + "]";
+	}
 
 	public int getId() {
 		return id;

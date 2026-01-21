@@ -125,8 +125,11 @@ public class ClienteAdmin {
 					break;
 
 				case 7:
-					System.out.println(ClienteApi.mostrarPedidos());
+					System.out.print("ID usuario: ");
+					int idUsuario = sc.nextInt();
+					System.out.println(ClienteApi.mostrarPedidos(idUsuario));
 					break;
+
 				case 8:
 					System.out.println(ClienteApi.mostrarContenidoPedidos());
 					break;

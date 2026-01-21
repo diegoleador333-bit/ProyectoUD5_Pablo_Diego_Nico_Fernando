@@ -151,7 +151,7 @@ public class CarritoEndpoints {
 		}
 
 		// pedidos y usuario_id en minúscula
-		jdbcTemplate.update("INSERT INTO pedidos (usuario_id, precioTotal) VALUES (?, ?)", carrito.getUsuario(),
+		jdbcTemplate.update("INSERT INTO Pedidos (usuario_id, precioTotal) VALUES (?, ?)", carrito.getUsuario(),
 				carrito.getPrecioTotal());
 
 		Integer idPedido = jdbcTemplate.queryForObject("SELECT MAX(id) FROM pedidos", Integer.class);
@@ -160,7 +160,7 @@ public class CarritoEndpoints {
 			CarritoContenido item = contenido.get(i);
 			// detallepedidos y columnas en minúscula
 			jdbcTemplate.update(
-					"INSERT INTO detallepedidos (pedido_id, camiseta_id, cantidad, talla, nombrePersonalizado, numeroPersonalizado, llevaParche) "
+					"INSERT INTO DetallePedidos (pedido_id, camiseta_id, cantidad, talla, nombrePersonalizado, numeroPersonalizado, llevaParche) "
 							+ "VALUES (?, ?, ?, ?, ?, ?, ?)",
 					idPedido, item.getCamiseta(), item.getCantidad(), item.getTallaSeleccionada().toUpperCase(),
 					item.getNombrePersonalizado(), item.getNumeroPersonalizado(), item.isLlevaParche() ? 1 : 0);

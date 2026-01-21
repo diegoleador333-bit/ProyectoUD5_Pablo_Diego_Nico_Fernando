@@ -1,8 +1,15 @@
 package com.example.demo.ClienteJava;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+
+import com.example.demo.Stock.StockPorTalla;
+
+import tools.jackson.databind.ObjectMapper;
 
 public class ClienteApi {
 
@@ -52,6 +59,50 @@ public class ClienteApi {
 		con.disconnect();
 	}
 
+	public static void actualizarStock(int idCamiseta, StockPorTalla stock) throws Exception {
+
+		URL url = new URL(BASE_URL + "/actualizarStock/" + idCamiseta);
+		HttpURLConnection con = (HttpURLConnection) url.openConnection();
+
+		con.setRequestMethod("POST");
+		con.setRequestProperty("Content-Type", "application/json");
+		con.setDoOutput(true);
+
+		String json = String.format("{\"stockS\":%d, \"stockM\":%d, \"stockL\":%d, \"stockXL\":%d}", stock.getStockS(),
+				stock.getStockM(), stock.getStockL(), stock.getStockXL());
+
+		System.out.println("JSON ENVIADO: " + json);
+
+		try (OutputStream os = con.getOutputStream()) {
+			os.write(json.getBytes("UTF-8"));
+		}
+
+		int responseCode = con.getResponseCode();
+
+		if (responseCode == 200) {
+			// ÉXITO
+			try (BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()))) {
+				String response = br.readLine();
+				System.out.println("Servidor dice: " + response);
+			}
+		} else {
+			// ERROR (Aquí capturamos el mensaje del 500)
+			System.out.println("Error en la petición. Código: " + responseCode);
+
+			// LEER EL ERROR STREAM
+			try (BufferedReader br = new BufferedReader(new InputStreamReader(con.getErrorStream()))) {
+				String line;
+				StringBuilder errorMsg = new StringBuilder();
+				while ((line = br.readLine()) != null) {
+					errorMsg.append(line);
+				}
+				System.out.println("DETALLE DEL ERROR DEL SERVIDOR: " + errorMsg.toString());
+			} catch (Exception e) {
+				System.out.println("No se pudo leer el detalle del error.");
+			}
+		}
+	}
+
 	// recibe el id
 	public static void eliminarCamiseta(int id) throws Exception {
 
@@ -84,6 +135,16 @@ public class ClienteApi {
 		return sb.toString();
 	}
 
+	public static StockPorTalla verStockObjeto(int id) throws Exception {
+		URL url = new URL(BASE_URL + "/stock/" + id);
+		HttpURLConnection con = (HttpURLConnection) url.openConnection();
+		ObjectMapper mapper = new ObjectMapper();
+		try (InputStream is = con.getInputStream()) {
+			StockPorTalla miStock = mapper.readValue(is, StockPorTalla.class);
+			return miStock;
+		}
+	}
+
 	private static String leerRespuesta(HttpURLConnection con) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
 		StringBuilder sb = new StringBuilder();
@@ -114,6 +175,15 @@ public class ClienteApi {
 
 	public static String mostrarPedidos() throws Exception {
 		URL url = new URL(BASE_URL + "/pedidos");
+		HttpURLConnection con = (HttpURLConnection) url.openConnection();
+		con.setRequestMethod("GET");
+		String respuesta = leerRespuesta(con);
+		con.disconnect();
+		return respuesta;
+	}
+
+	public static String mostrarContenidoPedidos() throws Exception {
+		URL url = new URL(BASE_URL + "/verTodosLosPedidos");
 		HttpURLConnection con = (HttpURLConnection) url.openConnection();
 		con.setRequestMethod("GET");
 		String respuesta = leerRespuesta(con);

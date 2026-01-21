@@ -34,7 +34,8 @@ public class camisetasEndpoints {
 
 	@GetMapping("/todas")
 	public List<Camisetas> mostrarCamisetas(HttpSession session) {
-		String sql = "SELECT * FROM Camisetas";
+		// todo en minúsculas
+		String sql = "SELECT * FROM camisetas";
 		return jdbcTemplate.query(sql, new CamisetasMapper());
 	}
 
@@ -43,6 +44,7 @@ public class camisetasEndpoints {
 		Usuarios usuario = (Usuarios) session.getAttribute("usuario");
 		if (usuario == null)
 			return "No has iniciado sesion";
+
 		String sql = "INSERT INTO camisetas (equipo, imagen, precio, temporada, liga) VALUES (?, ?, ?, ?, ?)";
 
 		int resultado = jdbcTemplate.update(sql, camiseta.getEquipo(), camiseta.getImagen(), camiseta.getPrecio(),
@@ -58,7 +60,8 @@ public class camisetasEndpoints {
 		Usuarios usuario = (Usuarios) session.getAttribute("usuario");
 		if (usuario == null)
 			return "No has iniciado sesion";
-		String sql = "UPDATE Camisetas SET precio = ? WHERE id = ?";
+
+		String sql = "UPDATE camisetas SET precio = ? WHERE id = ?";
 
 		int resultado = jdbcTemplate.update(sql, camiseta.getPrecio(), camiseta.getId());
 		if (resultado == 1)
@@ -72,7 +75,8 @@ public class camisetasEndpoints {
 		Usuarios usuario = (Usuarios) session.getAttribute("usuario");
 		if (usuario == null)
 			return "No has iniciado sesion";
-		String sql = "DELETE FROM Camisetas WHERE id = ?";
+
+		String sql = "DELETE FROM camisetas WHERE id = ?";
 
 		try {
 			int resultado = jdbcTemplate.update(sql, id);
@@ -87,7 +91,7 @@ public class camisetasEndpoints {
 
 	@GetMapping("/verStock")
 	public List<StockPorTalla> verStockPorTalla() {
-		return jdbcTemplate.query("select * from StockPorTalla", new StockMapper());
+		return jdbcTemplate.query("select * from stockportalla", new StockMapper());
 	}
 
 	@PostMapping("/actualizarStock/{idCamiseta}")
@@ -96,7 +100,9 @@ public class camisetasEndpoints {
 		Usuarios usuario = (Usuarios) session.getAttribute("usuario");
 		if (usuario == null)
 			return "No has iniciado sesion";
-		String sql = "UPDATE StockPorTalla SET stockS = ?, stockM = ?, stockL = ?, stockXL = ? WHERE camiseta_Id = ?";
+
+		// CORREGIDO: todo minúsculas (stockportalla, camiseta_id)
+		String sql = "UPDATE stockportalla SET stockS = ?, stockM = ?, stockL = ?, stockXL = ? WHERE camiseta_id = ?";
 		int resultado = jdbcTemplate.update(sql, stock.getStockS(), stock.getStockM(), stock.getStockL(),
 				stock.getStockXL(), idCamiseta);
 		if (resultado == 1)
@@ -115,37 +121,40 @@ public class camisetasEndpoints {
 		Integer cantObj = item.getCantidad();
 		int cantidad = (cantObj == null) ? 1 : cantObj;
 
-		Carrito carrito = jdbcTemplate.queryForObject("SELECT * FROM Carrito WHERE usuario_Id = ?", new CarritoMapper(),
+		// CORREGIDO: carrito (minúscula), usuario_id (minúscula)
+		Carrito carrito = jdbcTemplate.queryForObject("SELECT * FROM carrito WHERE usuario_id = ?", new CarritoMapper(),
 				usuario.getId());
 
 		String talla = item.getTallaSeleccionada();
 
+		// CORREGIDO: carritocontenido, carrito_id, camiseta_id (TODO MINÚSCULA)
 		Integer existe = jdbcTemplate.queryForObject(
-				"SELECT COUNT(*) FROM CarritoContenido WHERE carrito_Id = ? AND camiseta_Id = ? AND tallaSeleccionada = ?",
+				"SELECT COUNT(*) FROM carritocontenido WHERE carrito_id = ? AND camiseta_id = ? AND tallaSeleccionada = ?",
 				Integer.class, carrito.getId(), idCamiseta, talla);
 
 		if (existe != null && existe > 0) {
+			// CORREGIDO: todo minúscula
 			jdbcTemplate.update(
-					"UPDATE CarritoContenido SET cantidad = cantidad + ? WHERE carrito_Id = ? AND camiseta_Id = ? AND tallaSeleccionada = ?",
+					"UPDATE carritocontenido SET cantidad = cantidad + ? WHERE carrito_id = ? AND camiseta_id = ? AND tallaSeleccionada = ?",
 					cantidad, carrito.getId(), idCamiseta, talla);
 		} else {
+			// CORREGIDO: todo minúscula
 			jdbcTemplate.update(
-					"INSERT INTO CarritoContenido (carrito_Id, camiseta_Id, cantidad, tallaSeleccionada, nombrePersonalizado, numeroPersonalizado, llevaParche) "
+					"INSERT INTO carritocontenido (carrito_id, camiseta_id, cantidad, tallaSeleccionada, nombrePersonalizado, numeroPersonalizado, llevaParche) "
 							+ "VALUES (?, ?, ?, ?, ?, ?, ?)",
 					carrito.getId(), idCamiseta, cantidad, talla, item.getNombrePersonalizado(),
 					item.getNumeroPersonalizado(), item.isLlevaParche());
 		}
 
-		double precio = jdbcTemplate.queryForObject("SELECT precio FROM Camisetas WHERE id = ?", Double.class,
+		double precio = jdbcTemplate.queryForObject("SELECT precio FROM camisetas WHERE id = ?", Double.class,
 				idCamiseta);
 
 		if (item.isLlevaParche())
 			precio += 5.0;
 
-		jdbcTemplate.update("UPDATE Carrito SET precioTotal = precioTotal + ? WHERE id = ?", precio * cantidad,
+		jdbcTemplate.update("UPDATE carrito SET precioTotal = precioTotal + ? WHERE id = ?", precio * cantidad,
 				carrito.getId());
 
 		return "Añadido al carrito";
 	}
-
 }

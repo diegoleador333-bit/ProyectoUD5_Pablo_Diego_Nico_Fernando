@@ -80,16 +80,12 @@ public class ClienteApi {
 		int responseCode = con.getResponseCode();
 
 		if (responseCode == 200) {
-			// ÉXITO
 			try (BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()))) {
 				String response = br.readLine();
 				System.out.println("Servidor dice: " + response);
 			}
 		} else {
-			// ERROR (Aquí capturamos el mensaje del 500)
 			System.out.println("Error en la petición. Código: " + responseCode);
-
-			// LEER EL ERROR STREAM
 			try (BufferedReader br = new BufferedReader(new InputStreamReader(con.getErrorStream()))) {
 				String line;
 				StringBuilder errorMsg = new StringBuilder();
